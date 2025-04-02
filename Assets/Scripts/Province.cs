@@ -3,6 +3,7 @@ using UnityEngine;
 
 public class Province : MonoBehaviour
 {
-    List<Vector2> points = new List<Vector2>();
-    Country country = null;
+    public new string name;
+    public List<Vector2> points = new List<Vector2>();
+    public Country country = null;
 }

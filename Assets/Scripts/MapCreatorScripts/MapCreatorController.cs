@@ -1,12 +1,15 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityEngine.UI;
+using TMPro;
 
 public class MapCreatorController : MonoBehaviour
 {
     public Canvas canvas;
     public Canvas provincePointsCanvas;
     public GameObject temporaryMarks;
+    public TMP_InputField nameInput;
     Map map = new Map();
     bool isProvinceShapeFormed = false;
     List<Vector2> provincePoints = null;
@@ -17,15 +20,28 @@ public class MapCreatorController : MonoBehaviour
         canvas.gameObject.SetActive(false);
         provincePointsCanvas.gameObject.SetActive(true);
         provincePoints = new List<Vector2>();
+        nameInput.text = "";
     }
 
     public void OkClick()
     {
+        string provinceName = nameInput.text;
+        if(provinceName.Length < 2)
+        {
+            Debug.Log("Province name must consist of at least 2 characters!");
+            return;
+        }
+
+        Province province = ShapeTools.CreateProvince(provinceName, provincePoints);
+        if(!province) 
+        {
+            Debug.Log("Couldn't create the shape!");
+            return;
+        }
+
         isProvinceShapeFormed = false;
         canvas.gameObject.SetActive(true);
         provincePointsCanvas.gameObject.SetActive(false);
-
-        
 
         foreach(Transform t in temporaryMarks.transform)
         {
