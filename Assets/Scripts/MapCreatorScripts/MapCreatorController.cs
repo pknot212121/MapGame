@@ -1,10 +1,11 @@
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.EventSystems;
 
 public class MapCreatorController : MonoBehaviour
 {
-    public GameObject canvas;
-    public GameObject provincePointsCanvas;
+    public Canvas canvas;
+    public Canvas provincePointsCanvas;
     public GameObject temporaryMarks;
     Map map = new Map();
     bool isProvinceShapeFormed = false;
@@ -13,17 +14,18 @@ public class MapCreatorController : MonoBehaviour
     public void CreateProvinceClick()
     {
         isProvinceShapeFormed = true;
-        canvas.SetActive(false);
-        provincePointsCanvas.SetActive(true);
+        canvas.gameObject.SetActive(false);
+        provincePointsCanvas.gameObject.SetActive(true);
         provincePoints = new List<Vector2>();
     }
 
     public void OkClick()
     {
         isProvinceShapeFormed = false;
-        canvas.SetActive(true);
-        provincePointsCanvas.SetActive(false);
+        canvas.gameObject.SetActive(true);
+        provincePointsCanvas.gameObject.SetActive(false);
 
+        
 
         foreach(Transform t in temporaryMarks.transform)
         {
@@ -36,7 +38,7 @@ public class MapCreatorController : MonoBehaviour
     {
         if(isProvinceShapeFormed)
         {
-            if(Input.GetMouseButtonDown(0))
+            if(Input.GetMouseButtonDown(0) && !IsPointerOverSpecificCanvas(provincePointsCanvas))
             {
                 Vector3 worldPosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
                 worldPosition.z = 0;
@@ -46,5 +48,26 @@ public class MapCreatorController : MonoBehaviour
                 provincePoints.Add((Vector2)worldPosition);
             }
         }
+    }
+
+
+    bool IsPointerOverSpecificCanvas(Canvas c)
+    {
+        PointerEventData eventData = new PointerEventData(EventSystem.current)
+        {
+            position = Input.mousePosition
+        };
+
+        List<RaycastResult> results = new List<RaycastResult>();
+        EventSystem.current.RaycastAll(eventData, results);
+
+        foreach (RaycastResult result in results)
+        {
+            if (result.gameObject.GetComponentInParent<Canvas>() == c)
+            {
+                return true;
+            }
+        }
+        return false;
     }
 }
