@@ -3,6 +3,8 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 using TMPro;
+using Unity.VisualScripting;
+using UnityEngine.InputSystem;
 
 public class MapCreatorController : MonoBehaviour
 {
@@ -13,6 +15,8 @@ public class MapCreatorController : MonoBehaviour
     Map map = new Map();
     bool isProvinceShapeFormed = false;
     List<Vector2> provincePoints = null;
+    private Keyboard keyboard;
+    List<Vector2> allPoints = new List<Vector2>();
 
     public void CreateProvinceClick()
     {
@@ -38,6 +42,7 @@ public class MapCreatorController : MonoBehaviour
             Debug.Log("Couldn't create the shape!");
             return;
         }
+        foreach(Vector2 point in provincePoints){allPoints.Add(point);}
 
         isProvinceShapeFormed = false;
         canvas.gameObject.SetActive(true);
@@ -52,6 +57,7 @@ public class MapCreatorController : MonoBehaviour
 
     void Update()
     {
+        keyboard = Keyboard.current;
         if(isProvinceShapeFormed)
         {
             if(Input.GetMouseButtonDown(0) && !IsPointerOverSpecificCanvas(provincePointsCanvas))
@@ -59,9 +65,14 @@ public class MapCreatorController : MonoBehaviour
                 Vector3 worldPosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
                 worldPosition.z = 0;
                 GameObject prefab = Resources.Load<GameObject>("Prefabs/PointMark");
-                GameObject mark = Instantiate(prefab, worldPosition, Quaternion.identity);
+                Vector2 position = (Vector2)worldPosition;
+                if(keyboard.leftCtrlKey.isPressed){
+                    Debug.Log(Nearestpoint(position));
+                    position = Nearestpoint(position);
+                }
+                GameObject mark = Instantiate(prefab, new Vector3(position.x,position.y,0), Quaternion.identity);
                 mark.transform.SetParent(temporaryMarks.transform);
-                provincePoints.Add((Vector2)worldPosition);
+                provincePoints.Add(position);
             }
         }
     }
@@ -85,5 +96,15 @@ public class MapCreatorController : MonoBehaviour
             }
         }
         return false;
+    }
+
+    Vector2 Nearestpoint(Vector2 worldPosition){
+        double min_distance=double.MaxValue;
+        Vector2 nearest_point = worldPosition;
+        foreach(Vector2 point in allPoints){
+            double distance = Vector2.Distance(worldPosition,point);
+            if(distance<min_distance && point!=worldPosition){min_distance=distance;nearest_point=point;}
+        }
+        return nearest_point;
     }
 }
