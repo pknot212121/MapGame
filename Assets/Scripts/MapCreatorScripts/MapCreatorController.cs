@@ -11,6 +11,7 @@ public class MapCreatorController : MonoBehaviour
     public Canvas canvas;
     public Canvas provincePointsCanvas;
     public GameObject temporaryMarks;
+    public GameObject cursor;
     public TMP_InputField nameInput;
     Map map = new Map();
     bool isProvinceShapeFormed = false;
@@ -23,6 +24,8 @@ public class MapCreatorController : MonoBehaviour
         isProvinceShapeFormed = true;
         canvas.gameObject.SetActive(false);
         provincePointsCanvas.gameObject.SetActive(true);
+        Cursor.visible = false;
+        cursor.SetActive(true);
         provincePoints = new List<Vector2>();
         nameInput.text = "";
     }
@@ -47,6 +50,8 @@ public class MapCreatorController : MonoBehaviour
         isProvinceShapeFormed = false;
         canvas.gameObject.SetActive(true);
         provincePointsCanvas.gameObject.SetActive(false);
+        Cursor.visible = true;
+        cursor.SetActive(false);
 
         foreach(Transform t in temporaryMarks.transform)
         {
@@ -57,22 +62,21 @@ public class MapCreatorController : MonoBehaviour
 
     void Update()
     {
-        keyboard = Keyboard.current;
         if(isProvinceShapeFormed)
         {
+            Vector3 worldPosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+            if(Input.GetKey(KeyCode.LeftControl)) cursor.transform.position = NearestPoint((Vector2)worldPosition);
+            else
+            {
+                worldPosition.z = 0;
+                cursor.transform.position = worldPosition;
+            }
             if(Input.GetMouseButtonDown(0) && !IsPointerOverSpecificCanvas(provincePointsCanvas))
             {
-                Vector3 worldPosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-                worldPosition.z = 0;
                 GameObject prefab = Resources.Load<GameObject>("Prefabs/PointMark");
-                Vector2 position = (Vector2)worldPosition;
-                if(keyboard.leftCtrlKey.isPressed){
-                    Debug.Log(Nearestpoint(position));
-                    position = Nearestpoint(position);
-                }
-                GameObject mark = Instantiate(prefab, new Vector3(position.x,position.y,0), Quaternion.identity);
+                GameObject mark = Instantiate(prefab, cursor.transform.position, Quaternion.identity);
                 mark.transform.SetParent(temporaryMarks.transform);
-                provincePoints.Add(position);
+                provincePoints.Add((Vector2)cursor.transform.position);
             }
         }
     }
@@ -98,7 +102,7 @@ public class MapCreatorController : MonoBehaviour
         return false;
     }
 
-    Vector2 Nearestpoint(Vector2 worldPosition){
+    Vector2 NearestPoint(Vector2 worldPosition){
         double min_distance=double.MaxValue;
         Vector2 nearest_point = worldPosition;
         foreach(Vector2 point in allPoints){
