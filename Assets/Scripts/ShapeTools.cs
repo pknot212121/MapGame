@@ -17,7 +17,7 @@ public class ShapeTools
         return indices.ToArray();
     }
 
-    public static GameObject CreateShape(string name, List<Vector2> points)
+    public static GameObject CreateShape(string name, List<Vector2> points, float stroke)
     {
         if (points.Count < 3) return null;
         
@@ -26,6 +26,17 @@ public class ShapeTools
         
         MeshFilter meshFilter = shapeObject.AddComponent<MeshFilter>();
         MeshRenderer meshRenderer = shapeObject.AddComponent<MeshRenderer>();
+        if(stroke > 0)
+        {
+            LineRenderer line = shapeObject.AddComponent<LineRenderer>();
+            line.positionCount = points.Count;
+            line.loop = true;
+            line.widthMultiplier = stroke;
+            for (int i = 0; i < points.Count; i++)
+            {
+                line.SetPosition(i, new Vector3(points[i].x, points[i].y, 0));
+            }
+        }
         meshRenderer.material = new Material(Shader.Find("Standard"));
 
         Mesh mesh = new Mesh();
@@ -49,7 +60,7 @@ public class ShapeTools
 
     public static Province CreateProvince(string name, List<Vector2> points)
     {
-        GameObject shape = ShapeTools.CreateShape("Province", points);
+        GameObject shape = ShapeTools.CreateShape("Province", points, 0.2f);
         if(!shape) return null;
 
         Province province = shape.AddComponent<Province>();
