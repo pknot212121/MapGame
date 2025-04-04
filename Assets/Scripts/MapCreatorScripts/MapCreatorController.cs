@@ -12,7 +12,14 @@ public class MapCreatorController : MonoBehaviour
     public Canvas provincePointsCanvas;
     public GameObject temporaryMarks;
     public GameObject cursor;
+    public GameObject countriesListContent;
+
     public TMP_InputField nameInput;
+    public TMP_InputField countryNameInput;
+
+    List<Province> provinces = new List<Province>();
+    List<Country> countries = new List<Country>();
+
     Map map = new Map();
     bool isProvinceShapeFormed = false;
     List<Vector2> provincePoints = null;
@@ -45,6 +52,7 @@ public class MapCreatorController : MonoBehaviour
             Debug.Log("Couldn't create the shape!");
             return;
         }
+        provinces.Add(province);
         foreach(Vector2 point in provincePoints){allPoints.Add(point);}
 
         isProvinceShapeFormed = false;
@@ -58,6 +66,34 @@ public class MapCreatorController : MonoBehaviour
             Destroy(t.gameObject);
         }
         provincePoints = null;
+    }
+
+    public void AddCountryClick()
+    {
+        string countryName = countryNameInput.text;
+        if(countryName.Length < 2)
+        {
+            Debug.Log("Country name must consist of at least 2 characters!");
+            return;
+        }
+        foreach(Country c in countries)
+        {
+            if(c.name == countryName)
+            {
+                Debug.Log("Country with such name already exists!");
+                return;
+            }
+        }
+
+        Country country = new Country();
+        country.name = countryName;
+        countries.Add(country);
+
+        GameObject prefab = Resources.Load<GameObject>("Prefabs/CountryButton");
+        GameObject button = Instantiate(prefab);
+        button.transform.SetParent(countriesListContent.transform, false);
+        button.GetComponentInChildren<TMP_Text>().text = countryName;
+        countryNameInput.text = "";
     }
 
     void Update()
