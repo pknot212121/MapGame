@@ -6,15 +6,26 @@ public class ShapeTools
     public static int[] Triangulate(List<Vector2> points)
     {
         List<int> indices = new List<int>();
-
         for (int i = 1; i < points.Count - 1; i++)
         {
             indices.Add(0);
             indices.Add(i);
             indices.Add(i + 1);
         }
-
+        if(!IsClockwise(points)){indices.Reverse();}
         return indices.ToArray();
+    }
+
+    public static bool IsClockwise(List<Vector2> points)
+    {
+        float sum = 0;
+        for (int i = 0; i < points.Count; i++)
+        {
+            Vector2 p1 = points[i];
+            Vector2 p2 = points[(i + 1) % points.Count];
+            sum += p1.x * p2.y - p2.x * p1.y;
+        }
+        return sum < 0;
     }
 
     public static GameObject CreateShape(string name, List<Vector2> points, float stroke)
