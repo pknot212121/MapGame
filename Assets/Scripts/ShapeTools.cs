@@ -23,9 +23,21 @@ public class ShapeTools
             foreach(int index in rest.Keys){
                 queue.Add(index);
                 if(queue.Count == 3){
-                    if(IsConvex(rest[queue[0]],rest[queue[1]],rest[queue[2]])){
+                    bool isIntersecting = false;
+                    foreach(KeyValuePair<int,Vector2> pair in rest){
+                        if(pair.Key != queue[0] &&
+                           pair.Key != queue[1] &&
+                           pair.Key != queue[2] &&
+                           IsPointInTriangle(pair.Value,rest[queue[0]],rest[queue[1]],rest[queue[2]]))
+                        {
+                            Debug.Log("Punkt w środku!!!");
+                            isIntersecting = true;
+                            break;
+                        }
+                    }
+                    if(isIntersecting == false && IsConvex(rest[queue[0]],rest[queue[1]],rest[queue[2]])){
                         Debug.Log("Ucho!!!");
-                    
+
                         indices.Add(queue[0]);
                         indices.Add(queue[1]);
                         indices.Add(queue[2]);
