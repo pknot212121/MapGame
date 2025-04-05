@@ -1,18 +1,48 @@
 using UnityEngine;
 using System.Collections.Generic;
+using System;
+using UnityEngine.UIElements;
+using System.Data.Common;
 
 public class ShapeTools
 {
     public static int[] Triangulate(List<Vector2> points)
     {
         List<int> indices = new List<int>();
-        for (int i = 1; i < points.Count - 1; i++)
-        {
-            indices.Add(0);
-            indices.Add(i);
-            indices.Add(i + 1);
+        Dictionary<int,Vector2> rest = new Dictionary<int, Vector2>();
+        if(IsClockwise(points)){
+            for(int i=0;i<points.Count;i++){rest[i]=points[i];}
+        }else{
+            for(int i=points.Count-1;i>=0;i--){rest[i]=points[i];}
         }
-        if(!IsClockwise(points)){indices.Reverse();}
+
+        while(rest.Count>3){
+            int size = rest.Count;
+            bool removed = false;
+            List<int> queue = new List<int>();
+            foreach(int index in rest.Keys){
+                queue.Add(index);
+                if(queue.Count == 3){
+                    if(IsConvex(rest[queue[0]],rest[queue[1]],rest[queue[2]])){
+                        Debug.Log("Ucho!!!");
+                    
+                        indices.Add(queue[0]);
+                        indices.Add(queue[1]);
+                        indices.Add(queue[2]);
+                        rest.Remove(queue[1]);
+                        removed = true;
+                        break;
+                    }
+                    queue.RemoveAt(0);
+                }
+            }
+            if(!removed) break;
+        }
+        if(rest.Count == 3){
+            foreach(int index in rest.Keys){indices.Add(index);}
+        }
+        
+        
         return indices.ToArray();
     }
 
@@ -26,6 +56,24 @@ public class ShapeTools
             sum += p1.x * p2.y - p2.x * p1.y;
         }
         return sum < 0;
+    }
+    public static bool IsConvex(Vector2 A,Vector2 B,Vector2 C){
+        Vector2 vectorBA = A-B;
+        Vector2 vectorBC = C-B;
+        if(Vector2.SignedAngle(vectorBA,vectorBC)>0){return true;}
+        else{return false;}
+    }
+    public static bool IsPointInTriangle(Vector2 p, Vector2 a, Vector2 b, Vector2 c){
+        double z1 = CrossProduct2D(b - a, p - a);
+        double z2 = CrossProduct2D(c - b, p - b);
+        double z3 = CrossProduct2D(a - c, p - c);
+        bool hasNegative = (z1 < 0) || (z2 < 0) || (z3 < 0);
+        bool hasPositive = (z1 > 0) || (z2 > 0) || (z3 > 0);
+        return !(hasNegative && hasPositive);
+    }
+    private static double CrossProduct2D(Vector2 v1, Vector2 v2)
+    {
+        return v1.x * v2.y - v1.y * v2.x;
     }
 
     public static GameObject CreateShape(string name, List<Vector2> points, float stroke)
