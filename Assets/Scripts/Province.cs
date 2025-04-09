@@ -7,5 +7,8 @@ public class Province : MonoBehaviour
     public List<Vector2> points = new List<Vector2>();
     public Country country = null;
 
-    
+    public void SetColor(Color color)
+    {
+        gameObject.GetComponent<MeshRenderer>().material.color = color;
+    }
 }
