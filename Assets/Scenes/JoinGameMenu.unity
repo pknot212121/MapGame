@@ -382,7 +382,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3fbd58b8634e12d4093f4c05384e9894, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  networkController: {fileID: 1651850951}
   gamesListContentTransform: {fileID: 163610933}
   gameNameInput: {fileID: 1513092909}
 --- !u!4 &177021226
@@ -919,7 +918,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 1, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -149.70001, y: -15.126999}
+  m_AnchoredPosition: {x: -149.70001, y: -15.127014}
   m_SizeDelta: {x: 299.34998, y: -29.826}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &663301361

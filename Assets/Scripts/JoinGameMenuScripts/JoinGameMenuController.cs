@@ -8,7 +8,6 @@ using Fusion;
 
 public class JoinGameMenuController : MonoBehaviour
 {
-    public NetworkController networkController;
     public List<SessionInfo> currentSessionList = new List<SessionInfo>();
     public Transform gamesListContentTransform;
     public static JoinGameMenuController me;
@@ -33,7 +32,7 @@ public class JoinGameMenuController : MonoBehaviour
             }
         }
         else name = gameNameInput.text;
-        networkController.HostGame(name);
+        NetworkController.me.HostGame(name);
     }
 
     public void BackClick()
