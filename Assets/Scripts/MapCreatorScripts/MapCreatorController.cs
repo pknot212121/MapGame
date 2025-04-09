@@ -132,6 +132,9 @@ public class MapCreatorController : MonoBehaviour
         else{
             if(Input.GetKey(KeyCode.LeftControl) && Input.GetKeyDown(KeyCode.Z)){
                 Province lastProvince = provinces[provinces.Count-1];
+                foreach(Vector2 point in lastProvince.points){
+                    allPoints.Remove(point);
+                }
                 provinces.Remove(lastProvince);
                 Destroy(lastProvince.gameObject);
             }
