@@ -22,6 +22,8 @@ public class MapCreatorController : MonoBehaviour
     List<Province> provinces = new List<Province>();
     List<Country> countries = new List<Country>();
 
+    Stack<Province> deleted = new Stack<Province>();
+
     Map map = new Map();
     bool isProvinceShapeFormed = false;
     List<Vector2> provincePoints = null;
@@ -130,14 +132,26 @@ public class MapCreatorController : MonoBehaviour
             }
         }
         else{
+            
             if(Input.GetKey(KeyCode.LeftControl) && Input.GetKeyDown(KeyCode.Z)){
                 Province lastProvince = provinces[provinces.Count-1];
                 foreach(Vector2 point in lastProvince.points){
                     allPoints.Remove(point);
                 }
                 provinces.Remove(lastProvince);
+                deleted.Push(lastProvince);
                 Destroy(lastProvince.gameObject);
             }
+            if(Input.GetKey(KeyCode.LeftControl) && Input.GetKeyDown(KeyCode.Y) && deleted.Count>0){
+                Province newProvince = deleted.Pop();
+                Province province = ShapeTools.CreateProvince(newProvince.name, newProvince.points);
+                provinces.Add(province);
+                foreach(Vector2 point in province.points){
+                    allPoints.Add(point);
+                }
+                
+            }
+
         }
     }
 
