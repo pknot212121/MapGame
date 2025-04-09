@@ -5,6 +5,7 @@ using UnityEngine.UI;
 using TMPro;
 using Unity.VisualScripting;
 using UnityEngine.InputSystem;
+using UnityEngine.SceneManagement;
 
 public class MapCreatorController : MonoBehaviour
 {
@@ -94,6 +95,11 @@ public class MapCreatorController : MonoBehaviour
         button.transform.SetParent(countriesListContent.transform, false);
         button.GetComponentInChildren<TMP_Text>().text = countryName;
         countryNameInput.text = "";
+    }
+
+    public void BackClick()
+    {
+        SceneManager.LoadScene("Menu", LoadSceneMode.Single);
     }
 
     void Update()
