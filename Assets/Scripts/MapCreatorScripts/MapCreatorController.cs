@@ -107,7 +107,14 @@ public class MapCreatorController : MonoBehaviour
         if(isProvinceShapeFormed)
         {
             Vector3 worldPosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-            if(Input.GetKey(KeyCode.LeftControl)) cursor.transform.position = NearestPoint((Vector2)worldPosition);
+            if(Input.GetKey(KeyCode.LeftControl)){
+                cursor.transform.position = NearestPoint((Vector2)worldPosition);
+                if(Input.GetKeyDown(KeyCode.Z) && temporaryMarks.transform.childCount>0){
+                    Destroy(temporaryMarks.transform.GetChild(temporaryMarks.transform.childCount -1).gameObject);
+                    provincePoints.RemoveAt(provincePoints.Count-1);
+
+                }
+            }
             else
             {
                 worldPosition.z = 0;
