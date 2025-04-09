@@ -6,6 +6,7 @@ using TMPro;
 using Unity.VisualScripting;
 using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
+using System.Linq;
 
 public class MapCreatorController : MonoBehaviour
 {
@@ -126,6 +127,13 @@ public class MapCreatorController : MonoBehaviour
                 GameObject mark = Instantiate(prefab, cursor.transform.position, Quaternion.identity);
                 mark.transform.SetParent(temporaryMarks.transform);
                 provincePoints.Add((Vector2)cursor.transform.position);
+            }
+        }
+        else{
+            if(Input.GetKey(KeyCode.LeftControl) && Input.GetKeyDown(KeyCode.Z)){
+                Province lastProvince = provinces[provinces.Count-1];
+                provinces.Remove(lastProvince);
+                Destroy(lastProvince.gameObject);
             }
         }
     }
