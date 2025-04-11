@@ -12,12 +12,16 @@ public class MapCreatorController : MonoBehaviour
 {
     public Canvas canvas;
     public Canvas provincePointsCanvas;
+    public Canvas countryAdjustmentCanvas;
+
     public GameObject temporaryMarks;
     public GameObject cursor;
     public GameObject countriesListContent;
 
-    public TMP_InputField nameInput;
-    public TMP_InputField countryNameInput;
+    [SerializeField] private TMP_InputField createProvinceNameInput;
+    [SerializeField] private TMP_InputField countryNameInput;
+    [SerializeField] private TMP_InputField countryAdjustmentNameInput;
+    [SerializeField] private TMP_InputField countryHexColorInput;
 
     List<Province> provinces = new List<Province>();
     List<Country> countries = new List<Country>();
@@ -25,10 +29,20 @@ public class MapCreatorController : MonoBehaviour
     Stack<Province> deleted = new Stack<Province>();
 
     Map map = new Map();
+
     bool isProvinceShapeFormed = false;
+    public Country countryAdjusted = null;
+
     List<Vector2> provincePoints = null;
     private Keyboard keyboard;
     List<Vector2> allPoints = new List<Vector2>();
+
+    public static MapCreatorController me;
+
+    void Start()
+    {
+        me = this;
+    }
 
     public void CreateProvinceClick()
     {
@@ -38,12 +52,12 @@ public class MapCreatorController : MonoBehaviour
         Cursor.visible = false;
         cursor.SetActive(true);
         provincePoints = new List<Vector2>();
-        nameInput.text = "";
+        createProvinceNameInput.text = "";
     }
 
     public void OkClick()
     {
-        string provinceName = nameInput.text;
+        string provinceName = createProvinceNameInput.text;
         if(provinceName.Length < 2)
         {
             Debug.Log("Province name must consist of at least 2 characters!");
@@ -96,13 +110,25 @@ public class MapCreatorController : MonoBehaviour
         GameObject prefab = Resources.Load<GameObject>("Prefabs/CountryButton");
         GameObject button = Instantiate(prefab);
         button.transform.SetParent(countriesListContent.transform, false);
-        button.GetComponentInChildren<TMP_Text>().text = countryName;
+        button.GetComponent<CountryButton>().Initialise(country);
         countryNameInput.text = "";
     }
 
     public void BackClick()
     {
         SceneManager.LoadScene("Menu", LoadSceneMode.Single);
+    }
+
+    public void ExitClick()
+    {
+        countryAdjusted = null;
+        canvas.gameObject.SetActive(true);
+        countryAdjustmentCanvas.gameObject.SetActive(false);
+    }
+
+    public void CountryHexColorInput()
+    {
+        if(countryAdjusted != null) countryAdjusted.SetColorFromHex(countryHexColorInput.text);
     }
 
     void Update()
@@ -185,5 +211,13 @@ public class MapCreatorController : MonoBehaviour
             if(distance<min_distance && point!=worldPosition){min_distance=distance;nearest_point=point;}
         }
         return new Vector3(nearest_point.x,nearest_point.y,zet);
+    }
+
+    public void EnterCountryAdjustment(Country country)
+    {
+        countryAdjusted = country;
+        canvas.gameObject.SetActive(false);
+        countryAdjustmentCanvas.gameObject.SetActive(true);
+        countryAdjustmentNameInput.text = country.name;
     }
 }
