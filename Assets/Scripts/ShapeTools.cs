@@ -105,7 +105,7 @@ public class ShapeTools
             line.widthMultiplier = stroke;
             for (int i = 0; i < points.Count; i++)
             {
-                line.SetPosition(i, new Vector3(points[i].x, points[i].y, 0));
+                line.SetPosition(i, new Vector3(points[i].x, points[i].y, -1));
             }
         }
         meshRenderer.material = new Material(Shader.Find("Standard"));

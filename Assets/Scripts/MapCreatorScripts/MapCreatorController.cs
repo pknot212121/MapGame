@@ -109,9 +109,10 @@ public class MapCreatorController : MonoBehaviour
     {
         if(isProvinceShapeFormed)
         {
+            deleted.Clear();
             Vector3 worldPosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
             if(Input.GetKey(KeyCode.LeftControl)){
-                cursor.transform.position = NearestPoint((Vector2)worldPosition);
+                cursor.transform.position = NearestPoint((Vector2)worldPosition,-2);
                 if(Input.GetKeyDown(KeyCode.Z) && temporaryMarks.transform.childCount>0){
                     Destroy(temporaryMarks.transform.GetChild(temporaryMarks.transform.childCount -1).gameObject);
                     provincePoints.RemoveAt(provincePoints.Count-1);
@@ -120,7 +121,7 @@ public class MapCreatorController : MonoBehaviour
             }
             else
             {
-                worldPosition.z = 0;
+                worldPosition.z = -2;
                 cursor.transform.position = worldPosition;
             }
             if(Input.GetMouseButtonDown(0) && !IsPointerOverSpecificCanvas(provincePointsCanvas))
@@ -176,13 +177,13 @@ public class MapCreatorController : MonoBehaviour
         return false;
     }
 
-    Vector2 NearestPoint(Vector2 worldPosition){
+    Vector3 NearestPoint(Vector2 worldPosition, int zet){
         double min_distance=double.MaxValue;
         Vector2 nearest_point = worldPosition;
         foreach(Vector2 point in allPoints){
             double distance = Vector2.Distance(worldPosition,point);
             if(distance<min_distance && point!=worldPosition){min_distance=distance;nearest_point=point;}
         }
-        return nearest_point;
+        return new Vector3(nearest_point.x,nearest_point.y,zet);
     }
 }
