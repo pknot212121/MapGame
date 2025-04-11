@@ -63,15 +63,17 @@ public class MapCreatorController : MonoBehaviour
             Debug.Log("Province name must consist of at least 2 characters!");
             return;
         }
-
-        Province province = ShapeTools.CreateProvince(provinceName, provincePoints);
-        if(!province) 
-        {
-            Debug.Log("Couldn't create the shape!");
-            return;
+        if(ShapeTools.IsIntersecting(provincePoints)){
+            Province province = ShapeTools.CreateProvince(provinceName, provincePoints);
+            if(!province) 
+            {
+                Debug.Log("Couldn't create the shape!");
+                return;
+            }
+            provinces.Add(province);
+            foreach(Vector2 point in provincePoints){allPoints.Add(point);}
         }
-        provinces.Add(province);
-        foreach(Vector2 point in provincePoints){allPoints.Add(point);}
+        else{Debug.Log("Krawędzie się przecinają!");}
 
         isProvinceShapeFormed = false;
         canvas.gameObject.SetActive(true);
@@ -84,6 +86,7 @@ public class MapCreatorController : MonoBehaviour
             Destroy(t.gameObject);
         }
         provincePoints = null;
+        
     }
 
     public void AddCountryClick()

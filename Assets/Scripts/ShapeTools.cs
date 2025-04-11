@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System;
 using UnityEngine.UIElements;
 using System.Data.Common;
+using UnityEngine.Rendering;
 
 public class ShapeTools
 {
@@ -56,6 +57,39 @@ public class ShapeTools
         
         
         return indices.ToArray();
+    }
+    public static bool FasterLineSegmentIntersection (Vector2 line1point1, Vector2 line1point2, Vector2 line2point1, Vector2 line2point2) {
+        Vector2 a = line1point2 - line1point1;
+        Vector2 b = line2point1 - line2point2;
+        Vector2 c = line1point1 - line2point1;
+
+        float alphaNumerator = b.y * c.x - b.x * c.y;
+        float betaNumerator  = a.x * c.y - a.y * c.x;
+        float denominator    = a.y * b.x - a.x * b.y;
+
+        if (denominator == 0) {
+            return false;
+        } else if (denominator > 0) {
+            if (alphaNumerator < 0 || alphaNumerator > denominator || betaNumerator < 0 || betaNumerator > denominator) {
+                return false;
+            }
+        } else if (alphaNumerator > 0 || alphaNumerator < denominator || betaNumerator > 0 || betaNumerator < denominator) {
+            return false;
+        }
+        return true;
+    }
+
+    public static bool IsIntersecting(List<Vector2> points){
+        for(int i=0;i<points.Count-3;i++){
+            Vector2 A = points[i];
+            Vector2 B = points[i+1];
+            for(int j=i+2;j<points.Count-1;j++){
+                Vector2 C = points[j];
+                Vector2 D = points[j+1];
+                if(FasterLineSegmentIntersection(A,B,C,D)){return false;}
+            }
+        }
+        return true;
     }
 
     public static bool IsClockwise(List<Vector2> points)
