@@ -103,6 +103,13 @@ public class ShapeTools
             line.positionCount = points.Count;
             line.loop = true;
             line.widthMultiplier = stroke;
+            if (line.sharedMaterial == null) 
+            {
+                Material lineMaterial = new Material(Shader.Find("Unlit/Color"));
+                Debug.Log("Kolor ustalony!");
+                lineMaterial.color = Color.black;
+                line.material = lineMaterial;
+            }
             for (int i = 0; i < points.Count; i++)
             {
                 line.SetPosition(i, new Vector3(points[i].x, points[i].y, -1));
