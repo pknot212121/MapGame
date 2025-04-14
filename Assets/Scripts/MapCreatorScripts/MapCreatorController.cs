@@ -31,6 +31,7 @@ public class MapCreatorController : MonoBehaviour
     Map map = new Map();
 
     bool isProvinceShapeFormed = false;
+
     public Country countryAdjusted = null;
 
     List<Vector2> provincePoints = null;
@@ -133,55 +134,72 @@ public class MapCreatorController : MonoBehaviour
     {
         if(countryAdjusted != null) countryAdjusted.SetColorFromHex(countryHexColorInput.text);
     }
+    public void ProvinceShapeFormLogic(){
+        deleted.Clear();
+        Vector3 worldPosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+        if(Input.GetKey(KeyCode.LeftControl)){
+            cursor.transform.position = NearestPoint((Vector2)worldPosition,-2);
+            if(Input.GetKeyDown(KeyCode.Z) && temporaryMarks.transform.childCount>0){
+                Destroy(temporaryMarks.transform.GetChild(temporaryMarks.transform.childCount -1).gameObject);
+                provincePoints.RemoveAt(provincePoints.Count-1);
+            }
+        }
+        else
+        {
+            worldPosition.z = -2;
+            cursor.transform.position = worldPosition;
+        }
+        if(Input.GetMouseButtonDown(0) && !IsPointerOverSpecificCanvas(provincePointsCanvas))
+        {
+            GameObject prefab = Resources.Load<GameObject>("Prefabs/PointMark");
+            GameObject mark = Instantiate(prefab, cursor.transform.position, Quaternion.identity);
+            mark.transform.SetParent(temporaryMarks.transform);
+            provincePoints.Add((Vector2)cursor.transform.position);
+        }
+    }
+    public void DeletingAndReturingProvincesLogic(){
+        if(Input.GetKey(KeyCode.LeftControl) && Input.GetKeyDown(KeyCode.Z)){
+            Province lastProvince = provinces[provinces.Count-1];
+            foreach(Vector2 point in lastProvince.points){
+                allPoints.Remove(point);
+            }
+            provinces.Remove(lastProvince);
+            deleted.Push(lastProvince);
+            Destroy(lastProvince.gameObject);
+        }
+        if(Input.GetKey(KeyCode.LeftControl) && Input.GetKeyDown(KeyCode.Y) && deleted.Count>0){
+            Province newProvince = deleted.Pop();
+            Province province = ShapeTools.CreateProvince(newProvince.name, newProvince.points);
+            provinces.Add(province);
+            foreach(Vector2 point in province.points){
+                allPoints.Add(point);
+            }
+        }
+    }
+    public void AddingProvincesToCountriesLogic(){
+        Vector3 worldPosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+        if(Input.GetMouseButtonDown(0)){
+            foreach(Province province in provinces){
+                if(ShapeTools.IsPointInPolygon((Vector2)worldPosition,province.points.ToArray())){
+                    countryAdjusted.AddProvince(province);
+                    break;
+                }
+            }
+            
+        }
+    }
 
     void Update()
     {
         if(isProvinceShapeFormed)
         {
-            deleted.Clear();
-            Vector3 worldPosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-            if(Input.GetKey(KeyCode.LeftControl)){
-                cursor.transform.position = NearestPoint((Vector2)worldPosition,-2);
-                if(Input.GetKeyDown(KeyCode.Z) && temporaryMarks.transform.childCount>0){
-                    Destroy(temporaryMarks.transform.GetChild(temporaryMarks.transform.childCount -1).gameObject);
-                    provincePoints.RemoveAt(provincePoints.Count-1);
-
-                }
-            }
-            else
-            {
-                worldPosition.z = -2;
-                cursor.transform.position = worldPosition;
-            }
-            if(Input.GetMouseButtonDown(0) && !IsPointerOverSpecificCanvas(provincePointsCanvas))
-            {
-                GameObject prefab = Resources.Load<GameObject>("Prefabs/PointMark");
-                GameObject mark = Instantiate(prefab, cursor.transform.position, Quaternion.identity);
-                mark.transform.SetParent(temporaryMarks.transform);
-                provincePoints.Add((Vector2)cursor.transform.position);
-            }
+            ProvinceShapeFormLogic();
         }
         else{
-            
-            if(Input.GetKey(KeyCode.LeftControl) && Input.GetKeyDown(KeyCode.Z)){
-                Province lastProvince = provinces[provinces.Count-1];
-                foreach(Vector2 point in lastProvince.points){
-                    allPoints.Remove(point);
-                }
-                provinces.Remove(lastProvince);
-                deleted.Push(lastProvince);
-                Destroy(lastProvince.gameObject);
-            }
-            if(Input.GetKey(KeyCode.LeftControl) && Input.GetKeyDown(KeyCode.Y) && deleted.Count>0){
-                Province newProvince = deleted.Pop();
-                Province province = ShapeTools.CreateProvince(newProvince.name, newProvince.points);
-                provinces.Add(province);
-                foreach(Vector2 point in province.points){
-                    allPoints.Add(point);
-                }
-                
-            }
-
+            DeletingAndReturingProvincesLogic();
+        }
+        if(countryAdjusted != null){
+            AddingProvincesToCountriesLogic();
         }
     }
 

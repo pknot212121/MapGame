@@ -4,6 +4,7 @@ using System;
 using UnityEngine.UIElements;
 using System.Data.Common;
 using UnityEngine.Rendering;
+using System.Drawing;
 
 public class ShapeTools
 {
@@ -121,6 +122,37 @@ public class ShapeTools
     {
         return v1.x * v2.y - v1.y * v2.x;
     }
+    public static bool IsPointInPolygon( Vector2 p, Vector2[] polygon )
+    {
+        double minX = polygon[ 0 ].x;
+        double maxX = polygon[ 0 ].x;
+        double minY = polygon[ 0 ].y;
+        double maxY = polygon[ 0 ].y;
+        for ( int i = 1 ; i < polygon.Length ; i++ )
+        {
+            Vector2 q = polygon[ i ];
+            minX = Math.Min( q.x, minX );
+            maxX = Math.Max( q.x, maxX );
+            minY = Math.Min( q.y, minY );
+            maxY = Math.Max( q.y, maxY );
+        }
+
+        if ( p.x < minX || p.x > maxX || p.y < minY || p.y > maxY )
+        {
+            return false;
+        }
+        bool inside = false;
+        for ( int i = 0, j = polygon.Length - 1 ; i < polygon.Length ; j = i++ )
+        {
+            if ( ( polygon[ i ].y > p.y ) != ( polygon[ j ].y > p.y ) &&
+                p.x < ( polygon[ j ].x - polygon[ i ].x ) * ( p.y - polygon[ i ].y ) / ( polygon[ j ].y - polygon[ i ].y ) + polygon[ i ].x )
+            {
+                inside = !inside;
+            }
+        }
+
+        return inside;
+    }
 
     public static GameObject CreateShape(string name, List<Vector2> points, float stroke)
     {
@@ -141,7 +173,7 @@ public class ShapeTools
             {
                 Material lineMaterial = new Material(Shader.Find("Unlit/Color"));
                 Debug.Log("Kolor ustalony!");
-                lineMaterial.color = Color.black;
+                lineMaterial.color = UnityEngine.Color.black;
                 line.material = lineMaterial;
             }
             for (int i = 0; i < points.Count; i++)

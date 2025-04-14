@@ -6,7 +6,7 @@ public class Country
 {
     public string name;
     public Color color;
-    public List<Province> provinces;
+    public List<Province> provinces = new List<Province>();
 
     public void SetColorFromHex(string hex)
     {
