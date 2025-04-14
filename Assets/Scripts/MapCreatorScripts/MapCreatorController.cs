@@ -23,8 +23,8 @@ public class MapCreatorController : MonoBehaviour
     [SerializeField] private TMP_InputField countryAdjustmentNameInput;
     [SerializeField] private TMP_InputField countryHexColorInput;
 
-    List<Province> provinces = new List<Province>();
-    List<Country> countries = new List<Country>();
+    public List<Province> provinces = new List<Province>();
+    public List<Country> countries = new List<Country>();
 
     Stack<Province> deleted = new Stack<Province>();
 

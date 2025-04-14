@@ -10,10 +10,10 @@ public class CameraMovement : MonoBehaviour
     void FixedUpdate()
     {
         Vector3 pos = transform.position;
-        if(Input.GetKey(KeyCode.A)) pos.x -= speed;
-        if(Input.GetKey(KeyCode.W)) pos.y += speed;
-        if(Input.GetKey(KeyCode.D)) pos.x += speed;
-        if(Input.GetKey(KeyCode.S)) pos.y -= speed;
+        if(Input.GetKey(KeyCode.LeftArrow)) pos.x -= speed;
+        if(Input.GetKey(KeyCode.UpArrow)) pos.y += speed;
+        if(Input.GetKey(KeyCode.RightArrow)) pos.x += speed;
+        if(Input.GetKey(KeyCode.DownArrow)) pos.y -= speed;
         transform.position = pos;
     }
 
