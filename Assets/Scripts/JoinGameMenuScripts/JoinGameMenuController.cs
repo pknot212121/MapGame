@@ -35,6 +35,11 @@ public class JoinGameMenuController : MonoBehaviour
         NetworkController.me.HostGame(name);
     }
 
+    public void RefreshClick()
+    {
+        NetworkController.me.RefreshRoomList();
+    }
+
     public void BackClick()
     {
         SceneManager.LoadScene("Menu", LoadSceneMode.Single);
