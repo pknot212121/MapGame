@@ -32,7 +32,7 @@ public class JoinGameMenuController : MonoBehaviour
             }
         }
         else name = gameNameInput.text;
-        NetworkController.me.HostGame(name);
+        NetworkController.me.CreateSession(name);
     }
 
     public void RefreshClick()
@@ -49,7 +49,7 @@ public class JoinGameMenuController : MonoBehaviour
     {
         foreach (Transform child in gamesListContentTransform) { Destroy(child.gameObject); }
 
-        GameObject prefab = Resources.Load<GameObject>("Prefabs/GamePanelPrefab");
+        GameObject prefab = Resources.Load<GameObject>("Prefabs/GamePanelPrefab2");
         foreach(var session in sessionList)
         {
             Debug.Log(session.Name);
