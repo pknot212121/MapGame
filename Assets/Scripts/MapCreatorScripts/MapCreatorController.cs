@@ -109,6 +109,14 @@ public class MapCreatorController : MonoBehaviour
 
         Country country = new Country();
         country.name = countryName;
+        while(country.color == new Color())
+        {
+            country.color = new Color(Random.value, Random.value, Random.value);
+            foreach(Country c in MapCreatorController.me.countries)
+            {
+                if(country.color == c.color) country.color = new Color();
+            }
+        }
         countries.Add(country);
 
         GameObject prefab = Resources.Load<GameObject>("Prefabs/CountryButton");
