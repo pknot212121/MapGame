@@ -59,6 +59,7 @@ public class ShapeTools
         
         return indices.ToArray();
     }
+    
     public static bool FasterLineSegmentIntersection (Vector2 line1point1, Vector2 line1point2, Vector2 line2point1, Vector2 line2point2) {
         Vector2 a = line1point2 - line1point1;
         Vector2 b = line2point1 - line2point2;
@@ -181,7 +182,7 @@ public class ShapeTools
                 line.SetPosition(i, new Vector3(points[i].x, points[i].y, -1));
             }
         }
-        meshRenderer.material = new Material(Shader.Find("Standard"));
+        meshRenderer.material = new Material(Shader.Find("Unlit/Color"));
 
         Mesh mesh = new Mesh();
         meshFilter.mesh = mesh;

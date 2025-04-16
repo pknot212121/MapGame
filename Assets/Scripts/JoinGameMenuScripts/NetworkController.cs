@@ -49,7 +49,8 @@ public class NetworkController : MonoBehaviour, INetworkRunnerCallbacks
         {
             GameMode = GameMode.Shared,
             SessionName = name,
-            PlayerCount = 6
+            PlayerCount = 6,
+            Scene = gameSceneRef
         });
     }
 
@@ -60,6 +61,7 @@ public class NetworkController : MonoBehaviour, INetworkRunnerCallbacks
         {
             GameMode = GameMode.Shared,
             SessionName = session.Name,
+            Scene = gameSceneRef
         });
     }
 

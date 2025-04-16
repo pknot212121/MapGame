@@ -20,44 +20,56 @@ public class Country
 
     public void SetColorFromHex(string hex)
     {
-        if(!Regex.IsMatch(hex, "^#[0-9A-F]{6}$")){
-            foreach(string name in colorsFromText.Keys){
-                if(hex.ToLower()==name){
-                    color=colorsFromText[name];
+        Color c = Color.grey;
+        if(Regex.IsMatch(hex, "^#[0-9A-Fa-f]{6}$")) ColorUtility.TryParseHtmlString(hex, out c);
+        else if(Regex.IsMatch(hex, "^[0-9A-Fa-f]{6}$")) ColorUtility.TryParseHtmlString("#" + hex, out c);
+        else 
+        {
+            foreach(string name in colorsFromText.Keys)
+            {
+                if(hex.ToLower()==name)
+                {
+                    c = colorsFromText[name];
                     break;
                 }
             }
         }
-        else{ColorUtility.TryParseHtmlString(hex, out color);}
+        if(c == null)
+        {
+            Debug.Log("Error applying color");
+            return;
+        }
+        foreach(Country country in MapCreatorController.me.countries)
+        {
+            if(country.color == c && country != this)
+            {
+                Debug.Log("2 countries can't have the same color");
+                return;
+            }
+        }
+        color = c;
         
         foreach(Province p in provinces)
         {
+            Debug.Log("Setting color to " + color);
             p.SetColor(color);
         }
     }
 
     public void AddProvince(Province province)
     {
-        bool areColorsColliding = false;
         foreach (Country country in MapCreatorController.me.countries)
         {
-            if(country != this && country.color == color){
-                Debug.Log("Dwa państwa nie mogą mieć takiego samego koloru!!!");
-                areColorsColliding=true;
-            }
-        }
-        if(!areColorsColliding){
-            province.country = this;
-            provinces.Add(province);
-            province.SetColor(color);
-            foreach (Country country in MapCreatorController.me.countries)
+            if(country.provinces.Contains(province))
             {
-                if(country.provinces.Contains(province)){
-                    country.provinces.Remove(province);
-                    break;
-                }
+                country.provinces.Remove(province);
+                break;
             }
         }
+
+        province.country = this;
+        provinces.Add(province);
+        province.SetColor(color);
         
         if(MapCreatorController.me.countryAdjusted != null)
         {

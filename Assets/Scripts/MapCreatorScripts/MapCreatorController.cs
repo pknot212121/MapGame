@@ -132,6 +132,7 @@ public class MapCreatorController : MonoBehaviour
 
     public void CountryHexColorInput()
     {
+        Debug.Log("Color change");
         if(countryAdjusted != null) countryAdjusted.SetColorFromHex(countryHexColorInput.text);
     }
     public void ProvinceShapeFormLogic(){
