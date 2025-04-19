@@ -21,13 +21,10 @@ public class MapManagement{
         Debug.Log("Ścieżka zapisu: " + Application.persistentDataPath);
         System.IO.File.WriteAllText(path,json);
     }
-    public static void LoadMapFromJson(string filename){
+    public static string LoadMapFromJson(string filename){
         string path =  Application.persistentDataPath + "/" + filename + ".json";
         string json = System.IO.File.ReadAllText(path);
-        AllProvincesData allData = JsonUtility.FromJson<AllProvincesData>(json);
-        foreach(ProvinceData data in allData.allProvinces){
-            Debug.Log(data.name);
-        }
+        return json;
 
     }
 }

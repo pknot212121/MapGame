@@ -181,11 +181,9 @@ public class MapCreatorController : MonoBehaviour
         if(Input.GetKey(KeyCode.LeftControl) && Input.GetKeyDown(KeyCode.S)){
             if(mapNameInput.text!=null){
                 MapManagement.LoadMapIntoJson(mapNameInput.text);
-                MapManagement.LoadMapFromJson(mapNameInput.text);
             }
             else{
                 MapManagement.LoadMapIntoJson("map");
-                MapManagement.LoadMapFromJson("map");
             }
         }
     }

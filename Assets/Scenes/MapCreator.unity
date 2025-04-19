@@ -2705,7 +2705,7 @@ GameObject:
   - component: {fileID: 834004161}
   - component: {fileID: 834004160}
   m_Layer: 5
-  m_Name: InputField (TMP)
+  m_Name: MapInput
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -3922,6 +3922,7 @@ MonoBehaviour:
   countryNameInput: {fileID: 1061974036}
   countryAdjustmentNameInput: {fileID: 699083844}
   countryHexColorInput: {fileID: 336302585}
+  mapNameInput: {fileID: 834004160}
   provinces: []
 --- !u!4 &1337233936
 Transform:

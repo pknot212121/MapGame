@@ -5,6 +5,7 @@ using Fusion;
 using Fusion.Sockets;
 using System.Threading.Tasks;
 using UnityEngine.SceneManagement;
+using TMPro;
 
 
 
@@ -41,13 +42,16 @@ public class NetworkController : MonoBehaviour, INetworkRunnerCallbacks
         }
     }
 
-    public async void CreateSession(string name)
+    public async void CreateSession(string name,string mapData)
     {
         int num = UnityEngine.Random.Range(1000, 9999);
         if (runner == null) runner = gameObject.AddComponent<NetworkRunner>();
         await runner.StartGame(new StartGameArgs()
         {
             GameMode = GameMode.Shared,
+            SessionProperties = new Dictionary<string, SessionProperty>{
+                ["mapdata"] = mapData
+            }, 
             SessionName = name,
             PlayerCount = 6,
             Scene = gameSceneRef

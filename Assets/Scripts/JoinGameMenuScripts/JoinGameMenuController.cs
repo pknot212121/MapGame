@@ -12,7 +12,11 @@ public class JoinGameMenuController : MonoBehaviour
     public Transform gamesListContentTransform;
     public static JoinGameMenuController me;
 
+    public string mapData = null;
+
     [SerializeField] private TMP_InputField gameNameInput;
+
+    [SerializeField] private TMP_InputField mapNameInput;
 
     void Start()
     {
@@ -32,12 +36,20 @@ public class JoinGameMenuController : MonoBehaviour
             }
         }
         else name = gameNameInput.text;
-        NetworkController.me.CreateSession(name);
+        NetworkController.me.CreateSession(name,mapData);
     }
 
     public void RefreshClick()
     {
         NetworkController.me.RefreshRoomList();
+    }
+
+    public void ChooseMapClick(){
+        if(mapNameInput.text!=null){
+            mapData = MapManagement.LoadMapFromJson(mapNameInput.text);
+            Debug.Log(mapData);
+        }
+        else{Debug.Log("Wpisz nazwę!!!");}
     }
 
     public void BackClick()
