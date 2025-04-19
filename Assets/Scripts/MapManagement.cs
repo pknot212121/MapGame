@@ -17,7 +17,7 @@ public class MapManagement{
             else{data.countryName = province.country.name;}
             allData.allProvinces.Add(data);
         }
-        string json = JsonUtility.ToJson(allData,prettyPrint: true);
+        string json = JsonUtility.ToJson(allData);
         Debug.Log("Ścieżka zapisu: " + Application.persistentDataPath);
         System.IO.File.WriteAllText(path,json);
     }

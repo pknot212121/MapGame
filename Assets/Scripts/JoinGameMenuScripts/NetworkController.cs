@@ -45,13 +45,13 @@ public class NetworkController : MonoBehaviour, INetworkRunnerCallbacks
     public async void CreateSession(string name,string mapData)
     {
         int num = UnityEngine.Random.Range(1000, 9999);
+        Dictionary<string, SessionProperty> dicti = new Dictionary<string, SessionProperty>();
+        dicti["mapdata"]=mapData;
         if (runner == null) runner = gameObject.AddComponent<NetworkRunner>();
         await runner.StartGame(new StartGameArgs()
         {
             GameMode = GameMode.Shared,
-            SessionProperties = new Dictionary<string, SessionProperty>{
-                ["mapdata"] = mapData
-            }, 
+            SessionProperties = dicti,
             SessionName = name,
             PlayerCount = 6,
             Scene = gameSceneRef
