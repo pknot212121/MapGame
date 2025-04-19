@@ -7,16 +7,27 @@ using UnityEngine.Rendering;
 
 public class MapManagement{
     public static void LoadMapIntoJson(string filename){
+        string path =  Application.persistentDataPath + "/" + filename + ".json";
+        AllProvincesData allData = new AllProvincesData();
         foreach(Province province in MapCreatorController.me.provinces){
             ProvinceData data = new ProvinceData();
             data.name = province.name;
             data.points = province.points;
-            data.countryName = province.country.name;
-            string json = JsonUtility.ToJson(data,prettyPrint: true);
-            string path =  Application.persistentDataPath + "/" + filename + ".json";
-            System.IO.File.WriteAllText(path,json);
+            if(province.country==null){data.countryName="";}
+            else{data.countryName = province.country.name;}
+            allData.allProvinces.Add(data);
         }
-        
+        string json = JsonUtility.ToJson(allData,prettyPrint: true);
+        Debug.Log("Ścieżka zapisu: " + Application.persistentDataPath);
+        System.IO.File.WriteAllText(path,json);
+    }
+    public static void LoadMapFromJson(string filename){
+        string path =  Application.persistentDataPath + "/" + filename + ".json";
+        string json = System.IO.File.ReadAllText(path);
+        AllProvincesData allData = JsonUtility.FromJson<AllProvincesData>(json);
+        foreach(ProvinceData data in allData.allProvinces){
+            Debug.Log(data.name);
+        }
 
     }
 }

@@ -22,20 +22,14 @@ public class MapCreatorController : MonoBehaviour
     [SerializeField] private TMP_InputField countryNameInput;
     [SerializeField] private TMP_InputField countryAdjustmentNameInput;
     [SerializeField] private TMP_InputField countryHexColorInput;
+    [SerializeField] private TMP_InputField mapNameInput;
 
     public List<Province> provinces = new List<Province>();
     public List<Country> countries = new List<Country>();
-
     Stack<Province> deleted = new Stack<Province>();
-
-    Map map = new Map();
-
     bool isProvinceShapeFormed = false;
-
     public Country countryAdjusted = null;
-
     List<Vector2> provincePoints = null;
-    private Keyboard keyboard;
     List<Vector2> allPoints = new List<Vector2>();
 
     public static MapCreatorController me;
@@ -182,6 +176,16 @@ public class MapCreatorController : MonoBehaviour
             provinces.Add(province);
             foreach(Vector2 point in province.points){
                 allPoints.Add(point);
+            }
+        }
+        if(Input.GetKey(KeyCode.LeftControl) && Input.GetKeyDown(KeyCode.S)){
+            if(mapNameInput.text!=null){
+                MapManagement.LoadMapIntoJson(mapNameInput.text);
+                MapManagement.LoadMapFromJson(mapNameInput.text);
+            }
+            else{
+                MapManagement.LoadMapIntoJson("map");
+                MapManagement.LoadMapFromJson("map");
             }
         }
     }
