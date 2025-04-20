@@ -15,6 +15,11 @@ public class NetworkController : MonoBehaviour, INetworkRunnerCallbacks
     private NetworkRunner runner;
     public static NetworkController me;
 
+    public NetworkRunner GetRunner()
+    {
+        return runner;
+    }
+
     async void Start()
     {
         me = this;
