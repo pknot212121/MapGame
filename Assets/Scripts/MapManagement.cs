@@ -13,8 +13,8 @@ public class MapManagement{
             ProvinceData data = new ProvinceData();
             data.name = province.name;
             data.points = province.points;
-            if(province.country==null){data.countryName="";}
-            else{data.countryName = province.country.name;}
+            if(province.country==null){data.countryName="";data.color=Color.white;}
+            else{data.countryName = province.country.name;data.color=province.country.color;}
             allData.allProvinces.Add(data);
         }
         string json = JsonUtility.ToJson(allData);

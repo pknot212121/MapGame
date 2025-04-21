@@ -15,6 +15,9 @@ public class NetworkController : MonoBehaviour, INetworkRunnerCallbacks
     private NetworkRunner runner;
     public static NetworkController me;
 
+    [Header("Game Prefabs")]
+    public GameObject sessionDataPrefab;
+
     public NetworkRunner GetRunner()
     {
         return runner;
@@ -47,17 +50,17 @@ public class NetworkController : MonoBehaviour, INetworkRunnerCallbacks
         }
     }
 
-    public async void CreateSession(string name,string mapData)
+    public async void CreateSession(string name,string filename)
     {
         int num = UnityEngine.Random.Range(1000, 9999);
-        Dictionary<string, SessionProperty> dicti = new Dictionary<string, SessionProperty>();
-        dicti["mapdata"]=mapData;
         if (runner == null) runner = gameObject.AddComponent<NetworkRunner>();
+        Dictionary<string,SessionProperty> properites = new Dictionary<string, SessionProperty>();
+        properites["filename"]=filename;
         await runner.StartGame(new StartGameArgs()
         {
             GameMode = GameMode.Shared,
-            SessionProperties = dicti,
             SessionName = name,
+            SessionProperties = properites,
             PlayerCount = 6,
             Scene = gameSceneRef
         });
@@ -100,7 +103,12 @@ public class NetworkController : MonoBehaviour, INetworkRunnerCallbacks
     public void OnHostMigration(NetworkRunner runner, HostMigrationToken hostMigrationToken) { }
     public void OnInput(NetworkRunner runner, NetworkInput input) { }
     public void OnInputMissing(NetworkRunner runner, PlayerRef player, NetworkInput input) { }
-    public void OnPlayerJoined(NetworkRunner runner, PlayerRef player) { }
+    public void OnPlayerJoined(NetworkRunner runner, PlayerRef player) {
+        if(runner.IsSharedModeMasterClient){
+            runner.Spawn(sessionDataPrefab,Vector3.zero,Quaternion.identity, inputAuthority: null);
+            Debug.Log("Spawnuję!");
+        }
+     }
     public void OnPlayerLeft(NetworkRunner runner, PlayerRef player) { }
     public void OnSceneLoadDone(NetworkRunner runner) { }
     public void OnSceneLoadStart(NetworkRunner runner) { }

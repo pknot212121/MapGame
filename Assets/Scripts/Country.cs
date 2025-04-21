@@ -17,6 +17,11 @@ public class Country
         ["white"] = Color.white,
         ["grey"] = Color.grey
     };
+    public Country(){}
+    public Country(string _name,Color _color){
+        name=_name;
+        color=_color;
+    }
 
     public void SetColorFromHex(string hex)
     {

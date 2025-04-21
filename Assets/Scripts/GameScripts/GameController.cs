@@ -5,21 +5,26 @@ using System;
 
 public class GameController : MonoBehaviour
 {
-    List<Province> provinces = new List<Province>();
-    
+    string mapData=null;
     void Start(){
-        NetworkRunner runner = NetworkController.me.GetRunner();
-        IReadOnlyDictionary<string, SessionProperty> sessionProperties = runner.SessionInfo.Properties;
-        if (sessionProperties.TryGetValue("mapdata", out SessionProperty mapDataProperty))
-        {
-            string mapDataJson = mapDataProperty;
-            Debug.Log(mapDataJson);
-            List<Province> provinces = new List<Province>();
-            AllProvincesData allProvincesData = JsonUtility.FromJson<AllProvincesData>(mapDataJson);
-            foreach(ProvinceData data in allProvincesData.allProvinces){
-                Province province = ShapeTools.CreateProvince(data.name,data.points);
-                provinces.Add(province);
+
+    }
+    void Update(){
+        if(mapData==null){
+            if(MapLoading.Instance!=null){
+                Debug.Log("Wykryto instancję!");
+                mapData = MapLoading.Instance.dataJson;
+                Debug.Log(mapData);
+                AllProvincesData allProvinces = JsonUtility.FromJson<AllProvincesData>(mapData);
+                foreach(ProvinceData provinceData in allProvinces.allProvinces){
+                    Province province = ShapeTools.CreateProvince(provinceData.name,provinceData.points);
+                    province.SetColor(provinceData.color);
+                }
+            }
+            else{
+                Debug.Log("Nie wykryto Instancji!");
             }
         }
     }
+
 }

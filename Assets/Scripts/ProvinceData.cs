@@ -7,4 +7,5 @@ public class ProvinceData{
     public string name;
     public List<Vector2> points = new List<Vector2>();
     public string countryName;
+    public Color color;
 }

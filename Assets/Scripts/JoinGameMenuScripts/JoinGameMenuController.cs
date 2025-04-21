@@ -12,7 +12,7 @@ public class JoinGameMenuController : MonoBehaviour
     public Transform gamesListContentTransform;
     public static JoinGameMenuController me;
 
-    public string mapData = null;
+    public string filename = null;
 
     [SerializeField] private TMP_InputField gameNameInput;
 
@@ -36,7 +36,7 @@ public class JoinGameMenuController : MonoBehaviour
             }
         }
         else name = gameNameInput.text;
-        NetworkController.me.CreateSession(name,mapData);
+        NetworkController.me.CreateSession(name,filename);
     }
 
     public void RefreshClick()
@@ -46,8 +46,7 @@ public class JoinGameMenuController : MonoBehaviour
 
     public void ChooseMapClick(){
         if(mapNameInput.text!=null){
-            mapData = MapManagement.LoadMapFromJson(mapNameInput.text);
-            Debug.Log(mapData);
+            filename = mapNameInput.text;
         }
         else{Debug.Log("Wpisz nazwę!!!");}
     }
