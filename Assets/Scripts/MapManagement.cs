@@ -4,6 +4,11 @@ using System;
 using UnityEngine.UIElements;
 using System.Data.Common;
 using UnityEngine.Rendering;
+using System.IO.Compression;
+using System.IO;
+using System.Text;
+using Fusion;
+using System.Drawing;
 
 public class MapManagement{
     public static void LoadMapIntoJson(string filename){
@@ -11,9 +16,11 @@ public class MapManagement{
         AllProvincesData allData = new AllProvincesData();
         foreach(Province province in MapCreatorController.me.provinces){
             ProvinceData data = new ProvinceData();
+            foreach(Vector2 point in province.points){
+                data.points.Add(point.x.ToString("F4")+";"+point.y.ToString("F4"));
+            }
             data.name = province.name;
-            data.points = province.points;
-            if(province.country==null){data.countryName="";data.color=Color.white;}
+            if(province.country==null){data.countryName="";data.color=UnityEngine.Color.white;}
             else{data.countryName = province.country.name;data.color=province.country.color;}
             allData.allProvinces.Add(data);
         }
@@ -26,5 +33,26 @@ public class MapManagement{
         string json = System.IO.File.ReadAllText(path);
         return json;
 
+    }
+    public static byte[] Compress(string data)
+    {
+        byte[] bytes = Encoding.UTF8.GetBytes(data);
+        using (var output = new MemoryStream())
+        {
+            using (var gzip = new GZipStream(output, System.IO.Compression.CompressionLevel.Optimal))
+            {
+                gzip.Write(bytes, 0, bytes.Length);
+            }
+            return output.ToArray();
+        }
+    }
+    public static string Decompress(byte[] compressedData)
+    {
+        using (var input = new MemoryStream(compressedData))
+        using (var gzip = new GZipStream(input, CompressionMode.Decompress))
+        using (var reader = new StreamReader(gzip))
+        {
+            return reader.ReadToEnd();
+        }
     }
 }

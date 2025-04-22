@@ -5,7 +5,7 @@ using System.Collections.Generic;
 [System.Serializable]
 public class ProvinceData{
     public string name;
-    public List<Vector2> points = new List<Vector2>();
+    public List<string> points = new List<string>();
     public string countryName;
     public Color color;
 }

@@ -7,6 +7,7 @@ using Unity.VisualScripting;
 using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
 using System.Linq;
+using System;
 
 public class MapCreatorController : MonoBehaviour
 {
@@ -105,7 +106,7 @@ public class MapCreatorController : MonoBehaviour
         country.name = countryName;
         while(country.color == new Color())
         {
-            country.color = new Color(Random.value, Random.value, Random.value);
+            country.color = new Color(UnityEngine.Random.value, UnityEngine.Random.value, UnityEngine.Random.value);
             foreach(Country c in MapCreatorController.me.countries)
             {
                 if(country.color == c.color) country.color = new Color();
