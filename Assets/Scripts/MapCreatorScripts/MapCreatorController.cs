@@ -14,22 +14,30 @@ public class MapCreatorController : MonoBehaviour
     public Canvas canvas;
     public Canvas provincePointsCanvas;
     public Canvas countryAdjustmentCanvas;
+    public Canvas troopInfoAdjustmentCanvas;
 
     public GameObject temporaryMarks;
     public GameObject cursor;
-    public GameObject countriesListContent;
+    public Transform countriesListContentTransform;
+    public Transform troopInfosListContentTransform;
 
     [SerializeField] private TMP_InputField createProvinceNameInput;
     [SerializeField] private TMP_InputField countryNameInput;
+    [SerializeField] private TMP_InputField troopInfoNameInput;
     [SerializeField] private TMP_InputField countryAdjustmentNameInput;
     [SerializeField] private TMP_InputField countryHexColorInput;
     [SerializeField] private TMP_InputField mapNameInput;
 
     public List<Province> provinces = new List<Province>();
     public List<Country> countries = new List<Country>();
+    public List<ResourceInfo> resourceInfos = new List<ResourceInfo>();
+    public List<TroopInfo> troopInfos = new List<TroopInfo>();
     Stack<Province> deleted = new Stack<Province>();
+
     bool isProvinceShapeFormed = false;
     public Country countryAdjusted = null;
+    public TroopInfo troopInfoAdjusted = null;
+
     List<Vector2> provincePoints = null;
     List<Vector2> allPoints = new List<Vector2>();
 
@@ -116,9 +124,32 @@ public class MapCreatorController : MonoBehaviour
 
         GameObject prefab = Resources.Load<GameObject>("Prefabs/CountryButton");
         GameObject button = Instantiate(prefab);
-        button.transform.SetParent(countriesListContent.transform, false);
+        button.transform.SetParent(countriesListContentTransform, false);
         button.GetComponent<CountryButton>().Initialise(country);
         countryNameInput.text = "";
+    }
+
+    public void AddTroopInfoClick()
+    {
+        string troopInfoName = troopInfoNameInput.text;
+        if(troopInfoName.Length < 2)
+        {
+            Debug.Log("Troop name must consist of at least 2 characters!");
+            return;
+        }
+        if(troopInfos.Any(obj => obj.name == troopInfoName))
+        {
+            Debug.Log("Troop with such name already exists!");
+            return;
+        }
+
+        TroopInfo troopInfo = new TroopInfo(troopInfoName);
+        troopInfos.Add(troopInfo);
+        GameObject prefab = Resources.Load<GameObject>("Prefabs/TroopInfoButton");
+        GameObject button = Instantiate(prefab);
+        button.transform.SetParent(troopInfosListContentTransform, false);
+        button.GetComponent<TroopInfoButton>().Initialise(troopInfo);
+        troopInfoNameInput.text = "";
     }
 
     public void BackClick()
@@ -129,13 +160,14 @@ public class MapCreatorController : MonoBehaviour
     public void ExitClick()
     {
         countryAdjusted = null;
+        troopInfoAdjusted = null;
         canvas.gameObject.SetActive(true);
         countryAdjustmentCanvas.gameObject.SetActive(false);
+        troopInfoAdjustmentCanvas.gameObject.SetActive(false);
     }
 
     public void CountryHexColorInput()
     {
-        Debug.Log("Color change");
         if(countryAdjusted != null) countryAdjusted.SetColorFromHex(countryHexColorInput.text);
     }
     public void ProvinceShapeFormLogic(){
@@ -252,5 +284,13 @@ public class MapCreatorController : MonoBehaviour
         canvas.gameObject.SetActive(false);
         countryAdjustmentCanvas.gameObject.SetActive(true);
         countryAdjustmentNameInput.text = country.name;
+    }
+
+    public void EnterTroopInfoAdjustment(TroopInfo troopInfo)
+    {
+        troopInfoAdjusted = troopInfo;
+        canvas.gameObject.SetActive(false);
+        troopInfoAdjustmentCanvas.gameObject.SetActive(true);
+        TroopInfoAdjustmentPanel.me.Initialise();
     }
 }

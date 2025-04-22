@@ -36,7 +36,7 @@ public class JoinGameMenuController : MonoBehaviour
             }
         }
         else name = gameNameInput.text;
-        NetworkController.me.CreateSession(name,filename);
+        NetworkController.me.CreateSession(name, filename);
     }
 
     public void RefreshClick()
@@ -45,10 +45,14 @@ public class JoinGameMenuController : MonoBehaviour
     }
 
     public void ChooseMapClick(){
-        if(mapNameInput.text!=null){
+        // wylały mi się oczy jak to zobaczyłem
+        /*if(mapNameInput.text!=null){
             filename = mapNameInput.text;
         }
-        else{Debug.Log("Wpisz nazwę!!!");}
+        else{Debug.Log("Wpisz nazwę!!!");}*/
+
+        if(mapNameInput.text.Length >= 2) filename = mapNameInput.text; // domyślną wartością mapNameInput.text jest "" a nie null
+        else Debug.Log("Wpisz nazwę!!!"); // nie musisz dawać klamerek do pojedyńczego polecenia
     }
 
     public void BackClick()

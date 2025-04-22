@@ -21,6 +21,7 @@ public class GameController : MonoBehaviour
                 }
                 mapData = MapManagement.Decompress(mapDataEncoded);
                 Debug.Log(mapData);
+                Transform provinceParentObjectTransform = GameObject.Find("Provinces").transform;
                 AllProvincesData allProvinces = JsonUtility.FromJson<AllProvincesData>(mapData);
                 foreach(ProvinceData provinceData in allProvinces.allProvinces){
                     List<Vector2> points = new List<Vector2>();
@@ -31,6 +32,7 @@ public class GameController : MonoBehaviour
                     }
                     Province province = ShapeTools.CreateProvince(provinceData.name,points);
                     province.SetColor(provinceData.color);
+                    province.gameObject.transform.SetParent(provinceParentObjectTransform);
                 }
             }
             else{
