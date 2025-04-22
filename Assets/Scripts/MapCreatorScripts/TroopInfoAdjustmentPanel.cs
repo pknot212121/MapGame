@@ -31,7 +31,7 @@ public class TroopInfoAdjustmentPanel : MonoBehaviour
         foreach(ResourceInfo ri in MapCreatorController.me.resourceInfos)
         {
             ResourceCostPanel p = Instantiate(resourceCostPanelPrefab).GetComponent<ResourceCostPanel>();
-            p.gameObject.transform.SetParent(unitCostListContentTransform);
+            p.gameObject.transform.SetParent(unitCostListContentTransform, false);
             p.Initialise(ri);
         }
     }
@@ -45,7 +45,7 @@ public class TroopInfoAdjustmentPanel : MonoBehaviour
 
     public void PowerMultiplierInput()
     {
-        if(float.TryParse(powerMultiplierInput.text, out float result))
+        if(float.TryParse(powerMultiplierInput.text, out float result) && result >= 0)
         {
             MapCreatorController.me.troopInfoAdjusted.overallPowerMultiplier = result;
             powerMultiplierInput.text = result.ToString();

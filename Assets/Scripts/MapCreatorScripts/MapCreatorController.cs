@@ -15,14 +15,17 @@ public class MapCreatorController : MonoBehaviour
     public Canvas provincePointsCanvas;
     public Canvas countryAdjustmentCanvas;
     public Canvas troopInfoAdjustmentCanvas;
+    public Canvas resourceInfoAdjustmentCanvas;
 
     public GameObject temporaryMarks;
     public GameObject cursor;
     public Transform countriesListContentTransform;
+    public Transform resourceInfosListContentTransform;
     public Transform troopInfosListContentTransform;
 
     [SerializeField] private TMP_InputField createProvinceNameInput;
     [SerializeField] private TMP_InputField countryNameInput;
+    [SerializeField] private TMP_InputField resourceInfoNameInput;
     [SerializeField] private TMP_InputField troopInfoNameInput;
     [SerializeField] private TMP_InputField countryAdjustmentNameInput;
     [SerializeField] private TMP_InputField countryHexColorInput;
@@ -37,6 +40,7 @@ public class MapCreatorController : MonoBehaviour
     bool isProvinceShapeFormed = false;
     public Country countryAdjusted = null;
     public TroopInfo troopInfoAdjusted = null;
+    public ResourceInfo resourceInfoAdjusted = null;
 
     List<Vector2> provincePoints = null;
     List<Vector2> allPoints = new List<Vector2>();
@@ -129,6 +133,29 @@ public class MapCreatorController : MonoBehaviour
         countryNameInput.text = "";
     }
 
+    public void AddResourceInfoClick()
+    {
+        string resourceInfoName = resourceInfoNameInput.text;
+        if(resourceInfoName.Length < 2)
+        {
+            Debug.Log("Resource name must consist of at least 2 characters!");
+            return;
+        }
+        if(resourceInfos.Any(obj => obj.name == resourceInfoName))
+        {
+            Debug.Log("Resource with such name already exists!");
+            return;
+        }
+
+        ResourceInfo resourceInfo = new ResourceInfo(resourceInfoName);
+        resourceInfos.Add(resourceInfo);
+        GameObject prefab = Resources.Load<GameObject>("Prefabs/ResourceInfoButton");
+        GameObject button = Instantiate(prefab);
+        button.transform.SetParent(resourceInfosListContentTransform, false);
+        button.GetComponent<ResourceInfoButton>().Initialise(resourceInfo);
+        resourceInfoNameInput.text = "";
+    }
+
     public void AddTroopInfoClick()
     {
         string troopInfoName = troopInfoNameInput.text;
@@ -161,9 +188,11 @@ public class MapCreatorController : MonoBehaviour
     {
         countryAdjusted = null;
         troopInfoAdjusted = null;
+        resourceInfoAdjusted = null;
         canvas.gameObject.SetActive(true);
         countryAdjustmentCanvas.gameObject.SetActive(false);
         troopInfoAdjustmentCanvas.gameObject.SetActive(false);
+        resourceInfoAdjustmentCanvas.gameObject.SetActive(false);
     }
 
     public void CountryHexColorInput()
@@ -292,5 +321,13 @@ public class MapCreatorController : MonoBehaviour
         canvas.gameObject.SetActive(false);
         troopInfoAdjustmentCanvas.gameObject.SetActive(true);
         TroopInfoAdjustmentPanel.me.Initialise();
+    }
+
+    public void EnterResourceInfoAdjustment(ResourceInfo resourceInfo)
+    {
+        resourceInfoAdjusted = resourceInfo;
+        canvas.gameObject.SetActive(false);
+        resourceInfoAdjustmentCanvas.gameObject.SetActive(true);
+        ResourceInfoAdjustmentPanel.me.Initialise();
     }
 }
