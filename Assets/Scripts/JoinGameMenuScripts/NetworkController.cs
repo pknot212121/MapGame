@@ -108,6 +108,10 @@ public class NetworkController : MonoBehaviour, INetworkRunnerCallbacks
             runner.Spawn(sessionDataPrefab,Vector3.zero,Quaternion.identity, inputAuthority: null);
             Debug.Log("Spawnuję!");
         }
+        foreach(var p in runner.ActivePlayers)
+        {
+            Debug.Log(p);
+        }
      }
     public void OnPlayerLeft(NetworkRunner runner, PlayerRef player) { }
     public void OnSceneLoadDone(NetworkRunner runner) { }
