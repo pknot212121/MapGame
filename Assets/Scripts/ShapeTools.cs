@@ -209,8 +209,7 @@ public class ShapeTools
         if(!shape) return null;
 
         Province province = shape.AddComponent<Province>();
-        province.points = points;
-        province.name = name;
+        province.Initialise(name,points);
         GameObject parent = GameObject.Find("Provinces");
         if(parent) shape.transform.SetParent(parent.transform);
         return province;

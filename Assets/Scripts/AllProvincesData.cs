@@ -3,6 +3,11 @@ using System.IO;
 using System.Collections.Generic;
 
 [System.Serializable]
-public class AllProvincesData{
-    public List<ProvinceData> allProvinces = new List<ProvinceData>();
+public class Map{
+    public List<ProvinceData> provinces = new List<ProvinceData>();
+    public List<Country> countries = new List<Country>();
+    // public List<ResourceInfo> resources = new List<ResourceInfo>();
+
+    // public List<TroopInfo> troops = new List<TroopInfo>();
+
 }

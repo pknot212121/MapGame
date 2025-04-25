@@ -6,6 +6,7 @@ using Fusion.Sockets;
 using System.Threading.Tasks;
 using UnityEngine.SceneManagement;
 using TMPro;
+using System.Text;
 
 
 
@@ -107,11 +108,15 @@ public class NetworkController : MonoBehaviour, INetworkRunnerCallbacks
         if(runner.IsSharedModeMasterClient){
             runner.Spawn(sessionDataPrefab,Vector3.zero,Quaternion.identity, inputAuthority: null);
             Debug.Log("Spawnuję!");
+            runner.SendReliableDataToPlayer(player,ReliableKey.FromInts(42, 0, 21, 37),Encoding.UTF8.GetBytes(player.ToString()));
         }
         foreach(var p in runner.ActivePlayers)
         {
             Debug.Log(p);
         }
+        Debug.Log(runner.LocalPlayer);
+        if(runner.LocalPlayer.Equals(player)) Debug.Log("Równe!!!");
+
      }
     public void OnPlayerLeft(NetworkRunner runner, PlayerRef player) { }
     public void OnSceneLoadDone(NetworkRunner runner) { }

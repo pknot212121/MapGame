@@ -13,7 +13,7 @@ using System.Drawing;
 public class MapManagement{
     public static void LoadMapIntoJson(string filename){
         string path =  Application.persistentDataPath + "/" + filename + ".json";
-        AllProvincesData allData = new AllProvincesData();
+        Map allData = new Map();
         foreach(Province province in MapCreatorController.me.provinces){
             ProvinceData data = new ProvinceData();
             foreach(Vector2 point in province.points){
@@ -22,7 +22,7 @@ public class MapManagement{
             data.name = province.name;
             if(province.country==null){data.countryName="";data.color=UnityEngine.Color.white;}
             else{data.countryName = province.country.name;data.color=province.country.color;}
-            allData.allProvinces.Add(data);
+            allData.provinces.Add(data);
         }
         string json = JsonUtility.ToJson(allData);
         Debug.Log("Ścieżka zapisu: " + Application.persistentDataPath);

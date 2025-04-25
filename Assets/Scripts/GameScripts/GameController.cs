@@ -23,8 +23,8 @@ public class GameController : MonoBehaviour
                 mapData = MapManagement.Decompress(mapDataEncoded);
                 Debug.Log(mapData);
                 Transform provinceParentObjectTransform = GameObject.Find("Provinces").transform;
-                AllProvincesData allProvinces = JsonUtility.FromJson<AllProvincesData>(mapData);
-                foreach(ProvinceData provinceData in allProvinces.allProvinces){
+                Map allProvinces = JsonUtility.FromJson<Map>(mapData);
+                foreach(ProvinceData provinceData in allProvinces.provinces){
                     List<Vector2> points = new List<Vector2>();
                     foreach (string text in provinceData.points)
                     {
