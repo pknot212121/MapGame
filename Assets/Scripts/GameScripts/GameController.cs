@@ -7,7 +7,8 @@ public class GameController : MonoBehaviour
 {
     byte[] mapDataEncoded;
     string mapData=null;
-    void Start(){
+    void Start()
+    {
 
     }
     void Update(){
