@@ -31,11 +31,9 @@ public class MapCreatorController : MonoBehaviour
     [SerializeField] private TMP_InputField countryHexColorInput;
     [SerializeField] private TMP_InputField mapNameInput;
 
-    public List<Province> provinces = new List<Province>();
-    public List<Country> countries = new List<Country>();
-    public List<ResourceInfo> resourceInfos = new List<ResourceInfo>();
-    public List<TroopInfo> troopInfos = new List<TroopInfo>();
-    Stack<Province> deleted = new Stack<Province>();
+    public Map map;
+    public List<ProvinceGameObject> provinceGameObjects = new List<ProvinceGameObject>();
+    Stack<ProvinceGameObject> deleted = new Stack<ProvinceGameObject>();
 
     bool isProvinceShapeFormed = false;
     public Country countryAdjusted = null;
@@ -72,13 +70,13 @@ public class MapCreatorController : MonoBehaviour
             return;
         }
         if(ShapeTools.IsIntersecting(provincePoints)){
-            Province province = ShapeTools.CreateProvince(provinceName, provincePoints);
+            ProvinceGameObject province = ShapeTools.CreateProvinceGameObject(provinceName, provincePoints);
             if(!province) 
             {
                 Debug.Log("Couldn't create the shape!");
                 return;
             }
-            provinces.Add(province);
+            provinceGameObjects.Add(province);
             foreach(Vector2 point in provincePoints){allPoints.Add(point);}
         }
         else{Debug.Log("Krawędzie się przecinają!");}
@@ -105,7 +103,7 @@ public class MapCreatorController : MonoBehaviour
             Debug.Log("Country name must consist of at least 2 characters!");
             return;
         }
-        foreach(Country c in countries)
+        foreach(Country c in map.countries)
         {
             if(c.name == countryName)
             {
@@ -119,12 +117,12 @@ public class MapCreatorController : MonoBehaviour
         while(country.color == new Color())
         {
             country.color = new Color(UnityEngine.Random.value, UnityEngine.Random.value, UnityEngine.Random.value);
-            foreach(Country c in MapCreatorController.me.countries)
+            foreach(Country c in MapCreatorController.me.map.countries)
             {
                 if(country.color == c.color) country.color = new Color();
             }
         }
-        countries.Add(country);
+        map.countries.Add(country);
 
         GameObject prefab = Resources.Load<GameObject>("Prefabs/CountryButton");
         GameObject button = Instantiate(prefab);
@@ -141,14 +139,14 @@ public class MapCreatorController : MonoBehaviour
             Debug.Log("Resource name must consist of at least 2 characters!");
             return;
         }
-        if(resourceInfos.Any(obj => obj.name == resourceInfoName))
+        if(map.resourceInfos.Any(obj => obj.name == resourceInfoName))
         {
             Debug.Log("Resource with such name already exists!");
             return;
         }
 
         ResourceInfo resourceInfo = new ResourceInfo(resourceInfoName);
-        resourceInfos.Add(resourceInfo);
+        map.resourceInfos.Add(resourceInfo);
         GameObject prefab = Resources.Load<GameObject>("Prefabs/ResourceInfoButton");
         GameObject button = Instantiate(prefab);
         button.transform.SetParent(resourceInfosListContentTransform, false);
@@ -164,14 +162,14 @@ public class MapCreatorController : MonoBehaviour
             Debug.Log("Troop name must consist of at least 2 characters!");
             return;
         }
-        if(troopInfos.Any(obj => obj.name == troopInfoName))
+        if(map.troopInfos.Any(obj => obj.name == troopInfoName))
         {
             Debug.Log("Troop with such name already exists!");
             return;
         }
 
         TroopInfo troopInfo = new TroopInfo(troopInfoName);
-        troopInfos.Add(troopInfo);
+        map.troopInfos.Add(troopInfo);
         GameObject prefab = Resources.Load<GameObject>("Prefabs/TroopInfoButton");
         GameObject button = Instantiate(prefab);
         button.transform.SetParent(troopInfosListContentTransform, false);
@@ -224,18 +222,18 @@ public class MapCreatorController : MonoBehaviour
     }
     public void DeletingAndReturingProvincesLogic(){
         if(Input.GetKey(KeyCode.LeftControl) && Input.GetKeyDown(KeyCode.Z)){
-            Province lastProvince = provinces[provinces.Count-1];
+            ProvinceGameObject lastProvince = provinceGameObjects[provinceGameObjects.Count-1];
             foreach(Vector2 point in lastProvince.points){
                 allPoints.Remove(point);
             }
-            provinces.Remove(lastProvince);
+            provinceGameObjects.Remove(lastProvince);
             deleted.Push(lastProvince);
             Destroy(lastProvince.gameObject);
         }
         if(Input.GetKey(KeyCode.LeftControl) && Input.GetKeyDown(KeyCode.Y) && deleted.Count>0){
-            Province newProvince = deleted.Pop();
-            Province province = ShapeTools.CreateProvince(newProvince.name, newProvince.points);
-            provinces.Add(province);
+            ProvinceGameObject newProvince = deleted.Pop();
+            ProvinceGameObject province = ShapeTools.CreateProvinceGameObject(newProvince.name, newProvince.points);
+            provinceGameObjects.Add(province);
             foreach(Vector2 point in province.points){
                 allPoints.Add(point);
             }
@@ -252,9 +250,9 @@ public class MapCreatorController : MonoBehaviour
     public void AddingProvincesToCountriesLogic(){
         Vector3 worldPosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
         if(Input.GetMouseButtonDown(0)){
-            foreach(Province province in provinces){
+            foreach(ProvinceGameObject province in provinceGameObjects){
                 if(ShapeTools.IsPointInPolygon((Vector2)worldPosition,province.points.ToArray())){
-                    countryAdjusted.AddProvince(province);
+                    countryAdjusted.AddProvince(province.data);
                     break;
                 }
             }

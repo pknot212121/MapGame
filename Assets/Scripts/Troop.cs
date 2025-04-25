@@ -1,17 +1,8 @@
 using UnityEngine;
 using System.Collections.Generic;
 
-public class Troop : MonoBehaviour
+public class Troop
 {
     public Dictionary<TroopInfo,int> number;
     public Resource transportedResources;
-
-    void Start()
-    {
-        
-    }
-    void Update()
-    {
-        
-    }
 }

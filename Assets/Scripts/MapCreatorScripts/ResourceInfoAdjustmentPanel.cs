@@ -25,7 +25,7 @@ public class ResourceInfoAdjustmentPanel : MonoBehaviour
 
     public void ResourceInfoNameInput()
     {
-        if(resourceInfoNameInput.text.Length >= 2 && !MapCreatorController.me.resourceInfos.Any(obj => obj.name == resourceInfoNameInput.text))
+        if(resourceInfoNameInput.text.Length >= 2 && !MapCreatorController.me.map.resourceInfos.Any(obj => obj.name == resourceInfoNameInput.text))
             adjusted.name = resourceInfoNameInput.text;
         else resourceInfoNameInput.text = adjusted.name;
     }

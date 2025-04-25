@@ -28,7 +28,7 @@ public class TroopInfoAdjustmentPanel : MonoBehaviour
         {
             Destroy(t.gameObject);
         }
-        foreach(ResourceInfo ri in MapCreatorController.me.resourceInfos)
+        foreach(ResourceInfo ri in MapCreatorController.me.map.resourceInfos)
         {
             ResourceCostPanel p = Instantiate(resourceCostPanelPrefab).GetComponent<ResourceCostPanel>();
             p.gameObject.transform.SetParent(unitCostListContentTransform, false);
@@ -38,7 +38,7 @@ public class TroopInfoAdjustmentPanel : MonoBehaviour
 
     public void TroopInfoNameInput()
     {
-        if(troopInfoNameInput.text.Length >= 2 && !MapCreatorController.me.troopInfos.Any(obj => obj.name == troopInfoNameInput.text))
+        if(troopInfoNameInput.text.Length >= 2 && !MapCreatorController.me.map.troopInfos.Any(obj => obj.name == troopInfoNameInput.text))
             adjusted.name = troopInfoNameInput.text;
         else troopInfoNameInput.text = adjusted.name;
     }

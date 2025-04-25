@@ -1,32 +1,18 @@
-using System.Collections.Generic;
-using UnityEditor.UI;
 using UnityEngine;
+using System.IO;
+using System.Collections.Generic;
 
-public class Province : MonoBehaviour
+[System.Serializable]
+public class Province
 {
-    public new string name;
-    public List<Vector2> points = new List<Vector2>();
-    public Country country = null;
+    public string name;
+    public Country country;
+    public List<string> points = new List<string>();
 
-    Dictionary<ResourceInfo,double> resourceGeneration = new Dictionary<ResourceInfo,double>();
+    public ProvinceGameObject gameObject;
 
-    Resource resourceStockpiles;
-
-    int population;
-
-    public void SetColor(Color color)
+    public Province(string name)
     {
-        gameObject.GetComponent<MeshRenderer>().material.color = color;
-    }
-    public void Initialise(string name,List<Vector2> points){
         this.name = name;
-        this.points = points;
     }
-
-    // public void EvaluateTaxes(){
-    //     foreach(ResourceInfo resource in resourceGeneration.Keys){
-    //         Resource[resource]+=(int)(population*resourceGeneration[resource]*Random.Range(0.8f,1.2f));
-
-    //     }
-    // }
 }

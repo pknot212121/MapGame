@@ -32,13 +32,13 @@ public class ShapeTools
                            pair.Key != queue[2] &&
                            IsPointInTriangle(pair.Value,rest[queue[0]],rest[queue[1]],rest[queue[2]]))
                         {
-                            Debug.Log("Punkt w środku!!!");
+                            //Debug.Log("Punkt w środku!!!");
                             isIntersecting = true;
                             break;
                         }
                     }
                     if(isIntersecting == false && IsConvex(rest[queue[0]],rest[queue[1]],rest[queue[2]])){
-                        Debug.Log("Ucho!!!");
+                        //Debug.Log("Ucho!!!");
 
                         indices.Add(queue[0]);
                         indices.Add(queue[1]);
@@ -173,7 +173,7 @@ public class ShapeTools
             if (line.sharedMaterial == null) 
             {
                 Material lineMaterial = new Material(Shader.Find("Unlit/Color"));
-                Debug.Log("Kolor ustalony!");
+                //Debug.Log("Kolor ustalony!");
                 lineMaterial.color = UnityEngine.Color.black;
                 line.material = lineMaterial;
             }
@@ -203,13 +203,13 @@ public class ShapeTools
         return shapeObject;
     }
 
-    public static Province CreateProvince(string name, List<Vector2> points)
+    public static ProvinceGameObject CreateProvinceGameObject(string name, List<Vector2> points)
     {
         GameObject shape = ShapeTools.CreateShape("Province", points, 0.2f);
         if(!shape) return null;
 
-        Province province = shape.AddComponent<Province>();
-        province.Initialise(name,points);
+        ProvinceGameObject province = shape.AddComponent<ProvinceGameObject>();
+        province.Initialise(name, points);
         GameObject parent = GameObject.Find("Provinces");
         if(parent) shape.transform.SetParent(parent.transform);
         return province;

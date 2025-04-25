@@ -44,7 +44,7 @@ public class Country
             Debug.Log("Error applying color");
             return;
         }
-        foreach(Country country in MapCreatorController.me.countries)
+        foreach(Country country in MapCreatorController.me.map.countries)
         {
             if(country.color == c && country != this)
             {
@@ -56,14 +56,13 @@ public class Country
         
         foreach(Province p in provinces)
         {
-            Debug.Log("Setting color to " + color);
-            p.SetColor(color);
+            if(p.gameObject) p.gameObject.SetColor(color);
         }
     }
 
     public void AddProvince(Province province)
     {
-        foreach (Country country in MapCreatorController.me.countries)
+        foreach (Country country in MapCreatorController.me.map.countries)
         {
             if(country.provinces.Contains(province))
             {
@@ -74,7 +73,7 @@ public class Country
 
         province.country = this;
         provinces.Add(province);
-        province.SetColor(color);
+        if(province.gameObject) province.gameObject.SetColor(color);
         
         if(MapCreatorController.me.countryAdjusted != null)
         {
