@@ -752,7 +752,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 4386823209496361492, guid: 9a6e0ba0a35a70b4382d7d60256ff0b8, type: 3}
       propertyPath: m_Name
-      value: sessionManager
+      value: SessionManager
       objectReference: {fileID: 0}
     - target: {fileID: 5926345255680062293, guid: 9a6e0ba0a35a70b4382d7d60256ff0b8, type: 3}
       propertyPath: SortKey

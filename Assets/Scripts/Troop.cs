@@ -3,6 +3,6 @@ using System.Collections.Generic;
 
 public class Troop
 {
-    public Dictionary<TroopInfo,int> number;
+    public Dictionary<TroopInfo,int> numbers;
     public Resource transportedResources;
 }
