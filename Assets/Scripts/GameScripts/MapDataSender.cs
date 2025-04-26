@@ -12,6 +12,8 @@ public class MapLoading : NetworkBehaviour{
     [Networked,Capacity(8100)] public NetworkArray<byte> dataJson{get;}
     public string filename=null;
 
+    private const int CHUNK_SIZE = 1000;
+
     public static MapLoading Instance{get;private set;}
     public override void Spawned()
     {

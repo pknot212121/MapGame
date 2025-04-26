@@ -108,7 +108,12 @@ public class NetworkController : MonoBehaviour, INetworkRunnerCallbacks
         if(runner.IsSharedModeMasterClient){
             runner.Spawn(sessionDataPrefab,Vector3.zero,Quaternion.identity, inputAuthority: null);
             Debug.Log("Spawnuję!");
-            runner.SendReliableDataToPlayer(player,ReliableKey.FromInts(42, 0, 21, 37),Encoding.UTF8.GetBytes(player.ToString()));
+            IReadOnlyDictionary<string, SessionProperty> sessionProperties = runner.SessionInfo.Properties;
+            string filename = sessionProperties["filename"];
+            string mapData = MapManagement.LoadMapFromJson(filename);
+            Debug.Log(mapData);
+            byte[] rawData = MapManagement.Compress(mapData);
+            runner.SendReliableDataToPlayer(player,ReliableKey.FromInts(42, 0, 21, 37),Encoding.UTF8.GetBytes(mapData));
         }
         foreach(var p in runner.ActivePlayers)
         {
@@ -124,7 +129,25 @@ public class NetworkController : MonoBehaviour, INetworkRunnerCallbacks
     public void OnCustomAuthenticationResponse(NetworkRunner runner, Dictionary<string, object> data) { }
     public void OnObjectEnterAOI(NetworkRunner runner, NetworkObject obj, PlayerRef player) { }
     public void OnObjectExitAOI(NetworkRunner runner, NetworkObject obj, PlayerRef player) { }
-    public void OnReliableDataReceived(NetworkRunner runner, PlayerRef player, ReliableKey key, ArraySegment<byte> data) { }
+    public void OnReliableDataReceived(NetworkRunner runner, PlayerRef player, ReliableKey key, ArraySegment<byte> data) 
+    { 
+        string receivedMessage = Encoding.UTF8.GetString(data.Array, data.Offset, data.Count);
+        Debug.Log("MESSAGE: "+receivedMessage);
+        Transform provinceParentObjectTransform = GameObject.Find("Provinces").transform;
+        Map allProvinces = JsonUtility.FromJson<Map>(receivedMessage);
+        foreach(Province provinceData in allProvinces.provinces)
+        {
+            List<Vector2> points = new List<Vector2>();
+            foreach (Vector2 point in provinceData.points)
+            {
+                points.Add(point);
+            }
+            ProvinceGameObject province = ShapeTools.CreateProvinceGameObject(provinceData.name,points);
+            if(allProvinces.GetCountry(provinceData)==null) province.SetColor(Color.white);
+            else province.SetColor(allProvinces.GetCountry(provinceData).color);
+            province.gameObject.transform.SetParent(provinceParentObjectTransform);
+        }
+    }
     public void OnReliableDataProgress(NetworkRunner runner, PlayerRef player, ReliableKey key, float progress) { }
     public void OnConnectRequest(NetworkRunner runner, NetworkRunnerCallbackArgs.ConnectRequest request, byte[] token) { }
 }
