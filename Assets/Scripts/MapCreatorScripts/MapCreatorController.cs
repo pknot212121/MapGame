@@ -177,6 +177,11 @@ public class MapCreatorController : MonoBehaviour
         SceneManager.LoadScene("Menu", LoadSceneMode.Single);
     }
 
+    public void SaveMapClick(){
+        if(mapNameInput.text!=null) MapManagement.LoadMapIntoJson(mapNameInput.text);
+        else MapManagement.LoadMapIntoJson("map");
+    }
+
     public void ExitClick()
     {
         countryAdjusted = null;
@@ -234,12 +239,7 @@ public class MapCreatorController : MonoBehaviour
             }
         }
         if(Input.GetKey(KeyCode.LeftControl) && Input.GetKeyDown(KeyCode.S)){
-            if(mapNameInput.text!=null){
-                MapManagement.LoadMapIntoJson(mapNameInput.text);
-            }
-            else{
-                MapManagement.LoadMapIntoJson("map");
-            }
+            SaveMapClick();
         }
     }
     public void AddingProvincesToCountriesLogic()
