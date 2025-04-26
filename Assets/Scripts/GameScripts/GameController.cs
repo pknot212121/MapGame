@@ -26,13 +26,12 @@ public class GameController : MonoBehaviour
                 Map allProvinces = JsonUtility.FromJson<Map>(mapData);
                 foreach(Province provinceData in allProvinces.provinces){
                     List<Vector2> points = new List<Vector2>();
-                    foreach (string text in provinceData.points)
+                    foreach (Vector2 point in provinceData.points)
                     {
-                        string[] czesci = text.Split(new char[] { ';' }, 2);
-                        points.Add(new Vector2(float.Parse(czesci[0]),float.Parse(czesci[1])));
+                        points.Add(point);
                     }
                     ProvinceGameObject province = ShapeTools.CreateProvinceGameObject(provinceData.name,points);
-                    province.SetColor(provinceData.country.color);
+                    province.SetColor(allProvinces.GetCountry(provinceData).color);
                     province.gameObject.transform.SetParent(provinceParentObjectTransform);
                 }
             }

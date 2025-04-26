@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using System.Text.RegularExpressions;
 
+[System.Serializable]
 public class Country
 {
     public string name;
@@ -84,7 +85,6 @@ public class Country
             }
         }
 
-        province.country = this;
         provinces.Add(province);
         if(province.gameObject) province.gameObject.SetColor(color);
         

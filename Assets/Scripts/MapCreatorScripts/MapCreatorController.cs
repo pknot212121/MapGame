@@ -79,6 +79,7 @@ public class MapCreatorController : MonoBehaviour
                 return;
             }
             provinceGameObjects.Add(province);
+            map.provinces.Add(new Province(provinceName,province));
             foreach(Vector2 point in provincePoints){allPoints.Add(point);}
         }
         else Debug.Log("Krawędzie się przecinają!");
@@ -250,6 +251,7 @@ public class MapCreatorController : MonoBehaviour
                 if(ShapeTools.IsPointInPolygon((Vector2)worldPosition, province.points.ToArray()))
                 {
                     countryAdjusted.AddProvince(province.data);
+                    foreach(Province province1 in countryAdjusted.provinces) Debug.Log(province1.name);
                     break;
                 }
             }
