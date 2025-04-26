@@ -17,7 +17,7 @@ public class NetworkController : MonoBehaviour, INetworkRunnerCallbacks
     public static NetworkController me;
 
     [Header("Game Prefabs")]
-    public GameObject sessionDataPrefab;
+    public GameObject sessionManagerPrefab;
 
     public NetworkRunner GetRunner()
     {
@@ -111,6 +111,7 @@ public class NetworkController : MonoBehaviour, INetworkRunnerCallbacks
             string mapData = MapManagement.LoadMapFromJson(filename);
             byte[] rawData = MapManagement.Compress(mapData);
             runner.SendReliableDataToPlayer(player,ReliableKey.FromInts(42, 0, 21, 37),Encoding.UTF8.GetBytes(mapData));
+            runner.Spawn(sessionManagerPrefab,Vector3.zero, Quaternion.identity);
         }
 
      }
@@ -126,6 +127,7 @@ public class NetworkController : MonoBehaviour, INetworkRunnerCallbacks
         Debug.Log("MESSAGE: "+receivedMessage);
         Transform provinceParentObjectTransform = GameObject.Find("Provinces").transform;
         Map allProvinces = JsonUtility.FromJson<Map>(receivedMessage);
+
         foreach(Province provinceData in allProvinces.provinces)
         {
             List<Vector2> points = new List<Vector2>();
@@ -134,8 +136,10 @@ public class NetworkController : MonoBehaviour, INetworkRunnerCallbacks
                 points.Add(point);
             }
             ProvinceGameObject province = ShapeTools.CreateProvinceGameObject(provinceData.name,points);
+
             if(allProvinces.GetCountry(provinceData)==null) province.SetColor(Color.white);
             else province.SetColor(allProvinces.GetCountry(provinceData).color);
+
             province.gameObject.transform.SetParent(provinceParentObjectTransform);
         }
     }
