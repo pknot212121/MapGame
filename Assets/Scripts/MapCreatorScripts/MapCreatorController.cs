@@ -9,6 +9,7 @@ using UnityEngine.SceneManagement;
 using System.Linq;
 using System;
 
+
 public class MapCreatorController : MonoBehaviour
 {
     public Canvas canvas;
@@ -69,7 +70,8 @@ public class MapCreatorController : MonoBehaviour
             Debug.Log("Province name must consist of at least 2 characters!");
             return;
         }
-        if(ShapeTools.IsIntersecting(provincePoints)){
+        if(ShapeTools.IsIntersecting(provincePoints))
+        {
             ProvinceGameObject province = ShapeTools.CreateProvinceGameObject(provinceName, provincePoints);
             if(!province) 
             {
@@ -79,7 +81,7 @@ public class MapCreatorController : MonoBehaviour
             provinceGameObjects.Add(province);
             foreach(Vector2 point in provincePoints){allPoints.Add(point);}
         }
-        else{Debug.Log("Krawędzie się przecinają!");}
+        else Debug.Log("Krawędzie się przecinają!");
 
         isProvinceShapeFormed = false;
         canvas.gameObject.SetActive(true);
@@ -112,16 +114,7 @@ public class MapCreatorController : MonoBehaviour
             }
         }
 
-        Country country = new Country();
-        country.name = countryName;
-        while(country.color == new Color())
-        {
-            country.color = new Color(UnityEngine.Random.value, UnityEngine.Random.value, UnityEngine.Random.value);
-            foreach(Country c in MapCreatorController.me.map.countries)
-            {
-                if(country.color == c.color) country.color = new Color();
-            }
-        }
+        Country country = new Country(countryName);
         map.countries.Add(country);
 
         GameObject prefab = Resources.Load<GameObject>("Prefabs/CountryButton");
@@ -247,11 +240,15 @@ public class MapCreatorController : MonoBehaviour
             }
         }
     }
-    public void AddingProvincesToCountriesLogic(){
+    public void AddingProvincesToCountriesLogic()
+    {
         Vector3 worldPosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-        if(Input.GetMouseButtonDown(0)){
-            foreach(ProvinceGameObject province in provinceGameObjects){
-                if(ShapeTools.IsPointInPolygon((Vector2)worldPosition,province.points.ToArray())){
+        if(Input.GetMouseButtonDown(0))
+        {
+            foreach(ProvinceGameObject province in provinceGameObjects)
+            {
+                if(ShapeTools.IsPointInPolygon((Vector2)worldPosition, province.points.ToArray()))
+                {
                     countryAdjusted.AddProvince(province.data);
                     break;
                 }
@@ -311,6 +308,7 @@ public class MapCreatorController : MonoBehaviour
         canvas.gameObject.SetActive(false);
         countryAdjustmentCanvas.gameObject.SetActive(true);
         countryAdjustmentNameInput.text = country.name;
+        countryHexColorInput.text = UnityEngine.ColorUtility.ToHtmlStringRGB(country.color);
     }
 
     public void EnterTroopInfoAdjustment(TroopInfo troopInfo)

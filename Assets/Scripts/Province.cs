@@ -15,4 +15,10 @@ public class Province
     {
         this.name = name;
     }
+
+    public Province(string name, ProvinceGameObject gameObject)
+    {
+        this.name = name;
+        this.gameObject = gameObject;
+    }
 }

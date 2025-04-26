@@ -19,6 +19,7 @@ public class ProvinceGameObject : MonoBehaviour
     public void Initialise(Province data, List<Vector2> points = null)
     {
         this.data = data;
+        data.gameObject = this;
         this.points = points;
         if(points == null) points = new List<Vector2>();
         if(data.country != null) SetColor(data.country.color);
@@ -26,7 +27,7 @@ public class ProvinceGameObject : MonoBehaviour
 
     public void Initialise(string name, List<Vector2> points = null)
     {
-        this.data = new Province(name);
+        data = new Province(name, this);
         this.points = points;
         if(points == null) points = new List<Vector2>();
     }

@@ -13,14 +13,27 @@ public class Country
         ["red"] = Color.red,
         ["green"] = Color.green,
         ["yellow"] = Color.yellow,
-        ["black"] = Color.black,
-        ["white"] = Color.white,
+        //["black"] = Color.black, // to po prostu nie
+        //["white"] = Color.white, // biały to kolor prowincji niczyjej więc państwo nie może go mieć
         ["grey"] = Color.grey
     };
-    public Country(){}
-    public Country(string _name,Color _color){
-        name=_name;
-        color=_color;
+    public Country(string name)
+    {
+        this.name = name;
+        color = Color.white;
+        while(color == Color.white)
+        {
+            color = new Color(UnityEngine.Random.value, UnityEngine.Random.value, UnityEngine.Random.value);
+            foreach(Country c in MapCreatorController.me.map.countries)
+            {
+                if(color == c.color) color = Color.white;
+            }
+        }
+    }
+    public Country(string name, Color color)
+    {
+        this.name = name;
+        this.color = color;
     }
 
     public void SetColorFromHex(string hex)
