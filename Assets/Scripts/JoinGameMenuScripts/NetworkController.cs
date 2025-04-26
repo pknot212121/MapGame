@@ -106,21 +106,12 @@ public class NetworkController : MonoBehaviour, INetworkRunnerCallbacks
     public void OnInputMissing(NetworkRunner runner, PlayerRef player, NetworkInput input) { }
     public void OnPlayerJoined(NetworkRunner runner, PlayerRef player) {
         if(runner.IsSharedModeMasterClient){
-            runner.Spawn(sessionDataPrefab,Vector3.zero,Quaternion.identity, inputAuthority: null);
-            Debug.Log("Spawnuję!");
             IReadOnlyDictionary<string, SessionProperty> sessionProperties = runner.SessionInfo.Properties;
             string filename = sessionProperties["filename"];
             string mapData = MapManagement.LoadMapFromJson(filename);
-            Debug.Log(mapData);
             byte[] rawData = MapManagement.Compress(mapData);
             runner.SendReliableDataToPlayer(player,ReliableKey.FromInts(42, 0, 21, 37),Encoding.UTF8.GetBytes(mapData));
         }
-        foreach(var p in runner.ActivePlayers)
-        {
-            Debug.Log(p);
-        }
-        Debug.Log(runner.LocalPlayer);
-        if(runner.LocalPlayer.Equals(player)) Debug.Log("Równe!!!");
 
      }
     public void OnPlayerLeft(NetworkRunner runner, PlayerRef player) { }

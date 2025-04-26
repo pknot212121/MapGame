@@ -5,6 +5,8 @@ using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using TMPro;
 using Fusion;
+using System.IO;
+using System.Linq;
 
 public class JoinGameMenuController : MonoBehaviour
 {
@@ -46,13 +48,32 @@ public class JoinGameMenuController : MonoBehaviour
 
     public void ChooseMapClick(){
         // wylały mi się oczy jak to zobaczyłem
+        //XD
         /*if(mapNameInput.text!=null){
             filename = mapNameInput.text;
         }
         else{Debug.Log("Wpisz nazwę!!!");}*/
-
-        if(mapNameInput.text.Length >= 2) filename = mapNameInput.text; // domyślną wartością mapNameInput.text jest "" a nie null
-        else Debug.Log("Wpisz nazwę!!!"); // nie musisz dawać klamerek do pojedyńczego polecenia
+        bool isFileFound = false;
+        if(mapNameInput.text.Length >= 2)
+        {
+            foreach(string filePath in Directory.EnumerateFiles(Application.persistentDataPath,"*.json"))
+            {
+                string fileName = Path.GetFileName(filePath);
+                if(mapNameInput.text + ".json"==fileName)
+                {
+                    filename = mapNameInput.text;
+                    isFileFound = true;
+                    Debug.Log("Znaleziono mapę!");
+                }
+            }
+            if(!isFileFound)
+            {
+                Debug.Log("Nie znaleziono mapy!");
+                return;
+            }
+            
+        }
+        else Debug.Log("Nazwa musi mieć conajmniej 2 znaki!");
     }
 
     public void BackClick()
