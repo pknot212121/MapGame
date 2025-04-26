@@ -53,6 +53,7 @@ public class MapCreatorController : MonoBehaviour
 
     public void CreateProvinceClick()
     {
+        countryAdjusted = null;
         isProvinceShapeFormed = true;
         canvas.gameObject.SetActive(false);
         provincePointsCanvas.gameObject.SetActive(true);
@@ -251,7 +252,6 @@ public class MapCreatorController : MonoBehaviour
                 if(ShapeTools.IsPointInPolygon((Vector2)worldPosition, province.points.ToArray()))
                 {
                     countryAdjusted.AddProvince(province.data);
-                    foreach(Province province1 in countryAdjusted.provinces) Debug.Log(province1.name);
                     break;
                 }
             }
@@ -269,6 +269,7 @@ public class MapCreatorController : MonoBehaviour
             DeletingAndReturingProvincesLogic();
         }
         if(countryAdjusted != null){
+            // Debug.Log("Tryb Edycji Kraju!");
             AddingProvincesToCountriesLogic();
         }
     }
@@ -307,6 +308,7 @@ public class MapCreatorController : MonoBehaviour
     public void EnterCountryAdjustment(Country country)
     {
         countryAdjusted = country;
+        Debug.Log("WSZEDŁEM W COUNTRY ADJUSTMENT!!!");
         canvas.gameObject.SetActive(false);
         countryAdjustmentCanvas.gameObject.SetActive(true);
         countryAdjustmentNameInput.text = country.name;
