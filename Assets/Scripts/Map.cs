@@ -10,7 +10,6 @@ public class Map
     public List<ResourceInfo> resourceInfos = new List<ResourceInfo>();
     public List<TroopInfo> troopInfos = new List<TroopInfo>();
 
-
     public Country GetCountry(Province province){
         foreach(Country country in countries){
             foreach(Province province1 in country.provinces){ 

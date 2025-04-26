@@ -8,6 +8,7 @@ public class Province
     public string name;
     public List<Vector2> points = new List<Vector2>();
 
+    [System.NonSerialized]
     public ProvinceGameObject gameObject;
 
     public Province(string name)

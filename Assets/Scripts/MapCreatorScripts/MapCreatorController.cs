@@ -71,6 +71,14 @@ public class MapCreatorController : MonoBehaviour
             Debug.Log("Province name must consist of at least 2 characters!");
             return;
         }
+        foreach(Province province1 in map.provinces)
+        {
+            if(provinceName==province1.name)
+            {
+                Debug.Log("This name is already used by another province!");
+                return;
+            }
+        }
         if(ShapeTools.IsIntersecting(provincePoints))
         {
             ProvinceGameObject province = ShapeTools.CreateProvinceGameObject(provinceName, provincePoints);
