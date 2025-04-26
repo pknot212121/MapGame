@@ -6,8 +6,7 @@ using System.Collections.Generic;
 public class Province
 {
     public string name;
-    public Country country;
-    public List<string> points = new List<string>();
+    public List<Vector2> points = new List<Vector2>();
 
     public ProvinceGameObject gameObject;
 
@@ -20,5 +19,7 @@ public class Province
     {
         this.name = name;
         this.gameObject = gameObject;
+        points = gameObject.points;
     }
+
 }

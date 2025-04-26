@@ -14,17 +14,7 @@ public class MapManagement
 {
     public static void LoadMapIntoJson(string filename){
         string path =  Application.persistentDataPath + "/" + filename + ".json";
-        Map allData = new Map();
-        foreach(Province province in MapCreatorController.me.map.provinces){
-            Province data = new Province(province.name);
-            foreach(Vector2 point in province.gameObject.points){
-                data.points.Add(point.x.ToString("F4")+";"+point.y.ToString("F4"));
-            }
-            if(province.country==null){data.country=null;data.country.color=UnityEngine.Color.white;}
-            else{data.name = province.country.name;data.country.color=province.country.color;}
-            allData.provinces.Add(data);
-        }
-        string json = JsonUtility.ToJson(allData);
+        string json = JsonUtility.ToJson(MapCreatorController.me.map);
         Debug.Log("Ścieżka zapisu: " + Application.persistentDataPath);
         System.IO.File.WriteAllText(path,json);
     }

@@ -3,6 +3,7 @@ using System;
 using System.IO;
 using System.Collections.Generic;
 
+[System.Serializable]
 public class TroopInfo
 {
     public string name;

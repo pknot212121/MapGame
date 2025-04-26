@@ -53,6 +53,7 @@ public class MapCreatorController : MonoBehaviour
 
     public void CreateProvinceClick()
     {
+        countryAdjusted = null;
         isProvinceShapeFormed = true;
         canvas.gameObject.SetActive(false);
         provincePointsCanvas.gameObject.SetActive(true);
@@ -79,6 +80,7 @@ public class MapCreatorController : MonoBehaviour
                 return;
             }
             provinceGameObjects.Add(province);
+            map.provinces.Add(new Province(provinceName,province));
             foreach(Vector2 point in provincePoints){allPoints.Add(point);}
         }
         else Debug.Log("Krawędzie się przecinają!");
@@ -175,6 +177,11 @@ public class MapCreatorController : MonoBehaviour
         SceneManager.LoadScene("Menu", LoadSceneMode.Single);
     }
 
+    public void SaveMapClick(){
+        if(mapNameInput.text!=null) MapManagement.LoadMapIntoJson(mapNameInput.text);
+        else MapManagement.LoadMapIntoJson("map");
+    }
+
     public void ExitClick()
     {
         countryAdjusted = null;
@@ -232,12 +239,7 @@ public class MapCreatorController : MonoBehaviour
             }
         }
         if(Input.GetKey(KeyCode.LeftControl) && Input.GetKeyDown(KeyCode.S)){
-            if(mapNameInput.text!=null){
-                MapManagement.LoadMapIntoJson(mapNameInput.text);
-            }
-            else{
-                MapManagement.LoadMapIntoJson("map");
-            }
+            SaveMapClick();
         }
     }
     public void AddingProvincesToCountriesLogic()
@@ -267,6 +269,7 @@ public class MapCreatorController : MonoBehaviour
             DeletingAndReturingProvincesLogic();
         }
         if(countryAdjusted != null){
+            // Debug.Log("Tryb Edycji Kraju!");
             AddingProvincesToCountriesLogic();
         }
     }
@@ -305,6 +308,7 @@ public class MapCreatorController : MonoBehaviour
     public void EnterCountryAdjustment(Country country)
     {
         countryAdjusted = country;
+        Debug.Log("WSZEDŁEM W COUNTRY ADJUSTMENT!!!");
         canvas.gameObject.SetActive(false);
         countryAdjustmentCanvas.gameObject.SetActive(true);
         countryAdjustmentNameInput.text = country.name;
