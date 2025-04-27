@@ -8,6 +8,7 @@ public class TroopInfo
 {
     public string name;
     public float overallPowerMultiplier;
+    public string iconName = "sword_icon";
     public Dictionary<string, float> individualPowerMultiplier;
     public Dictionary<string, int> unitCost;
 
