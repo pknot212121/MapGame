@@ -108,15 +108,13 @@ public class NetworkController : MonoBehaviour, INetworkRunnerCallbacks
     public void OnInput(NetworkRunner runner, NetworkInput input) { }
     public void OnInputMissing(NetworkRunner runner, PlayerRef player, NetworkInput input) { }
     public void OnPlayerJoined(NetworkRunner runner, PlayerRef player) {
-        if (runner.IsServer || runner.IsSharedModeMasterClient) // Spawnowanie przez autorytet
+        if (runner.IsServer || runner.IsSharedModeMasterClient)
         {
-            // Spawnuj prefab gracza i przypisz mu Input Authority
+
             runner.Spawn(playerPrefab, Vector3.zero, Quaternion.identity, player);
 
-            // Logika spawnowania GameManager (jeśli jeszcze nie istnieje) - najlepiej robić to raz
             if (GameManager.Instance == null) runner.Spawn(sessionManagerPrefab,Vector3.zero, Quaternion.identity);
 
-            // Istniejąca logika wysyłania danych mapy...
             if(runner.IsSharedModeMasterClient)
             {
                 IReadOnlyDictionary<string, SessionProperty> sessionProperties = runner.SessionInfo.Properties;
