@@ -36,7 +36,6 @@ public class GameManager : NetworkBehaviour, INetworkRunnerCallbacks
     {
         if (Instance == null) Instance = this;
         else Destroy(gameObject);
-        // Sprawdzenie, czy referencje są ustawione
         if (textEntryPrefab == null)
         {
             Debug.LogError("Prefab pola tekstowego nie jest przypisany w DynamicTextAdder!");
@@ -99,7 +98,7 @@ public class GameManager : NetworkBehaviour, INetworkRunnerCallbacks
         CurrentMapData = mapData;
         IsMapDataReady = true;
         Debug.Log("Map data set in GameManager.");
-        OnMapDataReady?.Invoke(); // Wywołaj event, jeśli ktoś nasłuchuje
+        OnMapDataReady?.Invoke();
     }
         public void AddNewTextEntry(string message)
     {
@@ -108,16 +107,13 @@ public class GameManager : NetworkBehaviour, INetworkRunnerCallbacks
             Debug.LogError("Nie można dodać tekstu - brakuje prefabu lub kontenera.");
             return;
         }
-
-        // Stwórz nową instancję prefabu jako dziecko kontenera
-        // Drugi argument (textContainer) automatycznie ustawia rodzica
         GameObject newEntry = Instantiate(textEntryPrefab, textContainer);
-        newEntry.name = $"TextEntry_{messageCounter}"; // Opcjonalnie, dla porządku w Hierarchy
+        newEntry.name = $"TextEntry_{messageCounter}";
         TextMeshProUGUI tmpText = newEntry.GetComponentInChildren<TextMeshProUGUI>();
         if (tmpText != null) {
             tmpText.text = message;
         } else Debug.LogError("Nie znaleziono komponentu TextMeshProUGUI na instancji prefabu!", newEntry);
-         messageCounter++; // Zwiększ licznik dla kolejnych wiadomości testowych
+         messageCounter++;
     }
 
     public void OnPlayerLeft(NetworkRunner runner, PlayerRef player) {
