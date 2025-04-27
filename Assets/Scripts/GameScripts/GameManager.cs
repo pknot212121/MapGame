@@ -80,7 +80,7 @@ public class GameManager : NetworkBehaviour, INetworkRunnerCallbacks
         OnMapDataReady?.Invoke(); // Wywołaj event, jeśli ktoś nasłuchuje
     }
     public void OnPlayerLeft(NetworkRunner runner, PlayerRef player) {
-        if (Runner.IsServer) PlayersToCountries.Remove(player);
+        if (Runner.IsSharedModeMasterClient) PlayersToCountries.Remove(player);
      }
     public void OnSceneLoadDone(NetworkRunner runner) { }
     public void OnSceneLoadStart(NetworkRunner runner) { }
