@@ -8,6 +8,8 @@ public class PlayerNicknameDisplayer : MonoBehaviour
     {
         text.text = playerNickname;
         text.color = country.color;
-        gameObject.transform.position = ShapeTools.CentroidOfACountry(country);
+        Vector3 v3 = (Vector3)ShapeTools.CentroidOfACountry(country);
+        v3.z = -5f;
+        gameObject.transform.position = v3;
     }
 }

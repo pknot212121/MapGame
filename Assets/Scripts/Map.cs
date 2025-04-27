@@ -1,6 +1,7 @@
 using UnityEngine;
 using System.IO;
 using System.Collections.Generic;
+using System.Linq;
 
 [System.Serializable]
 public class Map
@@ -18,5 +19,10 @@ public class Map
             }
         }
         return null;
+    }
+
+    public Country GetCountry(string countryName)
+    {
+        return countries.FirstOrDefault(c => c.name == countryName);
     }
 }

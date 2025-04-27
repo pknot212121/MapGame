@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using UnityEngine.SceneManagement;
 using TMPro;
 using System.Text;
+using System.Linq;
 
 public class GameManager : NetworkBehaviour, INetworkRunnerCallbacks
 {
@@ -91,6 +92,21 @@ public class GameManager : NetworkBehaviour, INetworkRunnerCallbacks
     public void Rpc_SetPlayerCountry(PlayerRef player,NetworkString<_32> countryName)
     {
         PlayersToCountries.Set(player,countryName);
+        Rpc_RefreshPlayerNicknameDisplayers();
+    }
+
+    [Rpc(RpcSources.StateAuthority, RpcTargets.All)]
+    public void Rpc_RefreshPlayerNicknameDisplayers()
+    {
+        Debug.Log("Refreshing nickname displayers");
+        foreach(Transform t in GameController.me.playerNicknameDisplayersTransform) Destroy(t.gameObject);
+        GameObject prefab = Resources.Load("Prefabs/PlayerNicknameDisplayer") as GameObject;
+        foreach(var kvp in PlayersToCountries)
+        {
+            GameObject pnd = Instantiate(prefab);
+            pnd.GetComponent<PlayerNicknameDisplayer>().Initialise(PlayerNicknames[kvp.Key].Value, CurrentMapData.GetCountry(kvp.Value.Value));
+            pnd.transform.SetParent(GameController.me.playerNicknameDisplayersTransform);
+        }
     }
 
     public void SetMapData(Map mapData)

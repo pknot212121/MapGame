@@ -85,7 +85,7 @@ public class JoinGameMenuController : MonoBehaviour
     {
         foreach (Transform child in gamesListContentTransform) { Destroy(child.gameObject); }
 
-        GameObject prefab = Resources.Load<GameObject>("Prefabs/GamePanelPrefab2");
+        GameObject prefab = Resources.Load<GameObject>("Prefabs/GamePanelPrefab");
         foreach(var session in sessionList)
         {
             Debug.Log(session.Name);

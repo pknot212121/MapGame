@@ -16,7 +16,7 @@ public class NetworkPlayer : NetworkBehaviour
     public NetworkString<_32> Nickname { get; private set; }
     public override void Spawned()
     {
-        string chosenNickname = PlayerPrefs.GetString("PlayerNickname", $"Gracz_{UnityEngine.Random.Range(100, 999)}");
+        string chosenNickname = PlayerPrefs.GetString("PlayerNickname", $"Player_{UnityEngine.Random.Range(100, 999)}");
         Rpc_SetNickname(chosenNickname);
 
         TryInitializeWithMapData();
