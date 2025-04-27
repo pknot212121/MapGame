@@ -57,6 +57,7 @@ public class NetworkPlayer : NetworkBehaviour
             Log.Error("RPC: GameManager.Instance jest null, nie można zaktualizować centralnego słownika nicków.");
         }
     }
+    
     void TryInitializeWithMapData()
     {
         if (GameManager.Instance != null && GameManager.Instance.IsMapDataReady)

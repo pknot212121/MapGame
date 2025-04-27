@@ -17,6 +17,10 @@ public class GameManager : NetworkBehaviour, INetworkRunnerCallbacks
 
     [Networked, Capacity(20)]
     public NetworkDictionary<PlayerRef, NetworkString<_32>> PlayerNicknames { get; }
+    [Networked]
+    public PlayerRef Owner { get; set; }
+    [Networked]
+    public int StartTimer { get; set; } // 10 - poczekalnia, 5-1 - odliczanie, -1 - rozpoczęta gra
     public static GameManager Instance{get;private set;}
     public Map CurrentMapData { get; private set; }
     public bool IsMapDataReady { get; private set; } = false;
@@ -84,9 +88,7 @@ public class GameManager : NetworkBehaviour, INetworkRunnerCallbacks
     public void OnHostMigration(NetworkRunner runner, HostMigrationToken hostMigrationToken) { }
     public void OnInput(NetworkRunner runner, NetworkInput input) { }
     public void OnInputMissing(NetworkRunner runner, PlayerRef player, NetworkInput input) { }
-    public void OnPlayerJoined(NetworkRunner runner, PlayerRef player) {
-
-     }
+    public void OnPlayerJoined(NetworkRunner runner, PlayerRef player) { }
 
     [Rpc(RpcSources.All, RpcTargets.StateAuthority)]
     public void Rpc_SetPlayerCountry(PlayerRef player,NetworkString<_32> countryName)
@@ -116,7 +118,8 @@ public class GameManager : NetworkBehaviour, INetworkRunnerCallbacks
         Debug.Log("Map data set in GameManager.");
         OnMapDataReady?.Invoke();
     }
-        public void AddNewTextEntry(string message)
+
+    public void AddNewTextEntry(string message)
     {
         if (textEntryPrefab == null || textContainer == null)
         {
@@ -132,7 +135,8 @@ public class GameManager : NetworkBehaviour, INetworkRunnerCallbacks
          messageCounter++;
     }
 
-    public void OnPlayerLeft(NetworkRunner runner, PlayerRef player) {
+    public void OnPlayerLeft(NetworkRunner runner, PlayerRef player)
+    {
         if (Runner.IsSharedModeMasterClient)
         {
             PlayersToCountries.Remove(player);
@@ -140,7 +144,8 @@ public class GameManager : NetworkBehaviour, INetworkRunnerCallbacks
             PlayerNicknames.Remove(player);
             Debug.Log("Usunięcie przypisania gracza do nickname");
         }
-     }
+    }
+    
     public void OnSceneLoadDone(NetworkRunner runner) { }
     public void OnSceneLoadStart(NetworkRunner runner) { }
     public void OnCustomAuthenticationResponse(NetworkRunner runner, Dictionary<string, object> data) { }

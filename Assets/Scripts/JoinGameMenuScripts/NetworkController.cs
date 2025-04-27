@@ -44,14 +44,8 @@ public class NetworkController : MonoBehaviour, INetworkRunnerCallbacks
 
     public async void RefreshRoomList()
     {
-        if (runner != null && runner.IsRunning)
-        {
-            Debug.Log("Room list will be updated automatically");
-        }
-        else
-        {
-            await JoinLobby();
-        }
+        if (runner != null && runner.IsRunning) Debug.Log("Room list will be updated automatically");
+        else await JoinLobby();
     }
 
     public async void CreateSession(string name, string filename)
@@ -65,7 +59,7 @@ public class NetworkController : MonoBehaviour, INetworkRunnerCallbacks
             GameMode = GameMode.Shared,
             SessionName = name,
             SessionProperties = properites,
-            PlayerCount = 6,
+            PlayerCount = 20,
             Scene = gameSceneRef
         });
     }
@@ -83,19 +77,18 @@ public class NetworkController : MonoBehaviour, INetworkRunnerCallbacks
 
     public void OnSessionListUpdated(NetworkRunner runner, List<SessionInfo> sessionList)
     {
-        Debug.Log($"Rooms list update (Count: {sessionList.Count})");
-
+        //Debug.Log($"Rooms list update (Count: {sessionList.Count})");
         if (JoinGameMenuController.me) JoinGameMenuController.me.UpdateGamesList(sessionList);
     }
 
     public void OnConnectedToServer(NetworkRunner runner)
     {
-        Debug.Log("Connected to server");
+        //Debug.Log("Connected to server");
     }
 
     public void OnShutdown(NetworkRunner runner, ShutdownReason shutdownReason)
     {
-        Debug.LogWarning($"OnShutdown: {shutdownReason}");
+        //Debug.LogWarning($"OnShutdown: {shutdownReason}");
     }
 
 
@@ -107,7 +100,8 @@ public class NetworkController : MonoBehaviour, INetworkRunnerCallbacks
     public void OnHostMigration(NetworkRunner runner, HostMigrationToken hostMigrationToken) { }
     public void OnInput(NetworkRunner runner, NetworkInput input) { }
     public void OnInputMissing(NetworkRunner runner, PlayerRef player, NetworkInput input) { }
-    public void OnPlayerJoined(NetworkRunner runner, PlayerRef player) {
+    public void OnPlayerJoined(NetworkRunner runner, PlayerRef player)
+    {
         if (runner.IsServer || runner.IsSharedModeMasterClient)
         {
 
