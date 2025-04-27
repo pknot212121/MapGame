@@ -52,7 +52,7 @@ public class GameManager : NetworkBehaviour, INetworkRunnerCallbacks
         Runner.AddCallbacks(this);
     }
 
-    public async void CreateSession(string name, string filename)
+    /*public async void CreateSession(string name, string filename)
     {
 
     }
@@ -60,7 +60,7 @@ public class GameManager : NetworkBehaviour, INetworkRunnerCallbacks
     public async void ConnectToSession(SessionInfo session) 
     {
 
-    }
+    }*/
 
     public void OnSessionListUpdated(NetworkRunner runner, List<SessionInfo> sessionList)
     {
