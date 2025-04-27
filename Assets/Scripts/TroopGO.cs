@@ -61,6 +61,8 @@ public class TroopGO : MonoBehaviour
         }
 
         int iconIndex = 0;
+        Debug.Log(icons);
+        Debug.Log(iconIndex);
 
         foreach (var item in top4)
         {

@@ -15,7 +15,7 @@ public class MenuController : MonoBehaviour
 
     void Start()
     {
-        if (PlayerPrefs.HasKey("PlayerNickname")) nicknameInput.text = PlayerPrefs.GetString("PlayerNickname");
+        if(PlayerPrefs.HasKey("PlayerNickname")) nicknameInput.text = PlayerPrefs.GetString("PlayerNickname");
     }
 
     public void JoinGameClick()
