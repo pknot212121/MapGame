@@ -2,6 +2,7 @@ using UnityEngine;
 using TMPro;
 using System;
 using System.Linq;
+using UnityEngine.UI;
 
 public class TroopInfoAdjustmentPanel : MonoBehaviour
 {
@@ -10,6 +11,7 @@ public class TroopInfoAdjustmentPanel : MonoBehaviour
 
     [SerializeField] private TMP_InputField troopInfoNameInput;
     [SerializeField] private TMP_InputField powerMultiplierInput;
+    [SerializeField] private Image icon;
     [SerializeField] private Transform unitCostListContentTransform;
 
     [SerializeField] private GameObject resourceCostPanelPrefab;
@@ -24,6 +26,7 @@ public class TroopInfoAdjustmentPanel : MonoBehaviour
         adjusted = MapCreatorController.me.troopInfoAdjusted;
         troopInfoNameInput.text = adjusted.name;
         powerMultiplierInput.text = adjusted.overallPowerMultiplier.ToString();
+        icon.sprite = Resources.Load<Sprite>("TroopIcons/" + adjusted.iconName);
         foreach(Transform t in unitCostListContentTransform)
         {
             Destroy(t.gameObject);
@@ -41,6 +44,22 @@ public class TroopInfoAdjustmentPanel : MonoBehaviour
         if(troopInfoNameInput.text.Length >= 2 && !MapCreatorController.me.map.troopInfos.Any(obj => obj.name == troopInfoNameInput.text))
             adjusted.name = troopInfoNameInput.text;
         else troopInfoNameInput.text = adjusted.name;
+    }
+
+    public void IconImageClick()
+    {
+        Sprite[] allIcons = Resources.LoadAll<Sprite>("TroopIcons");
+
+        for(int i = 0; i < allIcons.Length; i++)
+        {
+            if(allIcons[i].name == adjusted.iconName || allIcons[i].name == adjusted.iconName + "_0")
+            {
+                Sprite next = allIcons[(i+1) % allIcons.Length];
+                adjusted.iconName = next.name;
+                icon.sprite = next;
+                break;
+            }
+        }
     }
 
     public void PowerMultiplierInput()
