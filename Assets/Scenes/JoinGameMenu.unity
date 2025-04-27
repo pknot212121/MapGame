@@ -2594,6 +2594,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   sessionManagerPrefab: {fileID: 4386823209496361492, guid: 9a6e0ba0a35a70b4382d7d60256ff0b8, type: 3}
+  playerPrefab:
+    RawGuidValue: 5497276f9e3f04b40b1799b240877644
 --- !u!1 &1653452491
 GameObject:
   m_ObjectHideFlags: 0

@@ -10,10 +10,7 @@ public class GameController : MonoBehaviour
     }
     void Update()
     {
-        if(PlayerController.Instance!=null && Input.GetKeyDown(KeyCode.A))
-        {
-            Debug.Log("Wartość: "+PlayerController.Instance.playersToCountries.Count);
-        }
+
     }
 
 }

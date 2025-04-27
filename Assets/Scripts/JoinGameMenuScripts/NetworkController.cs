@@ -18,6 +18,9 @@ public class NetworkController : MonoBehaviour, INetworkRunnerCallbacks
 
     [Header("Game Prefabs")]
     public GameObject sessionManagerPrefab;
+    public NetworkPrefabRef playerPrefab;
+
+
 
     public NetworkRunner GetRunner()
     {
@@ -105,13 +108,23 @@ public class NetworkController : MonoBehaviour, INetworkRunnerCallbacks
     public void OnInput(NetworkRunner runner, NetworkInput input) { }
     public void OnInputMissing(NetworkRunner runner, PlayerRef player, NetworkInput input) { }
     public void OnPlayerJoined(NetworkRunner runner, PlayerRef player) {
-        if(runner.IsSharedModeMasterClient){
-            IReadOnlyDictionary<string, SessionProperty> sessionProperties = runner.SessionInfo.Properties;
-            string filename = sessionProperties["filename"];
-            string mapData = MapManagement.LoadMapFromJson(filename);
-            byte[] rawData = MapManagement.Compress(mapData);
-            runner.SendReliableDataToPlayer(player,ReliableKey.FromInts(42, 0, 21, 37),Encoding.UTF8.GetBytes(mapData));
-            runner.Spawn(sessionManagerPrefab,Vector3.zero, Quaternion.identity);
+        if (runner.IsServer || runner.IsSharedModeMasterClient) // Spawnowanie przez autorytet
+        {
+            // Spawnuj prefab gracza i przypisz mu Input Authority
+            runner.Spawn(playerPrefab, Vector3.zero, Quaternion.identity, player);
+
+            // Logika spawnowania GameManager (jeśli jeszcze nie istnieje) - najlepiej robić to raz
+            if (GameManager.Instance == null) runner.Spawn(sessionManagerPrefab,Vector3.zero, Quaternion.identity);
+
+            // Istniejąca logika wysyłania danych mapy...
+            if(runner.IsSharedModeMasterClient)
+            {
+                IReadOnlyDictionary<string, SessionProperty> sessionProperties = runner.SessionInfo.Properties;
+                string filename = sessionProperties["filename"];
+                string mapData = MapManagement.LoadMapFromJson(filename);
+                byte[] rawData = MapManagement.Compress(mapData);
+                runner.SendReliableDataToPlayer(player,ReliableKey.FromInts(42, 0, 21, 37),Encoding.UTF8.GetBytes(mapData));
+            }
         }
 
      }
@@ -127,7 +140,7 @@ public class NetworkController : MonoBehaviour, INetworkRunnerCallbacks
         Debug.Log("MESSAGE: "+receivedMessage);
         Transform provinceParentObjectTransform = GameObject.Find("Provinces").transform;
         Map allProvinces = JsonUtility.FromJson<Map>(receivedMessage);
-
+        GameManager.Instance.SetMapData(allProvinces);
         foreach(Province provinceData in allProvinces.provinces)
         {
             List<Vector2> points = new List<Vector2>();
