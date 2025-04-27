@@ -13,6 +13,11 @@ public class MenuController : MonoBehaviour
 {
     [SerializeField] private TMP_InputField nicknameInput;
 
+    void Start()
+    {
+        if (PlayerPrefs.HasKey("PlayerNickname")) nicknameInput.text = PlayerPrefs.GetString("PlayerNickname");
+    }
+
     public void JoinGameClick()
     {
         SceneManager.LoadScene("JoinGameMenu", LoadSceneMode.Single);
