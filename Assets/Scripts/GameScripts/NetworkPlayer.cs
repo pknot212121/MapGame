@@ -57,6 +57,7 @@ public class NetworkPlayer : NetworkBehaviour
                         Object.Runner.LocalPlayer, 
                         currentMap.GetCountry(province).name);
                         mapRelatedInitializationDone = true;
+                        Debug.Log("Państwo wybrane!");
                         break;
                     }
                 }
