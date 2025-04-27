@@ -13,10 +13,6 @@ public class MenuController : MonoBehaviour
 {
     [SerializeField] private TMP_InputField nicknameInput;
 
-    // void Start()
-    // {
-    //     PlayerPrefs.SetString("PlayerNickname", "guest");
-    // }
     public void JoinGameClick()
     {
         SceneManager.LoadScene("JoinGameMenu", LoadSceneMode.Single);

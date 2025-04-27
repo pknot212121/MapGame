@@ -5,6 +5,7 @@ using UnityEngine.UIElements;
 using System.Data.Common;
 using UnityEngine.Rendering;
 using System.Drawing;
+using System.Linq;
 
 public class ShapeTools
 {
@@ -58,6 +59,36 @@ public class ShapeTools
         
         
         return indices.ToArray();
+    }
+    public static Vector2 CentroidOfACountry(Country country)
+    {
+        HashSet<Vector2> allPoints = new HashSet<Vector2>();
+        foreach(Province province in country.provinces)
+        {
+            foreach(Vector2 point in province.points) allPoints.Add(point);
+        }
+        return CentroidOfAPolygon(allPoints.ToList());
+    }
+
+    public static Vector2 CentroidOfAPolygon(List<Vector2> poly)
+    {
+        float accumulatedArea = 0.0f;
+        float centerX = 0.0f;
+        float centerY = 0.0f;
+
+        for (int i = 0, j = poly.Count - 1; i < poly.Count; j = i++)
+        {
+            float temp = poly[i].x * poly[j].y - poly[j].x * poly[i].y;
+            accumulatedArea += temp;
+            centerX += (poly[i].x + poly[j].x) * temp;
+            centerY += (poly[i].y + poly[j].y) * temp;
+        }
+
+        if (Math.Abs(accumulatedArea) < 1E-7f)
+            return new Vector2(0,0); 
+
+        accumulatedArea *= 3f;
+        return new Vector2(centerX / accumulatedArea, centerY / accumulatedArea);
     }
     
     public static bool FasterLineSegmentIntersection (Vector2 line1point1, Vector2 line1point2, Vector2 line2point1, Vector2 line2point2) {

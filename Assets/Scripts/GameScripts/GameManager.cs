@@ -21,11 +21,30 @@ public class GameManager : NetworkBehaviour, INetworkRunnerCallbacks
     public bool IsMapDataReady { get; private set; } = false;
     public event Action OnMapDataReady;
 
+    [Header("UI References")]
+    [Tooltip("Prefab pola tekstowego do instancjonowania (musi mieć TextEntryUI)")]
+    [SerializeField] private GameObject textEntryPrefab;
+
+    [Tooltip("Kontener UI, do którego będą dodawane pola tekstowe (z VerticalLayoutGroup)")]
+    [SerializeField] private RectTransform textContainer;
+
+    [Header("Testowanie")]
+    [SerializeField] private string defaultTestMessage = "To jest testowa wiadomość nr ";
+    private int messageCounter = 0;
+
     public override void Spawned()
     {
         if (Instance == null) Instance = this;
         else Destroy(gameObject);
-        
+        // Sprawdzenie, czy referencje są ustawione
+        if (textEntryPrefab == null)
+        {
+            Debug.LogError("Prefab pola tekstowego nie jest przypisany w DynamicTextAdder!");
+        }
+        if (textContainer == null)
+        {
+            Debug.LogError("Kontener tekstu nie jest przypisany w DynamicTextAdder!");
+        }
         Runner.AddCallbacks(this);
     }
 
@@ -82,6 +101,25 @@ public class GameManager : NetworkBehaviour, INetworkRunnerCallbacks
         Debug.Log("Map data set in GameManager.");
         OnMapDataReady?.Invoke(); // Wywołaj event, jeśli ktoś nasłuchuje
     }
+        public void AddNewTextEntry(string message)
+    {
+        if (textEntryPrefab == null || textContainer == null)
+        {
+            Debug.LogError("Nie można dodać tekstu - brakuje prefabu lub kontenera.");
+            return;
+        }
+
+        // Stwórz nową instancję prefabu jako dziecko kontenera
+        // Drugi argument (textContainer) automatycznie ustawia rodzica
+        GameObject newEntry = Instantiate(textEntryPrefab, textContainer);
+        newEntry.name = $"TextEntry_{messageCounter}"; // Opcjonalnie, dla porządku w Hierarchy
+        TextMeshProUGUI tmpText = newEntry.GetComponentInChildren<TextMeshProUGUI>();
+        if (tmpText != null) {
+            tmpText.text = message;
+        } else Debug.LogError("Nie znaleziono komponentu TextMeshProUGUI na instancji prefabu!", newEntry);
+         messageCounter++; // Zwiększ licznik dla kolejnych wiadomości testowych
+    }
+
     public void OnPlayerLeft(NetworkRunner runner, PlayerRef player) {
         if (Runner.IsSharedModeMasterClient)
         {
