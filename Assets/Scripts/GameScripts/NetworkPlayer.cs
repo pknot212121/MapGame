@@ -11,8 +11,14 @@ using System.Text;
 public class NetworkPlayer : NetworkBehaviour
 {
     private bool mapRelatedInitializationDone = false;
+
+    [Networked, Capacity(32)]
+    public NetworkString<_32> Nickname { get; private set; }
     public override void Spawned()
     {
+        string chosenNickname = PlayerPrefs.GetString("PlayerNickname", $"Gracz_{UnityEngine.Random.Range(100, 999)}");
+        Rpc_SetNickname(chosenNickname);
+
         TryInitializeWithMapData();
     }
 
@@ -28,8 +34,28 @@ public class NetworkPlayer : NetworkBehaviour
             {
                 Debug.Log($"Player {entry.Key}: {entry.Value}");
             }
+            foreach (var entry in GameManager.Instance.PlayerNicknames)
+            {
+                Debug.Log($"Player {entry.Key}: {entry.Value}");
+            }
         }
         
+    }
+
+    [Rpc(RpcSources.All, RpcTargets.StateAuthority)]
+    public void Rpc_SetNickname(NetworkString<_32> nickname, RpcInfo info = default)
+    {
+        string validatedNick = nickname.Value.Trim();
+        Nickname = validatedNick;
+        if (GameManager.Instance != null)
+        {
+            GameManager.Instance.PlayerNicknames.Set(info.Source, validatedNick);
+            Log.Info($"RPC: Zaktualizowano GameManager.PlayerNicknames dla {info.Source}.");
+        }
+         else
+        {
+            Log.Error("RPC: GameManager.Instance jest null, nie można zaktualizować centralnego słownika nicków.");
+        }
     }
     void TryInitializeWithMapData()
     {

@@ -13,6 +13,9 @@ public class GameManager : NetworkBehaviour, INetworkRunnerCallbacks
     [Networked,Capacity(20)] 
     public NetworkDictionary<PlayerRef, NetworkString<_32>> PlayersToCountries { get; } = new
         NetworkDictionary<PlayerRef, NetworkString<_32>>();
+
+    [Networked, Capacity(20)]
+    public NetworkDictionary<PlayerRef, NetworkString<_32>> PlayerNicknames { get; }
     public static GameManager Instance{get;private set;}
     public Map CurrentMapData { get; private set; }
     public bool IsMapDataReady { get; private set; } = false;
@@ -80,7 +83,13 @@ public class GameManager : NetworkBehaviour, INetworkRunnerCallbacks
         OnMapDataReady?.Invoke(); // Wywołaj event, jeśli ktoś nasłuchuje
     }
     public void OnPlayerLeft(NetworkRunner runner, PlayerRef player) {
-        if (Runner.IsSharedModeMasterClient) PlayersToCountries.Remove(player);
+        if (Runner.IsSharedModeMasterClient)
+        {
+            PlayersToCountries.Remove(player);
+            Debug.Log("Usunięto przypisanie gracza do państwa!");
+            PlayerNicknames.Remove(player);
+            Debug.Log("Usunięcie przypisania gracza do nickname");
+        }
      }
     public void OnSceneLoadDone(NetworkRunner runner) { }
     public void OnSceneLoadStart(NetworkRunner runner) { }

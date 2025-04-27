@@ -1,8 +1,22 @@
+using System;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
+using TMPro;
+using Fusion;
+using System.IO;
+using System.Linq;
+
 
 public class MenuController : MonoBehaviour
 {
+    [SerializeField] private TMP_InputField nicknameInput;
+
+    // void Start()
+    // {
+    //     PlayerPrefs.SetString("PlayerNickname", "guest");
+    // }
     public void JoinGameClick()
     {
         SceneManager.LoadScene("JoinGameMenu", LoadSceneMode.Single);
@@ -20,5 +34,15 @@ public class MenuController : MonoBehaviour
         #else
         Application.Quit();
         #endif
+    }
+
+    public void NicknameButtonClicked()
+    {
+        if(nicknameInput.text.Length >= 2)
+        {
+            PlayerPrefs.SetString("PlayerNickname", nicknameInput.text);
+            PlayerPrefs.Save();
+        }
+        else Debug.Log("Nickname musi mieć conajmniej dwa znaki!");
     }
 }
