@@ -36,17 +36,31 @@ public class NetworkPlayer : NetworkBehaviour
         if (GameManager.Instance != null && GameManager.Instance.IsMapDataReady)
         {
             Map currentMap = GameManager.Instance.CurrentMapData;
-            foreach(Country country in currentMap.countries)
+            // foreach(Country country in currentMap.countries)
+            // {
+            //     if(!GameManager.Instance.PlayersToCountries.ContainsValue(country.name))
+            //     {
+            //         GameManager.Instance.Rpc_SetPlayerCountry(
+            //         Object.Runner.LocalPlayer, 
+            //         country.name);
+            //     }
+            //     break;
+            // // }
+            Vector3 worldPosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+            if(Input.GetMouseButtonDown(0))
             {
-                if(!GameManager.Instance.PlayersToCountries.ContainsValue(country.name))
+                foreach(Province province in currentMap.provinces)
                 {
-                    GameManager.Instance.Rpc_SetPlayerCountry(
-                    Object.Runner.LocalPlayer, 
-                    country.name);
+                    if(ShapeTools.IsPointInPolygon((Vector2)worldPosition, province.points.ToArray()))
+                    {
+                        GameManager.Instance.Rpc_SetPlayerCountry(
+                        Object.Runner.LocalPlayer, 
+                        currentMap.GetCountry(province).name);
+                        mapRelatedInitializationDone = true;
+                        break;
+                    }
                 }
-                break;
             }
-            mapRelatedInitializationDone = true;
         }
     }
 }
