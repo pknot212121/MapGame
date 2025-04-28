@@ -53,7 +53,7 @@ public class GameController : MonoBehaviour
         }
     }
 
-    public void EndTurnClicked()
+    public void EndTurnClick()
     {
         Debug.Log("Próba zakończenia tury");
         {
@@ -90,9 +90,9 @@ public class GameController : MonoBehaviour
         {
             anteroomCanvas.gameObject.SetActive(false);
             gameplayCanvas.gameObject.SetActive(true);
-            endTurnButton.onClick.AddListener(EndTurnClicked);
         }
     }
+    
     void TryChangingOwnerhipOfAProvince()
     {
         if(NetworkManagerGame.Instance != null && NetworkManagerGame.Instance.IsMapDataReady)
