@@ -1680,8 +1680,10 @@ MonoBehaviour:
   gameplayCanvas: {fileID: 0}
   playerNicknameDisplayersTransform: {fileID: 0}
   startButton: {fileID: 0}
+  endTurnButton: {fileID: 0}
   startCounter: {fileID: 0}
   playersCountDisplayer: {fileID: 0}
+  networkPlayer: {fileID: 0}
 --- !u!1 &2097294567
 GameObject:
   m_ObjectHideFlags: 0
@@ -1715,8 +1717,10 @@ MonoBehaviour:
   gameplayCanvas: {fileID: 1939094701}
   playerNicknameDisplayersTransform: {fileID: 115694528}
   startButton: {fileID: 1940016354}
+  endTurnButton: {fileID: 188115239}
   startCounter: {fileID: 1156252012}
   playersCountDisplayer: {fileID: 14661044}
+  networkPlayer: {fileID: 8985892009029101596}
 --- !u!4 &2097294569
 Transform:
   m_ObjectHideFlags: 0
@@ -1866,6 +1870,17 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 5497276f9e3f04b40b1799b240877644, type: 3}
+--- !u!114 &8985892009029101596 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 6981972402399481823, guid: 5497276f9e3f04b40b1799b240877644, type: 3}
+  m_PrefabInstance: {fileID: 8985892009029101595}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f7cf5e6d94a58664c84cdea9143e2557, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0

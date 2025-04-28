@@ -186,8 +186,8 @@ public class MapCreatorController : MonoBehaviour
     }
 
     public void SaveMapClick(){
-        if(mapNameInput.text!=null) MapManagement.LoadMapIntoJson(mapNameInput.text);
-        else MapManagement.LoadMapIntoJson("map");
+        if(mapNameInput.text!=null) Map.LoadMapIntoJson(mapNameInput.text);
+        else Map.LoadMapIntoJson("map");
     }
 
     public void ExitClick()

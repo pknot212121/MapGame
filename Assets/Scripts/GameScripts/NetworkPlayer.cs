@@ -14,61 +14,35 @@ using UnityEngine.UI;
 
 public class NetworkPlayer : NetworkBehaviour
 {
-    private bool mapRelatedInitializationDone = false;
-    [SerializeField] private Button endTurnButton;
-
     [Networked, Capacity(32)]
     public NetworkString<_32> Nickname { get; private set; }
     public override void Spawned()
     {
         string chosenNickname = PlayerPrefs.GetString("PlayerNickname", $"Player_{UnityEngine.Random.Range(100, 999)}");
         Rpc_SetNickname(chosenNickname);
-
-        endTurnButton.onClick.AddListener(EndTurnClicked);
-
-        TryInitializeWithMapData();
+        
     }
 
     void Update()
     {
-        if (!mapRelatedInitializationDone)
-        {
-            TryInitializeWithMapData();
-        }
-        else TryChangingOwnerhipOfAProvince();
-        
-        if (Input.GetKeyDown(KeyCode.Tab))
-        {
-            foreach (var entry in GameManager.Instance.PlayersToCountries)
-            {
-                Debug.Log($"Player {entry.Key}: {entry.Value}");
-            }
-            foreach (var entry in GameManager.Instance.PlayerNicknames)
-            {
-                Debug.Log($"Player {entry.Key}: {entry.Value}");
-            }
-            Debug.Log("Active player: "+GameManager.Instance.ActivePlayer);
-        }
         
     }
 
-    public void EndTurnClicked()
-    {
-        if(GameManager.Instance.ActivePlayer==Runner.LocalPlayer && Runner.ActivePlayers.ToList().Count()>1)
-        {
-            RPC_EndTurn();
-        }
-    }
+
+
     [Rpc(RpcSources.All,RpcTargets.StateAuthority)]
-    private void RPC_EndTurn()
+    public void RPC_EndTurn()
     {
-        foreach(PlayerRef player in Runner.ActivePlayers.ToList())
+        if(NetworkManagerGame.Instance.ActivePlayer==Runner.LocalPlayer && Runner.ActivePlayers.ToList().Count()>1)
         {
-            if(player!=Runner.LocalPlayer)
+            foreach(PlayerRef player in Runner.ActivePlayers.ToList())
             {
-                GameManager.Instance.ActivePlayer = player;
-                Debug.Log("Koniec Tury gracza: "+Runner.LocalPlayer);
-                Debug.Log("Początek tury gracza: "+player);
+                if(player!=Runner.LocalPlayer)
+                {
+                    NetworkManagerGame.Instance.ActivePlayer = player;
+                    Debug.Log("Koniec Tury gracza: "+Runner.LocalPlayer);
+                    Debug.Log("Początek tury gracza: "+player);
+                }
             }
         }
     }
@@ -78,9 +52,9 @@ public class NetworkPlayer : NetworkBehaviour
     {
         string validatedNick = nickname.Value.Trim();
         Nickname = validatedNick;
-        if (GameManager.Instance != null)
+        if (NetworkManagerGame.Instance != null)
         {
-            GameManager.Instance.PlayerNicknames.Set(info.Source, validatedNick);
+            NetworkManagerGame.Instance.PlayerNicknames.Set(info.Source, validatedNick);
             Log.Info($"RPC: Zaktualizowano GameManager.PlayerNicknames dla {info.Source}.");
         }
          else
@@ -93,7 +67,7 @@ public class NetworkPlayer : NetworkBehaviour
     public void Rpc_ChangeProvinceOwnership(NetworkString<_32> winningSideName, NetworkString<_32> provinceName)
     {
         Transform provinceParentObjectTransform = GameObject.Find("Provinces").transform;
-        Map currentMap = GameManager.Instance.CurrentMapData;
+        Map currentMap = NetworkManagerGame.Instance.CurrentMapData;
         Country winningSide = currentMap.GetCountry(winningSideName.ToString());
         Province province = currentMap.GetProvince(provinceName.ToString());
         Country losingSide = currentMap.GetCountry(province);
@@ -102,66 +76,11 @@ public class NetworkPlayer : NetworkBehaviour
             if(country.name == losingSide.name) country.provinces.Remove(province);
             if(country.name == winningSideName.ToString()) country.provinces.Add(province);
         }
-        foreach(ProvinceGameObject provinceGameObject in GameManager.Instance.provinceGameObjects)
+        foreach(ProvinceGameObject provinceGameObject in NetworkManagerGame.Instance.provinceGameObjects)
         {
             if(provinceGameObject.data.name == province.name) provinceGameObject.SetColor(winningSide.color);
             Debug.Log("Podbito: "+ province.name);
         }
         
-    }
-    
-    void TryInitializeWithMapData()
-    {
-        if (GameManager.Instance != null && GameManager.Instance.IsMapDataReady)
-        {
-            Map currentMap = GameManager.Instance.CurrentMapData;
-            // foreach(Country country in currentMap.countries)
-            // {
-            //     if(!GameManager.Instance.PlayersToCountries.ContainsValue(country.name))
-            //     {
-            //         GameManager.Instance.Rpc_SetPlayerCountry(
-            //         Object.Runner.LocalPlayer, 
-            //         country.name);
-            //     }
-            //     break;
-            // // }
-            Vector3 worldPosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-            if(Input.GetMouseButtonDown(0))
-            {
-                foreach(Province province in currentMap.provinces)
-                {
-                    if(ShapeTools.IsPointInPolygon((Vector2)worldPosition, province.points.ToArray()))
-                    {
-                        GameManager.Instance.Rpc_SetPlayerCountry(
-                        Object.Runner.LocalPlayer, 
-                        currentMap.GetCountry(province).name);
-                        mapRelatedInitializationDone = true;
-                        Debug.Log("Państwo wybrane!");
-                        break;
-                    }
-                }
-            }
-        }
-    }
-    void TryChangingOwnerhipOfAProvince()
-    {
-        if(GameManager.Instance != null && GameManager.Instance.IsMapDataReady)
-        {
-            Map currentMap = GameManager.Instance.CurrentMapData;
-            Vector3 worldPosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-            if(Input.GetMouseButtonDown(0))
-            {
-                foreach(Province province in currentMap.provinces)
-                {
-                    if(ShapeTools.IsPointInPolygon((Vector2)worldPosition, province.points.ToArray()))
-                    {
-                        NetworkString<_32> countryName = GameManager.Instance.PlayersToCountries[Runner.LocalPlayer];
-                        Rpc_ChangeProvinceOwnership(countryName,province.name);
-                        break;
-                    }
-                }
-            }
-            
-        }
     }
 }

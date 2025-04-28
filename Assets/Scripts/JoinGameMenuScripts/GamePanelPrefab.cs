@@ -18,6 +18,6 @@ public class GamePanelPrefab : MonoBehaviour
 
     public void JoinClick()
     {
-        NetworkController.me.ConnectToSession(session);
+        NetworkManagerJoin.me.ConnectToSession(session);
     }
 }

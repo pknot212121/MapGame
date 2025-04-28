@@ -38,12 +38,12 @@ public class JoinGameMenuController : MonoBehaviour
             }
         }
         else name = gameNameInput.text;
-        NetworkController.me.CreateSession(name, filename);
+        NetworkManagerJoin.me.CreateSession(name, filename);
     }
 
     public void RefreshClick()
     {
-        NetworkController.me.RefreshRoomList();
+        NetworkManagerJoin.me.RefreshRoomList();
     }
 
     public void ChooseMapClick(){
