@@ -46,12 +46,11 @@ public class NetworkManagerJoin : MonoBehaviour, INetworkRunnerCallbacks
         else await JoinLobby();
     }
 
-    public async void CreateSession(string name, string filename)
+    public async void CreateSession(string name)
     {
         int num = UnityEngine.Random.Range(1000, 9999);
         if (runner == null) runner = gameObject.AddComponent<NetworkRunner>();
         Dictionary<string,SessionProperty> properites = new Dictionary<string, SessionProperty>();
-        properites["filename"] = filename;
         properites["PlayerCount"] = 20;
         await runner.StartGame(new StartGameArgs()
         {

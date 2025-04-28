@@ -14,8 +14,6 @@ public class JoinGameMenuController : MonoBehaviour
     public Transform gamesListContentTransform;
     public static JoinGameMenuController me;
 
-    public string filename = null;
-
     [SerializeField] private TMP_InputField gameNameInput;
 
     [SerializeField] private TMP_InputField mapNameInput;
@@ -39,7 +37,7 @@ public class JoinGameMenuController : MonoBehaviour
             }
         }
         else name = gameNameInput.text;
-        NetworkManagerJoin.me.CreateSession(name, filename);
+        NetworkManagerJoin.me.CreateSession(name);
     }
 
     public void RefreshClick()
@@ -62,7 +60,6 @@ public class JoinGameMenuController : MonoBehaviour
                 string fileName = Path.GetFileName(filePath);
                 if(mapNameInput.text + ".json"==fileName)
                 {
-                    filename = mapNameInput.text;
                     isFileFound = true;
                     Debug.Log("Znaleziono mapę!");
                     PlayerPrefs.SetString("mapName", mapNameInput.text);
