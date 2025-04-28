@@ -23,6 +23,7 @@ public class GameManager : NetworkBehaviour, INetworkRunnerCallbacks
     public int StartTimer { get; set; } // 10 - poczekalnia, 5-1 - odliczanie, -1 - rozpoczęta gra
     public static GameManager Instance{get;private set;}
     public Map CurrentMapData { get; private set; }
+    public List<ProvinceGameObject> provinceGameObjects {get; private set;}
     public bool IsMapDataReady { get; private set; } = false;
     public event Action OnMapDataReady;
 
@@ -111,12 +112,14 @@ public class GameManager : NetworkBehaviour, INetworkRunnerCallbacks
         }
     }
 
-    public void SetMapData(Map mapData)
+    public void SetMapData(Map mapData, List<ProvinceGameObject> provinceGameObjects)
     {
         CurrentMapData = mapData;
         IsMapDataReady = true;
+        this.provinceGameObjects = provinceGameObjects;
         Debug.Log("Map data set in GameManager.");
         OnMapDataReady?.Invoke();
+        
     }
 
     public void AddNewTextEntry(string message)

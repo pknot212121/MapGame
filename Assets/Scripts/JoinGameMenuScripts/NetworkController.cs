@@ -132,7 +132,8 @@ public class NetworkController : MonoBehaviour, INetworkRunnerCallbacks
         Debug.Log("MESSAGE: "+receivedMessage);
         Transform provinceParentObjectTransform = GameObject.Find("Provinces").transform;
         Map allProvinces = JsonUtility.FromJson<Map>(receivedMessage);
-        GameManager.Instance.SetMapData(allProvinces);
+        List<ProvinceGameObject> provinceGameObjects = new List<ProvinceGameObject>();
+
         foreach(Province provinceData in allProvinces.provinces)
         {
             List<Vector2> points = new List<Vector2>();
@@ -141,12 +142,13 @@ public class NetworkController : MonoBehaviour, INetworkRunnerCallbacks
                 points.Add(point);
             }
             ProvinceGameObject province = ShapeTools.CreateProvinceGameObject(provinceData.name,points);
-
+            provinceGameObjects.Add(province);
             if(allProvinces.GetCountry(provinceData)==null) province.SetColor(Color.white);
             else province.SetColor(allProvinces.GetCountry(provinceData).color);
 
             province.gameObject.transform.SetParent(provinceParentObjectTransform);
         }
+        GameManager.Instance.SetMapData(allProvinces,provinceGameObjects);
     }
     public void OnReliableDataProgress(NetworkRunner runner, PlayerRef player, ReliableKey key, float progress) { }
     public void OnConnectRequest(NetworkRunner runner, NetworkRunnerCallbackArgs.ConnectRequest request, byte[] token) { }

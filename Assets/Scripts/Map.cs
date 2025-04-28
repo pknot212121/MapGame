@@ -25,4 +25,8 @@ public class Map
     {
         return countries.FirstOrDefault(c => c.name == countryName);
     }
+    public Province GetProvince(string provinceName)
+    {
+        return provinces.FirstOrDefault(p => p.name == provinceName);
+    }
 }
