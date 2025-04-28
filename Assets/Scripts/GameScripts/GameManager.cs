@@ -9,6 +9,7 @@ using TMPro;
 using System.Text;
 using System.Linq;
 
+
 public class GameManager : NetworkBehaviour, INetworkRunnerCallbacks
 {
     [Networked,Capacity(20)] 
@@ -18,9 +19,7 @@ public class GameManager : NetworkBehaviour, INetworkRunnerCallbacks
     [Networked, Capacity(20)]
     public NetworkDictionary<PlayerRef, NetworkString<_32>> PlayerNicknames { get; }
     [Networked]
-    public PlayerRef Owner { get; set; }
-    [Networked]
-    public int StartTimer { get; set; } // 10 - poczekalnia, 5-1 - odliczanie, -1 - rozpoczęta gra
+    public int StartTimer { get; set; } = 10; // 10 - poczekalnia, 5-1 - odliczanie, -1 - rozpoczęta gra
     [Networked]
     public PlayerRef ActivePlayer {get;set;}
     public static GameManager Instance{get;private set;}
@@ -92,12 +91,14 @@ public class GameManager : NetworkBehaviour, INetworkRunnerCallbacks
     public void OnHostMigration(NetworkRunner runner, HostMigrationToken hostMigrationToken) { }
     public void OnInput(NetworkRunner runner, NetworkInput input) { }
     public void OnInputMissing(NetworkRunner runner, PlayerRef player, NetworkInput input) { }
-    public void OnPlayerJoined(NetworkRunner runner, PlayerRef player) {
+    public void OnPlayerJoined(NetworkRunner runner, PlayerRef player)
+    {
         if(!IsFirstActivePlayerSet && runner.IsSharedModeMasterClient)
         {
             ActivePlayer = player;
             IsFirstActivePlayerSet=true;
         }
+        GameController.me.UpdatePlayersCountDisplayer(Runner.ActivePlayers.ToList().Count(), runner.SessionInfo.MaxPlayers);
      }
 
     [Rpc(RpcSources.All, RpcTargets.StateAuthority)]
@@ -149,6 +150,7 @@ public class GameManager : NetworkBehaviour, INetworkRunnerCallbacks
 
     public void OnPlayerLeft(NetworkRunner runner, PlayerRef player)
     {
+        GameController.me.UpdatePlayersCountDisplayer(Runner.ActivePlayers.ToList().Count(), runner.SessionInfo.MaxPlayers);
         if (Runner.IsSharedModeMasterClient)
         {
             PlayersToCountries.Remove(player);
