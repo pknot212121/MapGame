@@ -10,14 +10,12 @@ using System.Linq;
 
 public class NetworkManagerGame : NetworkBehaviour, INetworkRunnerCallbacks
 {
-    [Networked,Capacity(20)] 
-    public NetworkDictionary<PlayerRef, NetworkString<_32>> PlayersToCountries { get; } = new NetworkDictionary<PlayerRef, NetworkString<_32>>();
-    [Networked, Capacity(20)]
-    public NetworkDictionary<PlayerRef, NetworkString<_32>> PlayerNicknames { get; }
-    [Networked]
-    public int StartTimer { get; set; } = 10; // 10 - poczekalnia, 5-1 - odliczanie, -1 - rozpoczęta gra
-    [Networked]
-    public PlayerRef ActivePlayer {get;set;}
+    [Networked,Capacity(20)] public NetworkDictionary<PlayerRef, NetworkString<_32>> PlayersToCountries { get; } = new NetworkDictionary<PlayerRef, NetworkString<_32>>();
+    [Networked, Capacity(20)] public NetworkDictionary<PlayerRef, NetworkString<_32>> PlayerNicknames { get; }
+    [Networked] public int StartTimer { get; set; } = 10; // 10 - poczekalnia, 5-1 - odliczanie, -1 - rozpoczęta gra
+    [Networked] public PlayerRef ActivePlayer {get;set;}
+
+
     public static NetworkManagerGame Instance{get;private set;}
     public Map CurrentMapData { get; private set; }
     public List<ProvinceGameObject> provinceGameObjects {get; private set;}
@@ -28,6 +26,8 @@ public class NetworkManagerGame : NetworkBehaviour, INetworkRunnerCallbacks
     [SerializeField] private GameObject textEntryPrefab;
     [SerializeField] private RectTransform textContainer;
     private int messageCounter = 0;
+
+
 
     [Rpc(RpcSources.All, RpcTargets.StateAuthority)]
     public void Rpc_SetPlayerCountry(PlayerRef player,NetworkString<_32> countryName)
@@ -50,6 +50,8 @@ public class NetworkManagerGame : NetworkBehaviour, INetworkRunnerCallbacks
         }
     }
 
+
+
     public void SetMapData(Map mapData, List<ProvinceGameObject> provinceGameObjects)
     {
         CurrentMapData = mapData;
@@ -59,7 +61,6 @@ public class NetworkManagerGame : NetworkBehaviour, INetworkRunnerCallbacks
         OnMapDataReady?.Invoke();
         
     }
-
     public void AddNewTextEntry(string message)
     {
         if (textEntryPrefab == null || textContainer == null)
@@ -77,36 +78,31 @@ public class NetworkManagerGame : NetworkBehaviour, INetworkRunnerCallbacks
     }
 
 
+
+
     public override void Spawned()
     {
         if (Instance == null) Instance = this;
         else Destroy(gameObject);
         Runner.AddCallbacks(this);
     }
-
     public void OnSessionListUpdated(NetworkRunner runner, List<SessionInfo> sessionList)
     {
         Debug.Log($"Rooms list update (Count: {sessionList.Count})");
 
         if (JoinGameMenuController.me) JoinGameMenuController.me.UpdateGamesList(sessionList);
     }
-
     public void OnConnectedToServer(NetworkRunner runner)
     {
         Debug.Log("Connected to server");
     }
-
     public void OnShutdown(NetworkRunner runner, ShutdownReason shutdownReason)
     {
         Debug.LogWarning($"OnShutdown: {shutdownReason}");
     }
-
-
-    //public void OnConnectedToServer(NetworkRunner runner) { }
     public void OnDisconnectedFromServer(NetworkRunner runner, NetDisconnectReason reason) { }
     public void OnConnectFailed(NetworkRunner runner, NetAddress remoteAddress, NetConnectFailedReason reason) { }
     public void OnUserSimulationMessage(NetworkRunner runner, SimulationMessagePtr message) { }
-    //public void OnShutdown(NetworkRunner runner, ShutdownReason shutdownReason) { }
     public void OnHostMigration(NetworkRunner runner, HostMigrationToken hostMigrationToken) { }
     public void OnInput(NetworkRunner runner, NetworkInput input) { }
     public void OnInputMissing(NetworkRunner runner, PlayerRef player, NetworkInput input) { }
@@ -115,7 +111,7 @@ public class NetworkManagerGame : NetworkBehaviour, INetworkRunnerCallbacks
         if(runner.IsSharedModeMasterClient)
         {
             IReadOnlyDictionary<string, SessionProperty> sessionProperties = runner.SessionInfo.Properties;
-            string filename = sessionProperties["filename"];
+            string filename = PlayerPrefs.GetString("mapName");
             string mapData = Map.LoadMapFromJson(filename);
             byte[] rawData = Map.Compress(mapData);
             runner.SendReliableDataToPlayer(player,ReliableKey.FromInts(42, 0, 21, 37),Encoding.UTF8.GetBytes(mapData));
@@ -126,8 +122,7 @@ public class NetworkManagerGame : NetworkBehaviour, INetworkRunnerCallbacks
             IsFirstActivePlayerSet=true;
         }
         GameController.me.UpdatePlayersCountDisplayer(Runner.ActivePlayers.ToList().Count(), runner.SessionInfo.MaxPlayers);
-     }
-
+    }
     public void OnPlayerLeft(NetworkRunner runner, PlayerRef player)
     {
         GameController.me.UpdatePlayersCountDisplayer(Runner.ActivePlayers.ToList().Count(), runner.SessionInfo.MaxPlayers);
@@ -139,7 +134,6 @@ public class NetworkManagerGame : NetworkBehaviour, INetworkRunnerCallbacks
             Debug.Log("Usunięcie przypisania gracza do nickname");
         }
     }
-    
     public void OnSceneLoadDone(NetworkRunner runner) { }
     public void OnSceneLoadStart(NetworkRunner runner) { }
     public void OnCustomAuthenticationResponse(NetworkRunner runner, Dictionary<string, object> data) { }

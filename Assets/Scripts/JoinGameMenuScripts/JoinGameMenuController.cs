@@ -23,6 +23,7 @@ public class JoinGameMenuController : MonoBehaviour
     void Start()
     {
         me = this;
+        if(PlayerPrefs.HasKey("mapName")) mapNameInput.text = PlayerPrefs.GetString("mapName");
     }
 
     public void StartGameClick()
@@ -64,6 +65,8 @@ public class JoinGameMenuController : MonoBehaviour
                     filename = mapNameInput.text;
                     isFileFound = true;
                     Debug.Log("Znaleziono mapę!");
+                    PlayerPrefs.SetString("mapName", mapNameInput.text);
+                    PlayerPrefs.Save();
                 }
             }
             if(!isFileFound)

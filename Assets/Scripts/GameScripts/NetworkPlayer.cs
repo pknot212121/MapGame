@@ -23,13 +23,6 @@ public class NetworkPlayer : NetworkBehaviour
         
     }
 
-    void Update()
-    {
-        
-    }
-
-
-
     [Rpc(RpcSources.All,RpcTargets.StateAuthority)]
     public void RPC_EndTurn()
     {
