@@ -31,11 +31,14 @@ public class GameController : MonoBehaviour
 
     void Update()
     {
-        if (!mapRelatedInitializationDone)
+        if(networkPlayer != null && networkPlayer.Runner != null)
         {
-            TryInitializeWithMapData();
+            if (!mapRelatedInitializationDone)
+            {
+                TryInitializeWithMapData();
+            }
+            else TryChangingOwnerhipOfAProvince();
         }
-        else TryChangingOwnerhipOfAProvince();
         if (Input.GetKeyDown(KeyCode.Tab))
         {
             foreach (var entry in NetworkManagerGame.Instance.PlayersToCountries)
@@ -118,6 +121,7 @@ public class GameController : MonoBehaviour
         {
             Map currentMap = NetworkManagerGame.Instance.CurrentMapData;
             Debug.Log(currentMap.countries[0].name);
+            Debug.Log(networkPlayer.Runner.LocalPlayer);
             Vector3 worldPosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
             if(Input.GetMouseButtonDown(0))
             {
