@@ -9,10 +9,13 @@ using TMPro;
 using System.Text;
 using Unity.VisualScripting;
 using UnityEngine.Assertions.Must;
+using System.Linq;
+using UnityEngine.UI;
 
 public class NetworkPlayer : NetworkBehaviour
 {
     private bool mapRelatedInitializationDone = false;
+    [SerializeField] private Button endTurnButton;
 
     [Networked, Capacity(32)]
     public NetworkString<_32> Nickname { get; private set; }
@@ -20,6 +23,8 @@ public class NetworkPlayer : NetworkBehaviour
     {
         string chosenNickname = PlayerPrefs.GetString("PlayerNickname", $"Player_{UnityEngine.Random.Range(100, 999)}");
         Rpc_SetNickname(chosenNickname);
+
+        endTurnButton.onClick.AddListener(EndTurnClicked);
 
         TryInitializeWithMapData();
     }
@@ -42,8 +47,30 @@ public class NetworkPlayer : NetworkBehaviour
             {
                 Debug.Log($"Player {entry.Key}: {entry.Value}");
             }
+            Debug.Log("Active player: "+GameManager.Instance.ActivePlayer);
         }
         
+    }
+
+    public void EndTurnClicked()
+    {
+        if(GameManager.Instance.ActivePlayer==Runner.LocalPlayer && Runner.ActivePlayers.ToList().Count()>1)
+        {
+            RPC_EndTurn();
+        }
+    }
+    [Rpc(RpcSources.All,RpcTargets.StateAuthority)]
+    private void RPC_EndTurn()
+    {
+        foreach(PlayerRef player in Runner.ActivePlayers.ToList())
+        {
+            if(player!=Runner.LocalPlayer)
+            {
+                GameManager.Instance.ActivePlayer = player;
+                Debug.Log("Koniec Tury gracza: "+Runner.LocalPlayer);
+                Debug.Log("Początek tury gracza: "+player);
+            }
+        }
     }
 
     [Rpc(RpcSources.All, RpcTargets.StateAuthority)]
@@ -78,7 +105,7 @@ public class NetworkPlayer : NetworkBehaviour
         foreach(ProvinceGameObject provinceGameObject in GameManager.Instance.provinceGameObjects)
         {
             if(provinceGameObject.data.name == province.name) provinceGameObject.SetColor(winningSide.color);
-            Debug.Log("Sprawdzam: "+ province.name);
+            Debug.Log("Podbito: "+ province.name);
         }
         
     }

@@ -21,10 +21,13 @@ public class GameManager : NetworkBehaviour, INetworkRunnerCallbacks
     public PlayerRef Owner { get; set; }
     [Networked]
     public int StartTimer { get; set; } // 10 - poczekalnia, 5-1 - odliczanie, -1 - rozpoczęta gra
+    [Networked]
+    public PlayerRef ActivePlayer {get;set;}
     public static GameManager Instance{get;private set;}
     public Map CurrentMapData { get; private set; }
     public List<ProvinceGameObject> provinceGameObjects {get; private set;}
     public bool IsMapDataReady { get; private set; } = false;
+    public bool IsFirstActivePlayerSet {get; private set;} = false;
     public event Action OnMapDataReady;
 
     [Header("UI References")]
@@ -89,7 +92,13 @@ public class GameManager : NetworkBehaviour, INetworkRunnerCallbacks
     public void OnHostMigration(NetworkRunner runner, HostMigrationToken hostMigrationToken) { }
     public void OnInput(NetworkRunner runner, NetworkInput input) { }
     public void OnInputMissing(NetworkRunner runner, PlayerRef player, NetworkInput input) { }
-    public void OnPlayerJoined(NetworkRunner runner, PlayerRef player) { }
+    public void OnPlayerJoined(NetworkRunner runner, PlayerRef player) {
+        if(!IsFirstActivePlayerSet && runner.IsSharedModeMasterClient)
+        {
+            ActivePlayer = player;
+            IsFirstActivePlayerSet=true;
+        }
+     }
 
     [Rpc(RpcSources.All, RpcTargets.StateAuthority)]
     public void Rpc_SetPlayerCountry(PlayerRef player,NetworkString<_32> countryName)
