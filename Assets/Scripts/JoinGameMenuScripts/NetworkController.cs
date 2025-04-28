@@ -75,6 +75,13 @@ public class NetworkController : MonoBehaviour, INetworkRunnerCallbacks
         });
     }
 
+    public async void LeaveRoom()
+    {
+        await runner.Shutdown();
+        SceneManager.LoadScene("JoinGameMenu");
+        await JoinLobby();
+    }
+
     public void OnSessionListUpdated(NetworkRunner runner, List<SessionInfo> sessionList)
     {
         //Debug.Log($"Rooms list update (Count: {sessionList.Count})");

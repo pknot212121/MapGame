@@ -17,4 +17,9 @@ public class GameController : MonoBehaviour
         me = this;
         startButton.interactable = false;
     }
+
+    public void ReturnToLobbyClick()
+    {
+        NetworkController.me.LeaveRoom();
+    }
 }
