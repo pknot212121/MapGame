@@ -77,15 +77,15 @@ public class NetworkManagerJoin : MonoBehaviour, INetworkRunnerCallbacks
 
     public async void LeaveRoom()
     {
-       if (runner != null && runner.IsRunning && runner.IsSharedModeMasterClient)
+        if (runner != null && runner.IsRunning && runner.IsSharedModeMasterClient)
         {
             Debug.Log($"SMMC ({runner.LocalPlayer}) is leaving. Sending reliable data to other players.");
 
             // Przygotuj dane do wysłania (np. string lub serializowany obiekt)
             NetworkManagerGame gameManager = NetworkManagerGame.Instance; 
-            Map lastMessage = gameManager.CurrentMapData;
-            string Message = lastMessage.SerializeToJson();
-            byte[] rawData = Map.Compress(Message);
+            string Message = JsonUtility.ToJson(gameManager.CurrentMapData);
+            Debug.Log("MESSAGE IS: "+Message);
+            
 
             // Pobierz listę wszystkich aktywnych graczy
             var activePlayers = runner.ActivePlayers;
@@ -96,7 +96,7 @@ public class NetworkManagerJoin : MonoBehaviour, INetworkRunnerCallbacks
                 if (player != runner.LocalPlayer) // Nie wysyłaj do siebie samego
                 {
                     Debug.Log($"SMMC: Sending leaving data to Player {player}");
-                    runner.SendReliableDataToPlayer(player, ReliableKey.FromInts(42, 0, 21, 37), rawData);
+                    runner.SendReliableDataToPlayer(player,ReliableKey.FromInts(42, 0, 21, 37),Encoding.UTF8.GetBytes(Message));
                 }
             }
 
@@ -141,7 +141,8 @@ public class NetworkManagerJoin : MonoBehaviour, INetworkRunnerCallbacks
             }
         }
      }
-    public void OnPlayerLeft(NetworkRunner runner, PlayerRef player) { }
+    public void OnPlayerLeft(NetworkRunner runner, PlayerRef player) { 
+    }
     public void OnSceneLoadDone(NetworkRunner runner) { }
     public void OnSceneLoadStart(NetworkRunner runner) { }
     public void OnCustomAuthenticationResponse(NetworkRunner runner, Dictionary<string, object> data) { }
