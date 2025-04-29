@@ -72,23 +72,17 @@ public class ShapeTools
 
     public static Vector2 CentroidOfAPolygon(List<Vector2> poly)
     {
-        float accumulatedArea = 0.0f;
-        float centerX = 0.0f;
-        float centerY = 0.0f;
-
-        for (int i = 0, j = poly.Count - 1; i < poly.Count; j = i++)
+        float sumX=0;
+        float sumY=0;
+        int count = poly.Count();
+        foreach(Vector2 point in poly)
         {
-            float temp = poly[i].x * poly[j].y - poly[j].x * poly[i].y;
-            accumulatedArea += temp;
-            centerX += (poly[i].x + poly[j].x) * temp;
-            centerY += (poly[i].y + poly[j].y) * temp;
+            sumX+=point.x;
+            sumY+=point.y;
         }
-
-        if (Math.Abs(accumulatedArea) < 1E-7f)
-            return new Vector2(0,0); 
-
-        accumulatedArea *= 3f;
-        return new Vector2(centerX / accumulatedArea, centerY / accumulatedArea);
+        sumX/=count;
+        sumY/=count;
+        return new Vector2(sumX,sumY);
     }
     
     public static bool FasterLineSegmentIntersection (Vector2 line1point1, Vector2 line1point2, Vector2 line2point1, Vector2 line2point2) {
