@@ -132,6 +132,7 @@ public class GameController : MonoBehaviour
         GameObject prefab = Resources.Load("Prefabs/PlayerNicknameDisplayer") as GameObject;
         foreach(var kvp in NetworkManagerGame.Instance.PlayersToCountries)
         {
+            Debug.Log(kvp);
             GameObject pnd = Instantiate(prefab);
             pnd.GetComponent<PlayerNicknameDisplayer>().Initialise(NetworkManagerGame.Instance.PlayerNicknames[kvp.Key].Value, NetworkManagerGame.Instance.CurrentMapData.GetCountry(kvp.Value.Value));
             pnd.transform.SetParent(playerNicknameDisplayersTransform);
