@@ -242,8 +242,10 @@ public class MapCreatorController : MonoBehaviour
             provincePoints.Add((Vector2)cursor.transform.position);
         }
     }
-    public void DeletingAndReturingProvincesLogic(){
-        if(Input.GetKey(KeyCode.LeftControl) && Input.GetKeyDown(KeyCode.Z)){
+    public void DeletingAndReturingProvincesLogic()
+    {
+        if(Input.GetKey(KeyCode.LeftControl) && Input.GetKeyDown(KeyCode.Z))
+        {
             ProvinceGameObject lastProvince = provinceGameObjects[provinceGameObjects.Count-1];
             foreach(Vector2 point in lastProvince.points){
                 allPoints.Remove(point);
@@ -252,15 +254,18 @@ public class MapCreatorController : MonoBehaviour
             deleted.Push(lastProvince);
             Destroy(lastProvince.gameObject);
         }
-        if(Input.GetKey(KeyCode.LeftControl) && Input.GetKeyDown(KeyCode.Y) && deleted.Count>0){
+        if(Input.GetKey(KeyCode.LeftControl) && Input.GetKeyDown(KeyCode.Y) && deleted.Count>0)
+        {
             ProvinceGameObject newProvince = deleted.Pop();
             ProvinceGameObject province = ShapeTools.CreateProvinceGameObject(newProvince.name, newProvince.points);
             provinceGameObjects.Add(province);
-            foreach(Vector2 point in province.points){
+            foreach(Vector2 point in province.points)
+            {
                 allPoints.Add(point);
             }
         }
-        if(Input.GetKey(KeyCode.LeftControl) && Input.GetKeyDown(KeyCode.S)){
+        if(Input.GetKey(KeyCode.LeftControl) && Input.GetKeyDown(KeyCode.S))
+        {
             SaveMapClick();
         }
     }
@@ -301,10 +306,12 @@ public class MapCreatorController : MonoBehaviour
         return false;
     }
 
-    Vector3 NearestPoint(Vector2 worldPosition, int zet){
+    Vector3 NearestPoint(Vector2 worldPosition, int zet)
+    {
         double min_distance=double.MaxValue;
         Vector2 nearest_point = worldPosition;
-        foreach(Vector2 point in allPoints){
+        foreach(Vector2 point in allPoints)
+        {
             double distance = Vector2.Distance(worldPosition,point);
             if(distance<min_distance && point!=worldPosition){min_distance=distance;nearest_point=point;}
         }
