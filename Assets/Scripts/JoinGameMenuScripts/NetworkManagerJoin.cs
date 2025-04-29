@@ -74,42 +74,10 @@ public class NetworkManagerJoin : MonoBehaviour, INetworkRunnerCallbacks
 
     public async void LeaveRoom()
     {
-        if (runner != null && runner.IsRunning && runner.IsSharedModeMasterClient)
-        {
-            Debug.Log($"SMMC ({runner.LocalPlayer}) is leaving. Sending reliable data to other players.");
-
-            // Przygotuj dane do wysłania (np. string lub serializowany obiekt)
-            NetworkManagerGame gameManager = NetworkManagerGame.Instance; 
-            string Message = JsonUtility.ToJson(gameManager.CurrentMapData);
-            Debug.Log("MESSAGE IS: "+Message);
-            
-
-            // Pobierz listę wszystkich aktywnych graczy
-            var activePlayers = runner.ActivePlayers;
-
-            // Wyślij dane do każdego INNEGO gracza
-            foreach (PlayerRef player in activePlayers)
-            {
-                if (player != runner.LocalPlayer) // Nie wysyłaj do siebie samego
-                {
-                    Debug.Log($"SMMC: Sending leaving data to Player {player}");
-                    runner.SendReliableDataToPlayer(player,ReliableKey.FromInts(42, 0, 21, 37),Encoding.UTF8.GetBytes(Message));
-                }
-            }
-
-            // Opcjonalnie: Małe opóźnienie, aby dać sieci szansę na wysłanie
-            // Nie ma gwarancji, ale może pomóc.
-             await Task.Delay(100); // Czekaj 100ms
-        }
-        // --- KONIEC ZMIANY ---
-
-        // Kontynuuj proces opuszczania pokoju
         if (runner != null)
         {
             await runner.Shutdown();
         }
-
-        // Przeładuj scenę menu i dołącz do lobby
         SceneManager.LoadScene("JoinGameMenu");
         await JoinLobby();
     }
