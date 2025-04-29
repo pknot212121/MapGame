@@ -14,7 +14,8 @@ public class NetworkManagerGame : NetworkBehaviour, INetworkRunnerCallbacks
     [Networked, Capacity(20)] public NetworkDictionary<PlayerRef, NetworkString<_32>> PlayerNicknames { get; }
     [Networked] public int StartTimer { get; set; } = 10; // 10 - poczekalnia, 5-1 - odliczanie, -1 - rozpoczęta gra
     [Networked] public PlayerRef ActivePlayer {get;set;}
-    [Networked] public PlayerRef CurrentHost {get;set;}
+
+    [Networked] public bool IsMapLoaded {get;set;} = false;
 
 
     public static NetworkManagerGame Instance{get;private set;}
@@ -124,7 +125,6 @@ public class NetworkManagerGame : NetworkBehaviour, INetworkRunnerCallbacks
         {
             if(Runner.LocalPlayer == player) // Jesli to host dołącza (tworzy pokój)
             {
-                CurrentHost = Runner.LocalPlayer;
                 string filename = PlayerPrefs.GetString("mapName");
                 GameController.me.mapString = Map.LoadMapFromJson(filename);
                 Map map = JsonUtility.FromJson<Map>(GameController.me.mapString);
@@ -136,7 +136,6 @@ public class NetworkManagerGame : NetworkBehaviour, INetworkRunnerCallbacks
                 runner.SendReliableDataToPlayer(player, ReliableKey.FromInts(42, 0, 21, 37),Encoding.UTF8.GetBytes(GameController.me.mapString));
                 Debug.Log("Sent reliable data to " + player);
             }
-            Debug.Log("HOST TO: "+CurrentHost);
             /*if(!IsMapLoaded)
             {
                 

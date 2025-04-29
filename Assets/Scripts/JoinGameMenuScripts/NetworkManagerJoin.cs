@@ -92,7 +92,6 @@ public class NetworkManagerJoin : MonoBehaviour, INetworkRunnerCallbacks
             {
                 if (player != runner.LocalPlayer) // Nie wysyłaj do siebie samego
                 {
-                    gameManager.CurrentHost = player;
                     Debug.Log($"SMMC: Sending leaving data to Player {player}");
                     runner.SendReliableDataToPlayer(player,ReliableKey.FromInts(42, 0, 21, 37),Encoding.UTF8.GetBytes(Message));
                 }
