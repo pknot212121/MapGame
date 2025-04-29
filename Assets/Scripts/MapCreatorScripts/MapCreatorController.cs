@@ -50,6 +50,12 @@ public class MapCreatorController : MonoBehaviour
     {
         me = this;
     }
+    void Update()
+    {
+        if(isProvinceShapeFormed) ProvinceShapeFormLogic();
+        else DeletingAndReturingProvincesLogic();
+        if(countryAdjusted != null) AddingProvincesToCountriesLogic();
+    }
 
     public void CreateProvinceClick()
     {
@@ -266,22 +272,6 @@ public class MapCreatorController : MonoBehaviour
             
         }
     }
-
-    void Update()
-    {
-        if(isProvinceShapeFormed)
-        {
-            ProvinceShapeFormLogic();
-        }
-        else{
-            DeletingAndReturingProvincesLogic();
-        }
-        if(countryAdjusted != null){
-            // Debug.Log("Tryb Edycji Kraju!");
-            AddingProvincesToCountriesLogic();
-        }
-    }
-
 
     bool IsPointerOverSpecificCanvas(Canvas c)
     {

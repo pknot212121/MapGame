@@ -76,7 +76,23 @@ public class NetworkManagerGame : NetworkBehaviour, INetworkRunnerCallbacks
         } else Debug.LogError("Nie znaleziono komponentu TextMeshProUGUI na instancji prefabu!", newEntry);
          messageCounter++;
     }
+    
+    public PlayerRef GetOwnerOfACountry(NetworkString<_32> countryName)
+    {
+        foreach(KeyValuePair<PlayerRef,NetworkString<_32>> keyValuePair in PlayersToCountries)
+        {
+            if(keyValuePair.Value==countryName) return keyValuePair.Key;
+        }
+        return PlayerRef.None;
+    }
 
+    public void PrintCountryOwners()
+    {
+        foreach(KeyValuePair<PlayerRef,NetworkString<_32>> keyValuePair in PlayersToCountries)
+        {
+            Debug.Log("Gracz: "+keyValuePair.Key+" Państwo: "+keyValuePair.Value);
+        }
+    }
 
 
 

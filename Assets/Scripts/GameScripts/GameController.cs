@@ -17,12 +17,9 @@ public class GameController : MonoBehaviour
     public TMP_Text startCounter;
     public TMP_Text playersCountDisplayer;
     public NetworkPlayer networkPlayer;
-    
-    private bool mapRelatedInitializationDone = false;
 
     void Start()
     {
-        TryInitializeWithMapData();
         me = this;
         // startButton.gameObject.SetActive(false);
         // startCounter.gameObject.SetActive(false);
@@ -33,23 +30,8 @@ public class GameController : MonoBehaviour
     {
         if(networkPlayer != null && networkPlayer.Runner != null)
         {
-            if (!mapRelatedInitializationDone)
-            {
-                TryInitializeWithMapData();
-            }
+            if (anteroomCanvas != null) TrySettingCountryForPlayer();
             else TryChangingOwnerhipOfAProvince();
-        }
-        if (Input.GetKeyDown(KeyCode.Tab))
-        {
-            foreach (var entry in NetworkManagerGame.Instance.PlayersToCountries)
-            {
-                Debug.Log($"Player {entry.Key}: {entry.Value}");
-            }
-            foreach (var entry in NetworkManagerGame.Instance.PlayerNicknames)
-            {
-                Debug.Log($"Player {entry.Key}: {entry.Value}");
-            }
-            Debug.Log("Active player: "+NetworkManagerGame.Instance.ActivePlayer);
         }
     }
 
@@ -115,13 +97,11 @@ public class GameController : MonoBehaviour
         }
     }
 
-    void TryInitializeWithMapData()
+    void TrySettingCountryForPlayer()
     {
         if (NetworkManagerGame.Instance != null && NetworkManagerGame.Instance.IsMapDataReady)
         {
             Map currentMap = NetworkManagerGame.Instance.CurrentMapData;
-            Debug.Log(currentMap.countries[0].name);
-            Debug.Log(networkPlayer.Runner.LocalPlayer);
             Vector3 worldPosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
             if(Input.GetMouseButtonDown(0))
             {
@@ -129,11 +109,15 @@ public class GameController : MonoBehaviour
                 {
                     if(ShapeTools.IsPointInPolygon((Vector2)worldPosition, province.points.ToArray()))
                     {
-                        NetworkManagerGame.Instance.Rpc_SetPlayerCountry(
-                        networkPlayer.Runner.LocalPlayer, 
-                        currentMap.GetCountry(province).name);
-                        mapRelatedInitializationDone = true;
-                        Debug.Log("Państwo wybrane!");
+                        string countryName = currentMap.GetCountry(province).name;
+                        PlayerRef owner = NetworkManagerGame.Instance.GetOwnerOfACountry(countryName);
+                        if(owner==PlayerRef.None)
+                        {
+                            NetworkManagerGame.Instance.Rpc_SetPlayerCountry(
+                            networkPlayer.Runner.LocalPlayer, 
+                            currentMap.GetCountry(province).name);
+                            NetworkManagerGame.Instance.PrintCountryOwners();
+                        }
                         break;
                     }
                 }
