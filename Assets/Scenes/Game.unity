@@ -1644,58 +1644,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1 &2020502345
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 2020502346}
-  - component: {fileID: 2020502347}
-  m_Layer: 0
-  m_Name: GameManager
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &2020502346
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2020502345}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0.040886637, y: 0.22059682, z: -12.970295}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &2020502347
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2020502345}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f2fc88f5099d10d44a70feeb5fc9c89f, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  anteroomCanvas: {fileID: 0}
-  gameplayCanvas: {fileID: 0}
-  playerNicknameDisplayersTransform: {fileID: 0}
-  startButton: {fileID: 0}
-  endTurnButton: {fileID: 0}
-  startCounter: {fileID: 0}
-  playersCountDisplayer: {fileID: 0}
-  networkPlayer: {fileID: 0}
 --- !u!1 &2097294567
 GameObject:
   m_ObjectHideFlags: 0
@@ -1728,11 +1676,19 @@ MonoBehaviour:
   anteroomCanvas: {fileID: 1981649742}
   gameplayCanvas: {fileID: 1939094701}
   playerNicknameDisplayersTransform: {fileID: 115694528}
+  provincesTransform: {fileID: 2008197890}
   startButton: {fileID: 1940016354}
   endTurnButton: {fileID: 188115239}
   startCounter: {fileID: 1156252012}
   playersCountDisplayer: {fileID: 14661044}
   networkPlayer: {fileID: 8985892009029101596}
+  mapString: 
+  map:
+    provinces: []
+    countries: []
+    resourceInfos: []
+    troopInfos: []
+  provinceGameObjects: []
 --- !u!4 &2097294569
 Transform:
   m_ObjectHideFlags: 0
@@ -1906,7 +1862,6 @@ SceneRoots:
   - {fileID: 1939094702}
   - {fileID: 2008197890}
   - {fileID: 5631805723133198302}
-  - {fileID: 2020502346}
   - {fileID: 8985892009029101595}
   - {fileID: 115694528}
   - {fileID: 2097294569}

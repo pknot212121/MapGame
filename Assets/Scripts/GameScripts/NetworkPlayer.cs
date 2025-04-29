@@ -19,8 +19,8 @@ public class NetworkPlayer : NetworkBehaviour
     public override void Spawned()
     {
         string chosenNickname = PlayerPrefs.GetString("PlayerNickname", $"Player_{UnityEngine.Random.Range(100, 999)}");
+        Debug.Log("Spawned");
         Rpc_SetNickname(chosenNickname);
-        
     }
 
     [Rpc(RpcSources.All,RpcTargets.StateAuthority)]

@@ -15,13 +15,12 @@ public class ProvinceGameObject : MonoBehaviour
         gameObject.GetComponent<MeshRenderer>().material.color = color;
     }
 
-    public void Initialise(Map map,Province data, List<Vector2> points = null)
+    public void Initialise(Province data, List<Vector2> points = null)
     {
         this.data = data;
         data.gameObject = this;
         this.points = points;
         if(points == null) points = new List<Vector2>();
-        if(map.GetCountry(data) != null) SetColor(map.GetCountry(data).color);
     }
 
     public void Initialise(string name, List<Vector2> points = null)

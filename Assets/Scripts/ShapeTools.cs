@@ -239,4 +239,16 @@ public class ShapeTools
         if(parent) shape.transform.SetParent(parent.transform);
         return province;
     }
+
+    public static ProvinceGameObject CreateProvinceGameObject(Province data, List<Vector2> points)
+    {
+        GameObject shape = ShapeTools.CreateShape("Province", points, 0.2f);
+        if(!shape) return null;
+
+        ProvinceGameObject province = shape.AddComponent<ProvinceGameObject>();
+        province.Initialise(data, points);
+        GameObject parent = GameObject.Find("Provinces");
+        if(parent) shape.transform.SetParent(parent.transform);
+        return province;
+    }
 }

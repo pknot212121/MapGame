@@ -52,13 +52,10 @@ public class NetworkManagerJoin : MonoBehaviour, INetworkRunnerCallbacks
     {
         int num = UnityEngine.Random.Range(1000, 9999);
         if (runner == null) runner = gameObject.AddComponent<NetworkRunner>();
-        Dictionary<string,SessionProperty> properites = new Dictionary<string, SessionProperty>();
-        properites["PlayerCount"] = 20;
         await runner.StartGame(new StartGameArgs()
         {
             GameMode = GameMode.Shared,
             SessionName = name,
-            SessionProperties = properites,
             PlayerCount = 20,
             Scene = gameSceneRef
         });

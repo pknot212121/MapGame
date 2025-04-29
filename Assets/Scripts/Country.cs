@@ -21,16 +21,27 @@ public class Country
     public Country(string name)
     {
         this.name = name;
+        SetRandomColor();
+    }
+
+
+    public void SetRandomColor()
+    {
         color = Color.white;
         while(color == Color.white)
         {
             color = new Color(UnityEngine.Random.value, UnityEngine.Random.value, UnityEngine.Random.value);
             foreach(Country c in MapCreatorController.me.map.countries)
             {
-                if(color == c.color) color = Color.white;
+                if(color == c.color && c != this) color = Color.white;
             }
         }
+        foreach(Province p in provinces)
+        {
+            if(p.gameObject) p.gameObject.SetColor(color);
+        }
     }
+
     public Country(string name, Color color)
     {
         this.name = name;

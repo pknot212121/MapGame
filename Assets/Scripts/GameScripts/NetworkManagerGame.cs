@@ -23,7 +23,7 @@ public class NetworkManagerGame : NetworkBehaviour, INetworkRunnerCallbacks
     public List<ProvinceGameObject> provinceGameObjects {get; private set;}
     public bool IsMapDataReady { get; private set; } = false;
     public bool IsFirstActivePlayerSet {get; private set;} = false;
-    public event Action OnMapDataReady;
+    //public event Action OnMapDataReady;
 
     [SerializeField] private GameObject textEntryPrefab;
     [SerializeField] private RectTransform textContainer;
@@ -46,15 +46,15 @@ public class NetworkManagerGame : NetworkBehaviour, INetworkRunnerCallbacks
 
 
 
-    public void SetMapData(Map mapData, List<ProvinceGameObject> provinceGameObjects)
+    /*public void SetMapData(Map mapData, List<ProvinceGameObject> provinceGameObjects)
     {
         CurrentMapData = mapData;
         IsMapDataReady = true;
         this.provinceGameObjects = provinceGameObjects;
         Debug.Log("Map data set in GameManager.");
         OnMapDataReady?.Invoke();
-        
-    }
+    }*/
+
     public void AddNewTextEntry(string message)
     {
         if (textEntryPrefab == null || textContainer == null)
@@ -102,17 +102,16 @@ public class NetworkManagerGame : NetworkBehaviour, INetworkRunnerCallbacks
     }
     public void OnSessionListUpdated(NetworkRunner runner, List<SessionInfo> sessionList)
     {
-        Debug.Log($"Rooms list update (Count: {sessionList.Count})");
-
-        if (JoinGameMenuController.me) JoinGameMenuController.me.UpdateGamesList(sessionList);
+        //Debug.Log($"Rooms list update (Count: {sessionList.Count})");
+        //if (JoinGameMenuController.me) JoinGameMenuController.me.UpdateGamesList(sessionList);
     }
     public void OnConnectedToServer(NetworkRunner runner)
     {
-        Debug.Log("Connected to server");
+        //Debug.Log("Connected to server");
     }
     public void OnShutdown(NetworkRunner runner, ShutdownReason shutdownReason)
     {
-        Debug.LogWarning($"OnShutdown: {shutdownReason}");
+        //Debug.LogWarning($"OnShutdown: {shutdownReason}");
     }
     public void OnDisconnectedFromServer(NetworkRunner runner, NetDisconnectReason reason) { }
     public void OnConnectFailed(NetworkRunner runner, NetAddress remoteAddress, NetConnectFailedReason reason) { }
@@ -122,12 +121,24 @@ public class NetworkManagerGame : NetworkBehaviour, INetworkRunnerCallbacks
     public void OnInputMissing(NetworkRunner runner, PlayerRef player, NetworkInput input) { }
     public void OnPlayerJoined(NetworkRunner runner, PlayerRef player)
     {
-        if(runner.IsSharedModeMasterClient)
+        if(Runner.IsSharedModeMasterClient) // Tylko host wykonuje zmiany
         {
-            if(!IsMapLoaded)
+            if(Runner.LocalPlayer == player) // Jesli to host dołącza (tworzy pokój)
             {
                 string filename = PlayerPrefs.GetString("mapName");
-                string mapData = Map.LoadMapFromJson(filename);
+                GameController.me.mapString = Map.LoadMapFromJson(filename);
+                Map map = JsonUtility.FromJson<Map>(GameController.me.mapString);
+                GameController.me.SetUpMap(map);
+                Debug.Log("Set up host scene");
+            }
+            else // Jeśli to nie host dołącza to wysyła wcześniej ustawione dane z GameController
+            {
+                runner.SendReliableDataToPlayer(player, ReliableKey.FromInts(42, 0, 21, 37),Encoding.UTF8.GetBytes(GameController.me.mapString));
+                Debug.Log("Sent reliable data to " + player);
+            }
+            /*if(!IsMapLoaded)
+            {
+                
                 runner.SendReliableDataToPlayer(player,ReliableKey.FromInts(42, 0, 21, 37),Encoding.UTF8.GetBytes(mapData));
                 IsMapLoaded = true;
             }
@@ -137,13 +148,14 @@ public class NetworkManagerGame : NetworkBehaviour, INetworkRunnerCallbacks
                 string Message = JsonUtility.ToJson(CurrentMapData);
                 Debug.Log(Message);
                 runner.SendReliableDataToPlayer(player,ReliableKey.FromInts(42, 0, 21, 37),Encoding.UTF8.GetBytes(Message));
-            }
+            }*/
+            StartTimer = 10;
         }
-        if(!IsFirstActivePlayerSet && runner.IsSharedModeMasterClient)
+        /*if(!IsFirstActivePlayerSet && runner.IsSharedModeMasterClient)
         {
             ActivePlayer = player;
             IsFirstActivePlayerSet=true;
-        }
+        }*/
         GameController.me.UpdatePlayersCountDisplayer(Runner.ActivePlayers.ToList().Count(), runner.SessionInfo.MaxPlayers);
     }
     public void OnPlayerLeft(NetworkRunner runner, PlayerRef player)
@@ -154,6 +166,7 @@ public class NetworkManagerGame : NetworkBehaviour, INetworkRunnerCallbacks
             Debug.Log("Usunięto przypisanie gracza do państwa!");
             PlayerNicknames.Remove(player);
             Debug.Log("Usunięcie przypisania gracza do nickname");
+            StartTimer = 10;
         }
         GameController.me.UpdatePlayersCountDisplayer(Runner.ActivePlayers.ToList().Count(), runner.SessionInfo.MaxPlayers);
     }
@@ -163,10 +176,14 @@ public class NetworkManagerGame : NetworkBehaviour, INetworkRunnerCallbacks
     public void OnObjectEnterAOI(NetworkRunner runner, NetworkObject obj, PlayerRef player) { }
     public void OnObjectExitAOI(NetworkRunner runner, NetworkObject obj, PlayerRef player) { }
     public void OnReliableDataReceived(NetworkRunner runner, PlayerRef player, ReliableKey key, ArraySegment<byte> data) 
-    { 
+    {
+        Debug.Log("Received reliable data");
         string receivedMessage = Encoding.UTF8.GetString(data.Array, data.Offset, data.Count);
-        Debug.Log("RECEIVED MESSAGE: "+receivedMessage);
-        Transform provinceParentObjectTransform = GameObject.Find("Provinces").transform;
+        GameController.me.mapString = receivedMessage;
+        Map map = JsonUtility.FromJson<Map>(receivedMessage);
+        GameController.me.SetUpMap(map);
+        //Debug.Log("RECEIVED MESSAGE: "+receivedMessage);
+        /*Transform provinceParentObjectTransform = GameObject.Find("Provinces").transform;
         Map allProvinces = JsonUtility.FromJson<Map>(receivedMessage);
         List<ProvinceGameObject> provinceGameObjects = new List<ProvinceGameObject>();
 
@@ -177,14 +194,14 @@ public class NetworkManagerGame : NetworkBehaviour, INetworkRunnerCallbacks
             {
                 points.Add(point);
             }
-            ProvinceGameObject province = ShapeTools.CreateProvinceGameObject(provinceData.name,points);
+            ProvinceGameObject province = ShapeTools.CreateProvinceGameObject(provinceData.name, provinceData.points);
             provinceGameObjects.Add(province);
             if(allProvinces.GetCountry(provinceData)==null) province.SetColor(Color.white);
             else province.SetColor(allProvinces.GetCountry(provinceData).color);
 
             province.gameObject.transform.SetParent(provinceParentObjectTransform);
-        }
-        NetworkManagerGame.Instance.SetMapData(allProvinces,provinceGameObjects);
+        }*/
+        //NetworkManagerGame.Instance.SetMapData(allProvinces,provinceGameObjects);
     }
     public void OnReliableDataProgress(NetworkRunner runner, PlayerRef player, ReliableKey key, float progress) { }
     public void OnConnectRequest(NetworkRunner runner, NetworkRunnerCallbackArgs.ConnectRequest request, byte[] token) { }

@@ -211,7 +211,15 @@ public class MapCreatorController : MonoBehaviour
     {
         if(countryAdjusted != null) countryAdjusted.SetColorFromHex(countryHexColorInput.text);
     }
-    public void ProvinceShapeFormLogic(){
+
+    public void CountrySetRandomColorClick()
+    {
+        if(countryAdjusted != null) countryAdjusted.SetRandomColor();
+        countryHexColorInput.text = UnityEngine.ColorUtility.ToHtmlStringRGB(countryAdjusted.color);
+    }
+
+    public void ProvinceShapeFormLogic()
+    {
         deleted.Clear();
         Vector3 worldPosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
         if(Input.GetKey(KeyCode.LeftControl)){

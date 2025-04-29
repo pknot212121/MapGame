@@ -12,18 +12,22 @@ public class GameController : MonoBehaviour
     public Canvas anteroomCanvas;
     public Canvas gameplayCanvas;
     public Transform playerNicknameDisplayersTransform;
+    public Transform provincesTransform;
     public Button startButton;
     public Button endTurnButton;
     public TMP_Text startCounter;
     public TMP_Text playersCountDisplayer;
     public NetworkPlayer networkPlayer;
 
+    public string mapString;
+    public Map map;
+    public List<ProvinceGameObject> provinceGameObjects = new List<ProvinceGameObject>();
+
     void Start()
     {
         me = this;
-        // startButton.gameObject.SetActive(false);
-        // startCounter.gameObject.SetActive(false);
-
+        startButton.gameObject.SetActive(false);
+        startCounter.gameObject.SetActive(false);
     }
 
     void Update()
@@ -33,6 +37,21 @@ public class GameController : MonoBehaviour
             if (anteroomCanvas != null) TrySettingCountryForPlayer();
             else TryChangingOwnerhipOfAProvince();
         }
+    }
+
+    public void SetUpMap(Map map)
+    {
+        this.map = map;
+
+        foreach(Province province in map.provinces)
+        {
+            ProvinceGameObject provinceGO = ShapeTools.CreateProvinceGameObject(province, province.points);
+            provinceGameObjects.Add(provinceGO);
+            if(map.GetCountry(province) == null) provinceGO.SetColor(Color.white);
+            else provinceGO.SetColor(map.GetCountry(province).color);
+            provinceGO.gameObject.transform.SetParent(provincesTransform);
+        }
+        Debug.Log("Map has been set up");
     }
 
     public void EndTurnClick()
