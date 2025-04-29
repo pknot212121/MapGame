@@ -13,6 +13,8 @@ public class Map
     public List<ResourceInfo> resourceInfos = new List<ResourceInfo>();
     public List<TroopInfo> troopInfos = new List<TroopInfo>();
 
+    public Map me;
+
     public Country GetCountry(Province province){
         foreach(Country country in countries){
             foreach(Province province1 in country.provinces){ 
@@ -39,6 +41,11 @@ public class Map
         string json = JsonUtility.ToJson(MapCreatorController.me.map);
         Debug.Log("Ścieżka zapisu: " + Application.persistentDataPath);
         System.IO.File.WriteAllText(path,json);
+    }
+    public string SerializeToJson()
+    {
+        string json = JsonUtility.ToJson(me);
+        return json;
     }
     public static string LoadMapFromJson(string filename)
     {

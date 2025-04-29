@@ -5,6 +5,8 @@ using Fusion;
 using Fusion.Sockets;
 using System.Threading.Tasks;
 using UnityEngine.SceneManagement;
+using System.IO;
+using System.Text;
 
 
 
@@ -75,7 +77,42 @@ public class NetworkManagerJoin : MonoBehaviour, INetworkRunnerCallbacks
 
     public async void LeaveRoom()
     {
-        await runner.Shutdown();
+       if (runner != null && runner.IsRunning && runner.IsSharedModeMasterClient)
+        {
+            Debug.Log($"SMMC ({runner.LocalPlayer}) is leaving. Sending reliable data to other players.");
+
+            // Przygotuj dane do wysłania (np. string lub serializowany obiekt)
+            NetworkManagerGame gameManager = NetworkManagerGame.Instance; 
+            Map lastMessage = gameManager.CurrentMapData;
+            string Message = lastMessage.SerializeToJson();
+            byte[] rawData = Map.Compress(Message);
+
+            // Pobierz listę wszystkich aktywnych graczy
+            var activePlayers = runner.ActivePlayers;
+
+            // Wyślij dane do każdego INNEGO gracza
+            foreach (PlayerRef player in activePlayers)
+            {
+                if (player != runner.LocalPlayer) // Nie wysyłaj do siebie samego
+                {
+                    Debug.Log($"SMMC: Sending leaving data to Player {player}");
+                    runner.SendReliableDataToPlayer(player, ReliableKey.FromInts(42, 0, 21, 37), rawData);
+                }
+            }
+
+            // Opcjonalnie: Małe opóźnienie, aby dać sieci szansę na wysłanie
+            // Nie ma gwarancji, ale może pomóc.
+             await Task.Delay(100); // Czekaj 100ms
+        }
+        // --- KONIEC ZMIANY ---
+
+        // Kontynuuj proces opuszczania pokoju
+        if (runner != null)
+        {
+            await runner.Shutdown();
+        }
+
+        // Przeładuj scenę menu i dołącz do lobby
         SceneManager.LoadScene("JoinGameMenu");
         await JoinLobby();
     }
@@ -94,10 +131,14 @@ public class NetworkManagerJoin : MonoBehaviour, INetworkRunnerCallbacks
     public void OnInputMissing(NetworkRunner runner, PlayerRef player, NetworkInput input) { }
     public void OnPlayerJoined(NetworkRunner runner, PlayerRef player)
     {
-        if (runner.IsServer || runner.IsSharedModeMasterClient)
+        if (runner.IsSharedModeMasterClient)
         {
             runner.Spawn(playerPrefab, Vector3.zero, Quaternion.identity, player);
-            if (NetworkManagerGame.Instance == null) runner.Spawn(sessionManagerPrefab,Vector3.zero, Quaternion.identity);
+            if (NetworkManagerGame.Instance == null)
+            {
+                Debug.Log("SPAWNUJE: NETWORKMANAGERGAME");
+                runner.Spawn(sessionManagerPrefab,Vector3.zero, Quaternion.identity);
+            }
         }
      }
     public void OnPlayerLeft(NetworkRunner runner, PlayerRef player) { }

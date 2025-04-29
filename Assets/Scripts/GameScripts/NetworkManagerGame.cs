@@ -85,7 +85,10 @@ public class NetworkManagerGame : NetworkBehaviour, INetworkRunnerCallbacks
             Debug.Log("Gracz: "+keyValuePair.Key+" Państwo: "+keyValuePair.Value);
         }
     }
-
+    public void SendMapDataBeforeLeaving()
+    {
+        
+    }
 
 
     public override void Spawned()
@@ -119,7 +122,6 @@ public class NetworkManagerGame : NetworkBehaviour, INetworkRunnerCallbacks
     {
         if(runner.IsSharedModeMasterClient)
         {
-            IReadOnlyDictionary<string, SessionProperty> sessionProperties = runner.SessionInfo.Properties;
             string filename = PlayerPrefs.GetString("mapName");
             string mapData = Map.LoadMapFromJson(filename);
             byte[] rawData = Map.Compress(mapData);
