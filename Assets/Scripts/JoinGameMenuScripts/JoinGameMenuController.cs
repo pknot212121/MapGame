@@ -46,12 +46,6 @@ public class JoinGameMenuController : MonoBehaviour
     }
 
     public void ChooseMapClick(){
-        // wylały mi się oczy jak to zobaczyłem
-        //XD
-        /*if(mapNameInput.text!=null){
-            filename = mapNameInput.text;
-        }
-        else{Debug.Log("Wpisz nazwę!!!");}*/
         bool isFileFound = false;
         if(mapNameInput.text.Length >= 2)
         {
