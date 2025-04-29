@@ -39,15 +39,7 @@ public class NetworkManagerGame : NetworkBehaviour, INetworkRunnerCallbacks
     [Rpc(RpcSources.StateAuthority, RpcTargets.All)]
     public void Rpc_RefreshPlayerNicknameDisplayers()
     {
-        Debug.Log("Refreshing nickname displayers");
-        foreach(Transform t in GameController.me.playerNicknameDisplayersTransform) Destroy(t.gameObject);
-        GameObject prefab = Resources.Load("Prefabs/PlayerNicknameDisplayer") as GameObject;
-        foreach(var kvp in PlayersToCountries)
-        {
-            GameObject pnd = Instantiate(prefab);
-            pnd.GetComponent<PlayerNicknameDisplayer>().Initialise(PlayerNicknames[kvp.Key].Value, CurrentMapData.GetCountry(kvp.Value.Value));
-            pnd.transform.SetParent(GameController.me.playerNicknameDisplayersTransform);
-        }
+        GameController.me.RefreshPlayerNicknameDisplayers();
     }
 
 
@@ -101,6 +93,7 @@ public class NetworkManagerGame : NetworkBehaviour, INetworkRunnerCallbacks
         if (Instance == null) Instance = this;
         else Destroy(gameObject);
         Runner.AddCallbacks(this);
+        GameController.me.RefreshPlayerNicknameDisplayers();
     }
     public void OnSessionListUpdated(NetworkRunner runner, List<SessionInfo> sessionList)
     {
@@ -141,7 +134,6 @@ public class NetworkManagerGame : NetworkBehaviour, INetworkRunnerCallbacks
     }
     public void OnPlayerLeft(NetworkRunner runner, PlayerRef player)
     {
-        GameController.me.UpdatePlayersCountDisplayer(Runner.ActivePlayers.ToList().Count(), runner.SessionInfo.MaxPlayers);
         if (Runner.IsSharedModeMasterClient)
         {
             PlayersToCountries.Remove(player);
@@ -149,6 +141,7 @@ public class NetworkManagerGame : NetworkBehaviour, INetworkRunnerCallbacks
             PlayerNicknames.Remove(player);
             Debug.Log("Usunięcie przypisania gracza do nickname");
         }
+        GameController.me.UpdatePlayersCountDisplayer(Runner.ActivePlayers.ToList().Count(), runner.SessionInfo.MaxPlayers);
     }
     public void OnSceneLoadDone(NetworkRunner runner) { }
     public void OnSceneLoadStart(NetworkRunner runner) { }

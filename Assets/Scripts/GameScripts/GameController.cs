@@ -124,4 +124,17 @@ public class GameController : MonoBehaviour
             }
         }
     }
+
+    public void RefreshPlayerNicknameDisplayers()
+    {
+        Debug.Log("Refreshing nickname displayers");
+        foreach(Transform t in playerNicknameDisplayersTransform) Destroy(t.gameObject);
+        GameObject prefab = Resources.Load("Prefabs/PlayerNicknameDisplayer") as GameObject;
+        foreach(var kvp in NetworkManagerGame.Instance.PlayersToCountries)
+        {
+            GameObject pnd = Instantiate(prefab);
+            pnd.GetComponent<PlayerNicknameDisplayer>().Initialise(NetworkManagerGame.Instance.PlayerNicknames[kvp.Key].Value, NetworkManagerGame.Instance.CurrentMapData.GetCountry(kvp.Value.Value));
+            pnd.transform.SetParent(playerNicknameDisplayersTransform);
+        }
+    }
 }
