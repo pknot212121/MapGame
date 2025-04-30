@@ -134,7 +134,19 @@ public class NetworkManagerGame : NetworkBehaviour, INetworkRunnerCallbacks
 
     public void PrepareGame()
     {
+        List<Action> actions = new List<Action>();
+        int troopsCounter = 0;
+        foreach (Province province in GameController.me.map.provinces)
+        {
+            if(province.country != null)
+            {
+                Troop troop = new Troop(++troopsCounter, 15, province.country, province);
+                troop.Pack();
+                actions.Add(new Action(Action.ActionType.RaiseTroop, null, troop, null));
+            }
+        }
 
+        // Tu trzeba dorobić wysyłanie listy
     }
 
 
@@ -217,9 +229,9 @@ public class NetworkManagerGame : NetworkBehaviour, INetworkRunnerCallbacks
             Map map = JsonUtility.FromJson<Map>(content);
             GameController.me.SetUpMap(map);
         }
-        else if(title == "InitialTroops")
+        else if(title == "InitialActions")
         {
-            
+
         }
     }
     public void OnReliableDataProgress(NetworkRunner runner, PlayerRef player, ReliableKey key, float progress) { }

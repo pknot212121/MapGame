@@ -1,6 +1,6 @@
 using UnityEngine;
 [System.Serializable]
-public class ResourceInfo
+public class ResourceInfo : Entity
 {
     public string name;
     public float value;

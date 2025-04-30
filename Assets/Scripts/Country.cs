@@ -3,7 +3,7 @@ using UnityEngine;
 using System.Text.RegularExpressions;
 
 [System.Serializable]
-public class Country
+public class Country : Entity
 {
     public string name;
     public Color color;

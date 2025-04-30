@@ -3,10 +3,11 @@ using System.IO;
 using System.Collections.Generic;
 
 [System.Serializable]
-public class Province
+public class Province : Entity
 {
     public string name;
     public List<Vector2> points = new List<Vector2>();
+    public Country country;
 
     [System.NonSerialized]
     public ProvinceGameObject gameObject;

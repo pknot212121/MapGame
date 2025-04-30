@@ -4,7 +4,7 @@ using System.IO;
 using System.Collections.Generic;
 
 [System.Serializable]
-public class TroopInfo
+public class TroopInfo : Entity
 {
     public string name;
     public float overallPowerMultiplier;

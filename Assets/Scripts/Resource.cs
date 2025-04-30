@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Resource
+public class Resource : Entity
 {
     public Dictionary<ResourceInfo,int> content = new Dictionary<ResourceInfo,int>();
 

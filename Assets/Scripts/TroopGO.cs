@@ -60,13 +60,13 @@ public class TroopGO : MonoBehaviour
             sr[3].gameObject.transform.localPosition = new Vector3(0.4f, -0.4f, 0);
         }
 
-        int iconIndex = 0;
+        //int iconIndex = 0;
         Debug.Log(icons);
-        Debug.Log(iconIndex);
+        /*Debug.Log(iconIndex);
 
         foreach (var item in top4)
         {
             
-        }
+        }*/
     }
 }

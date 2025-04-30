@@ -106,8 +106,7 @@ public class NetworkManagerJoin : MonoBehaviour, INetworkRunnerCallbacks
             }
         }
      }
-    public void OnPlayerLeft(NetworkRunner runner, PlayerRef player) { 
-    }
+    public void OnPlayerLeft(NetworkRunner runner, PlayerRef player) { }
     public void OnSceneLoadDone(NetworkRunner runner) { }
     public void OnSceneLoadStart(NetworkRunner runner) { }
     public void OnCustomAuthenticationResponse(NetworkRunner runner, Dictionary<string, object> data) { }
