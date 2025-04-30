@@ -24,5 +24,13 @@ public class Province : Entity
         this.gameObject = gameObject;
         points = gameObject.points;
     }
+    public override void Pack()
+    {
+        country=null;
+    }
+    public override void Unpack()
+    {
+        base.Unpack();
+    }
 
 }

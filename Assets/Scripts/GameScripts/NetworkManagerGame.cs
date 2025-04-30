@@ -194,6 +194,7 @@ public class NetworkManagerGame : NetworkBehaviour, INetworkRunnerCallbacks
                 string filename = PlayerPrefs.GetString("mapName");
                 GameController.me.mapString = Map.LoadMapFromJson(filename);
                 Map map = JsonUtility.FromJson<Map>(GameController.me.mapString);
+                map.Unpack();
                 GameController.me.SetUpMap(map);
                 Debug.Log("Set up host scene");
             }
@@ -235,6 +236,7 @@ public class NetworkManagerGame : NetworkBehaviour, INetworkRunnerCallbacks
         {
             GameController.me.mapString = content;
             Map map = JsonUtility.FromJson<Map>(content);
+            map.Unpack();
             GameController.me.SetUpMap(map);
         }
         else if(title == "InitialActions")

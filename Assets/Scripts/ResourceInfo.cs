@@ -10,4 +10,13 @@ public class ResourceInfo : Entity
         this.name = name;
         this.value = value;
     }
+
+    public override void Pack()
+    {
+        base.Pack();
+    }
+    public override void Unpack()
+    {
+        base.Unpack();
+    }
 }

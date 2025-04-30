@@ -8,6 +8,7 @@ public class Country : Entity
     public string name;
     public Color color;
     public List<Province> provinces = new List<Province>();
+    // public Map map;
 
     public Dictionary<string,Color> colorsFromText = new Dictionary<string, Color>{
         ["blue"] = Color.blue,
@@ -22,6 +23,21 @@ public class Country : Entity
     {
         this.name = name;
         SetRandomColor();
+    }
+    public override void Pack()
+    {
+        foreach(Province province in provinces)
+        {
+            province.Pack();
+        }
+    }
+    public override void Unpack()
+    {
+        foreach(Province province in provinces)
+        {
+            province.country = this;
+            province.Unpack();
+        }
     }
 
 
