@@ -70,6 +70,7 @@ public class GameController : MonoBehaviour
     public void StartClick()
     {
         NetworkManagerGame.Instance.Rpc_StartCountdown();
+        startButton.gameObject.SetActive(false);
     }
 
     public void ReturnToLobbyClick()
