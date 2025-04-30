@@ -24,7 +24,7 @@ public class JoinGameMenuController : MonoBehaviour
         if(PlayerPrefs.HasKey("mapName")) mapNameInput.text = PlayerPrefs.GetString("mapName");
     }
 
-    public void StartGameClick()
+    [UnityEngine.Scripting.Preserve] public void StartGameClick()
     {
         string name = "";
         if(gameNameInput.text.Length < 6)

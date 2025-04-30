@@ -69,7 +69,7 @@ public class MapCreatorController : MonoBehaviour
         createProvinceNameInput.text = "";
     }
 
-    public void OkClick()
+    [UnityEngine.Scripting.Preserve] public void OkClick()
     {
         string provinceName = createProvinceNameInput.text;
         if(provinceName.Length < 2)
