@@ -69,12 +69,17 @@ public class GameController : MonoBehaviour
 
     public void StartClick()
     {
-
+        NetworkManagerGame.Instance.Rpc_StartCountdown();
     }
 
     public void ReturnToLobbyClick()
     {
         NetworkManagerJoin.me.LeaveRoom();
+    }
+
+    public void ShowMasterCanvas()
+    {
+        startButton.gameObject.SetActive(true);
     }
 
     // Obsługuje odliczanie do startu

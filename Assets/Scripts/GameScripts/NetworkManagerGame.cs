@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Collections;
 using UnityEngine;
 using Fusion;
 using Fusion.Sockets;
@@ -14,7 +15,7 @@ public class NetworkManagerGame : NetworkBehaviour, INetworkRunnerCallbacks
     [Networked, Capacity(20)] public NetworkDictionary<PlayerRef, NetworkString<_32>> PlayerNicknames { get; }
     [Networked] public int StartTimer { get; set; } = 10; // 10 - poczekalnia, 5-1 - odliczanie, -1 - rozpoczęta gra
     [Networked] public PlayerRef ActivePlayer {get;set;}
-
+    [Networked] public PlayerRef Master { get; set; }
     [Networked] public bool IsMapLoaded {get;set;} = false;
 
 
@@ -44,6 +45,31 @@ public class NetworkManagerGame : NetworkBehaviour, INetworkRunnerCallbacks
         GameController.me.RefreshPlayerNicknameDisplayers();
     }
 
+    [Rpc(RpcSources.All, RpcTargets.StateAuthority)]
+    public void Rpc_StartCountdown()
+    {
+        StartTimer = 5;
+        Rpc_CountdownHasStarted();
+        StartCoroutine(CountDown());
+    }
+
+    public IEnumerator CountDown()
+    {
+        while(StartTimer > 0)
+        {
+            yield return new WaitForSeconds(1);
+            StartTimer--;
+        }
+        if(StartTimer == 0) StartTimer = -1;
+        Debug.Log("Game has started");
+    }
+
+    [Rpc(RpcSources.StateAuthority, RpcTargets.All)]
+    public void Rpc_CountdownHasStarted()
+    {
+        GameController.me.StartCoroutine(GameController.me.CountingDownToStart());
+    }
+
 
 
     /*public void SetMapData(Map mapData, List<ProvinceGameObject> provinceGameObjects)
@@ -54,6 +80,14 @@ public class NetworkManagerGame : NetworkBehaviour, INetworkRunnerCallbacks
         Debug.Log("Map data set in GameManager.");
         OnMapDataReady?.Invoke();
     }*/
+
+    public void SetNewMaster(PlayerRef master) // To ma być teoretycznie wywołane tylko przez obecnego mastera, nie należy wywoływać u innych
+    {
+        if(!Runner.IsSharedModeMasterClient) return;
+        Master = master;
+        GameController.me.ShowMasterCanvas();
+        Debug.Log(Master + " has been assigned as new master");
+    }
 
     public void AddNewTextEntry(string message)
     {
@@ -125,6 +159,7 @@ public class NetworkManagerGame : NetworkBehaviour, INetworkRunnerCallbacks
         {
             if(Runner.LocalPlayer == player) // Jesli to host dołącza (tworzy pokój)
             {
+                SetNewMaster(player);
                 string filename = PlayerPrefs.GetString("mapName");
                 GameController.me.mapString = Map.LoadMapFromJson(filename);
                 Map map = JsonUtility.FromJson<Map>(GameController.me.mapString);
@@ -167,6 +202,7 @@ public class NetworkManagerGame : NetworkBehaviour, INetworkRunnerCallbacks
             PlayerNicknames.Remove(player);
             Debug.Log("Usunięcie przypisania gracza do nickname");
             StartTimer = 10;
+            if(Master != Runner.LocalPlayer) SetNewMaster(Runner.LocalPlayer);
         }
         GameController.me.UpdatePlayersCountDisplayer(Runner.ActivePlayers.ToList().Count(), runner.SessionInfo.MaxPlayers);
     }
