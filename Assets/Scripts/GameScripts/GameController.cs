@@ -96,6 +96,7 @@ public class GameController : MonoBehaviour
         {
             anteroomCanvas.gameObject.SetActive(false);
             gameplayCanvas.gameObject.SetActive(true);
+            Debug.Log("Game has started");
         }
     }
     

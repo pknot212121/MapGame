@@ -61,7 +61,6 @@ public class NetworkManagerGame : NetworkBehaviour, INetworkRunnerCallbacks
             StartTimer--;
         }
         if(StartTimer == 0) StartTimer = -1;
-        Debug.Log("Game has started");
     }
 
     [Rpc(RpcSources.StateAuthority, RpcTargets.All)]
