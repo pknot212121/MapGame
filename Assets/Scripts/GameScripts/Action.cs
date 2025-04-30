@@ -15,6 +15,7 @@ public class Action : Entity
     public Entity entity2;
     public string optionalData;
 
+    public Action(){}
     public Action(ActionType type, Entity entity1, Entity entity2, string optionalData)
     {
         this.type = type;

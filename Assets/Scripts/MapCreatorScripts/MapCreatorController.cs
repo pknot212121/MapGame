@@ -32,7 +32,7 @@ public class MapCreatorController : MonoBehaviour
     [SerializeField] private TMP_InputField countryHexColorInput;
     [SerializeField] private TMP_InputField mapNameInput;
 
-    public Map map;
+    public Map map = new Map();
     public List<ProvinceGameObject> provinceGameObjects = new List<ProvinceGameObject>();
     Stack<ProvinceGameObject> deleted = new Stack<ProvinceGameObject>();
 

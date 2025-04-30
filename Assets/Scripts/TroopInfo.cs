@@ -3,7 +3,6 @@ using System;
 using System.IO;
 using System.Collections.Generic;
 
-[System.Serializable]
 public class TroopInfo : Entity
 {
     public string name;
@@ -12,6 +11,7 @@ public class TroopInfo : Entity
     public Dictionary<string, float> individualPowerMultiplier;
     public Dictionary<string, int> unitCost;
 
+    public TroopInfo(){}
 
     public TroopInfo(string name, float overallPowerMultiplier = 1, Dictionary<string, int> unitCost = null, Dictionary<string, float> individualPowerMultiplier = null)
     {

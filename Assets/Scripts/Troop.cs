@@ -7,14 +7,15 @@ public class Troop : Entity
     public Dictionary<TroopInfo, int> numbers;
     public Resource transportedResources;
 
-    [System.NonSerialized]
+    // [System.NonSerialized]
     public Country country; // Właściciel
-    [System.NonSerialized]
+    // [System.NonSerialized]
     public Province province; // Prowincja na której przebywa (nie zawsze należy ona do właściciela)
 
     public string countryName = null; // Używane przy wysyłce
     public string provinceName = null; // Używane przy wysyłce
 
+    public Troop(){}
     public Troop(int id, int numberOfEachTroopInfo, Country country, Province province) // Możliwe że ten konstruktor to tymczasowe rozwiązanie
     {
         this.id = id;

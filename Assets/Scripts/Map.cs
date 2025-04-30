@@ -5,8 +5,8 @@ using System.Linq;
 using System.IO.Compression;
 using System.Text;
 using Unity.VisualScripting;
+using Unity.Serialization.Json;
 
-[System.Serializable]
 public class Map : Entity
 {
     public List<Province> provinces = new List<Province>();
@@ -35,7 +35,6 @@ public class Map : Entity
         foreach(Country country in countries){
             foreach(Province province1 in country.provinces){ 
                 if(province1.name==province.name) return country;
-
             }
         }
         return null;
@@ -55,13 +54,13 @@ public class Map : Entity
     {
         string path =  Application.persistentDataPath + "/" + filename + ".json";
         MapCreatorController.me.map.Pack();
-        string json = JsonUtility.ToJson(MapCreatorController.me.map);
+        string json = JsonSerialization.ToJson(MapCreatorController.me.map);
         Debug.Log("Ścieżka zapisu: " + Application.persistentDataPath);
         System.IO.File.WriteAllText(path,json);
     }
     public string SerializeToJson()
     {
-        string json = JsonUtility.ToJson(me);
+        string json = JsonSerialization.ToJson(me);
         return json;
     }
     public static string LoadMapFromJson(string filename)

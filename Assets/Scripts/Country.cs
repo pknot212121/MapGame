@@ -2,7 +2,6 @@ using System.Collections.Generic;
 using UnityEngine;
 using System.Text.RegularExpressions;
 
-[System.Serializable]
 public class Country : Entity
 {
     public string name;
@@ -19,6 +18,7 @@ public class Country : Entity
         //["white"] = Color.white, // biały to kolor prowincji niczyjej więc państwo nie może go mieć
         ["grey"] = Color.grey
     };
+    public Country(){}
     public Country(string name)
     {
         this.name = name;

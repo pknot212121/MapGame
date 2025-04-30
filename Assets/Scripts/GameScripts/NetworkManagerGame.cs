@@ -7,6 +7,8 @@ using Fusion.Sockets;
 using TMPro;
 using System.Text;
 using System.Linq;
+using Unity.Serialization.Json;
+using UnityEngine.InputSystem;
 
 
 public class NetworkManagerGame : NetworkBehaviour, INetworkRunnerCallbacks
@@ -138,17 +140,17 @@ public class NetworkManagerGame : NetworkBehaviour, INetworkRunnerCallbacks
         int troopsCounter = 0;
         foreach (Province province in GameController.me.map.provinces)
         {
-            if(province.country != null)
+            if(province!=null)
             {
                 Troop troop = new Troop(++troopsCounter, 15, province.country, province);
                 Action action = new Action(Action.ActionType.RaiseTroop, null, troop, null);
-                action.Pack();
+                // action.Pack();
                 actions.Add(action);
             }
         }
 
         // Tu trzeba dorobić wysyłanie listy
-        string json = JsonUtility.ToJson(actions);
+        string json = JsonSerialization.ToJson(actions);
         Debug.Log(json);
         DistributeMessage("InitialActions", json);
     }
@@ -195,7 +197,7 @@ public class NetworkManagerGame : NetworkBehaviour, INetworkRunnerCallbacks
                 SetNewMaster(player);
                 string filename = PlayerPrefs.GetString("mapName");
                 GameController.me.mapString = Map.LoadMapFromJson(filename);
-                Map map = JsonUtility.FromJson<Map>(GameController.me.mapString);
+                Map map = JsonSerialization.FromJson<Map>(GameController.me.mapString);
                 map.Unpack();
                 GameController.me.SetUpMap(map);
                 Debug.Log("Set up host scene");
@@ -237,7 +239,7 @@ public class NetworkManagerGame : NetworkBehaviour, INetworkRunnerCallbacks
         if(title == "InitialMap")
         {
             GameController.me.mapString = content;
-            Map map = JsonUtility.FromJson<Map>(content);
+            Map map = JsonSerialization.FromJson<Map>(content);
             map.Unpack();
             GameController.me.SetUpMap(map);
         }
@@ -245,7 +247,7 @@ public class NetworkManagerGame : NetworkBehaviour, INetworkRunnerCallbacks
         {
             // Tu wczytać akcje z jsona
             
-            List<Action> actions = JsonUtility.FromJson<List<Action>>(content);
+            List<Action> actions = JsonSerialization.FromJson<List<Action>>(content);
             GameController.me.HandleActions(actions);
         }
     }

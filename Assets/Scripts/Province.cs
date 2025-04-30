@@ -2,7 +2,6 @@ using UnityEngine;
 using System.IO;
 using System.Collections.Generic;
 
-[System.Serializable]
 public class Province : Entity
 {
     public string name;
@@ -12,6 +11,10 @@ public class Province : Entity
 
     [System.NonSerialized]
     public ProvinceGameObject gameObject;
+
+    public Province()
+    {
+    }
 
     public Province(string name)
     {

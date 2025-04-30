@@ -46,7 +46,7 @@ public class GameController : MonoBehaviour
     public void SetUpMap(Map map)
     {
         this.map = map;
-
+        map.Unpack();
         foreach(Province province in map.provinces)
         {
             ProvinceGameObject provinceGO = ShapeTools.CreateProvinceGameObject(province, province.points);
@@ -63,7 +63,8 @@ public class GameController : MonoBehaviour
         if(action.type == Action.ActionType.RaiseTroop)
         {
             TroopGO troopGO = Instantiate(troopPrefab).GetComponent<TroopGO>();
-            troopGO.Initialise((Troop)action.entity2);
+            Troop troop = (Troop)action.entity2;
+            troopGO.Initialise(troop);
             troopGO.transform.SetParent(troopsTransform);
             troopGOs.Add(troopGO);
         }
