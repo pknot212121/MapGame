@@ -141,13 +141,15 @@ public class NetworkManagerGame : NetworkBehaviour, INetworkRunnerCallbacks
             if(province.country != null)
             {
                 Troop troop = new Troop(++troopsCounter, 15, province.country, province);
-                actions.Add(new Action(Action.ActionType.RaiseTroop, null, troop, null));
+                Action action = new Action(Action.ActionType.RaiseTroop, null, troop, null);
+                action.Pack();
+                actions.Add(action);
             }
         }
 
         // Tu trzeba dorobić wysyłanie listy
-        string json = "";
-
+        string json = JsonUtility.ToJson(actions);
+        Debug.Log(json);
         DistributeMessage("InitialActions", json);
     }
 
@@ -242,7 +244,8 @@ public class NetworkManagerGame : NetworkBehaviour, INetworkRunnerCallbacks
         else if(title == "InitialActions")
         {
             // Tu wczytać akcje z jsona
-            List<Action> actions = new List<Action>();
+            
+            List<Action> actions = JsonUtility.FromJson<List<Action>>(content);
             GameController.me.HandleActions(actions);
         }
     }
