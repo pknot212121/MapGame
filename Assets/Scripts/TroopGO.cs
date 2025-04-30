@@ -12,6 +12,13 @@ public class TroopGO : MonoBehaviour
         
     }
 
+    public void Initialise(Troop data)
+    {
+        this.data = data;
+        transform.position = ShapeTools.CentroidOfAPolygon(data.province.points);
+        Revisualise();
+    }
+
     public void Revisualise()
     {
         var top4 = data.numbers.Where(x => x.Value > 0).OrderByDescending(x => x.Value).Take(4).ToList();

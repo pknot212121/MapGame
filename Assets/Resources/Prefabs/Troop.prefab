@@ -136,10 +136,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   sr:
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
+  - {fileID: 1956412421497065721}
+  - {fileID: 5664596606133623181}
+  - {fileID: 8230131249742797255}
+  - {fileID: 8928111360818202274}
 --- !u!1 &432546859949697010
 GameObject:
   m_ObjectHideFlags: 0

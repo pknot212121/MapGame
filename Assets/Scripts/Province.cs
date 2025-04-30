@@ -7,6 +7,7 @@ public class Province : Entity
 {
     public string name;
     public List<Vector2> points = new List<Vector2>();
+    [System.NonSerialized]
     public Country country;
 
     [System.NonSerialized]

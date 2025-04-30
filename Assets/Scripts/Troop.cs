@@ -7,7 +7,9 @@ public class Troop : Entity
     public Dictionary<TroopInfo, int> numbers;
     public Resource transportedResources;
 
+    [System.NonSerialized]
     public Country country; // Właściciel
+    [System.NonSerialized]
     public Province province; // Prowincja na której przebywa (nie zawsze należy ona do właściciela)
 
     public string countryName = null; // Używane przy wysyłce

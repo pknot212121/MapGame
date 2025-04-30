@@ -388,6 +388,37 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 63895988}
   m_CullTransparentMesh: 1
+--- !u!1 &111991871
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 111991872}
+  m_Layer: 0
+  m_Name: Troops
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &111991872
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 111991871}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &115694527
 GameObject:
   m_ObjectHideFlags: 0
@@ -1694,6 +1725,7 @@ MonoBehaviour:
   startCounter: {fileID: 1156252012}
   playersCountDisplayer: {fileID: 14661044}
   networkPlayer: {fileID: 0}
+  troopPrefab: {fileID: 151503228070588590, guid: 389cec33cb69e9541be6c67c624a136a, type: 3}
   mapString: 
   map:
     provinces: []
@@ -1701,6 +1733,7 @@ MonoBehaviour:
     resourceInfos: []
     troopInfos: []
   provinceGameObjects: []
+  troopGOs: []
 --- !u!4 &2097294569
 Transform:
   m_ObjectHideFlags: 0
@@ -1724,6 +1757,7 @@ SceneRoots:
   - {fileID: 1981649743}
   - {fileID: 1939094702}
   - {fileID: 2008197890}
+  - {fileID: 111991872}
   - {fileID: 115694528}
   - {fileID: 2097294569}
   - {fileID: 1036917151}

@@ -13,15 +13,19 @@ public class GameController : MonoBehaviour
     public Canvas gameplayCanvas;
     public Transform playerNicknameDisplayersTransform;
     public Transform provincesTransform;
+    public Transform troopsTransform;
     public Button startButton;
     public Button endTurnButton;
     public TMP_Text startCounter;
     public TMP_Text playersCountDisplayer;
     public NetworkPlayer networkPlayer;
 
+    public GameObject troopPrefab;
+
     public string mapString;
     public Map map;
     public List<ProvinceGameObject> provinceGameObjects = new List<ProvinceGameObject>();
+    public List<TroopGO> troopGOs = new List<TroopGO>();
 
     void Start()
     {
@@ -52,6 +56,22 @@ public class GameController : MonoBehaviour
             provinceGO.gameObject.transform.SetParent(provincesTransform);
         }
         Debug.Log("Map has been set up");
+    }
+
+    public void HandleAction(Action action)
+    {
+        if(action.type == Action.ActionType.RaiseTroop)
+        {
+            TroopGO troopGO = Instantiate(troopPrefab).GetComponent<TroopGO>();
+            troopGO.Initialise((Troop)action.entity2);
+            troopGO.transform.SetParent(troopsTransform);
+            troopGOs.Add(troopGO);
+        }
+    }
+
+    public void HandleActions(List<Action> actions)
+    {
+        foreach(Action action in actions) HandleAction(action);
     }
 
     public void EndTurnClick()

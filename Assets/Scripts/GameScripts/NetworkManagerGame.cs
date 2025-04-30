@@ -141,12 +141,20 @@ public class NetworkManagerGame : NetworkBehaviour, INetworkRunnerCallbacks
             if(province.country != null)
             {
                 Troop troop = new Troop(++troopsCounter, 15, province.country, province);
-                troop.Pack();
                 actions.Add(new Action(Action.ActionType.RaiseTroop, null, troop, null));
             }
         }
 
         // Tu trzeba dorobić wysyłanie listy
+        string json = "";
+
+        DistributeMessage("InitialActions", json);
+    }
+
+    public void DistributeMessage(string title, string content) // Wyślij wiadomość do wszystkich
+    {
+        foreach(PlayerRef player in Runner.ActivePlayers)
+        Runner.SendReliableDataToPlayer(player, ReliableKey.FromInts(42, 0, 21, 37), Encoding.UTF8.GetBytes(title + " " + content));
     }
 
 
@@ -231,7 +239,9 @@ public class NetworkManagerGame : NetworkBehaviour, INetworkRunnerCallbacks
         }
         else if(title == "InitialActions")
         {
-
+            // Tu wczytać akcje z jsona
+            List<Action> actions = new List<Action>();
+            GameController.me.HandleActions(actions);
         }
     }
     public void OnReliableDataProgress(NetworkRunner runner, PlayerRef player, ReliableKey key, float progress) { }
