@@ -92,13 +92,14 @@ public class GameController : MonoBehaviour
             startCounter.text = "Starting in: " + NetworkManagerGame.Instance.StartTimer;
             yield return null;
         }
-        if(NetworkManagerGame.Instance.StartTimer == 10) startCounter.gameObject.SetActive(false);
+        startCounter.gameObject.SetActive(false);
+        /*if(NetworkManagerGame.Instance.StartTimer == 10) startCounter.gameObject.SetActive(false);
         if(NetworkManagerGame.Instance.StartTimer == -1)
         {
             anteroomCanvas.gameObject.SetActive(false);
             gameplayCanvas.gameObject.SetActive(true);
             Debug.Log("Game has started");
-        }
+        }*/
     }
     
     void TryChangingOwnerhipOfAProvince()

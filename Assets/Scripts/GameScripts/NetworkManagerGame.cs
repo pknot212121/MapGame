@@ -60,13 +60,23 @@ public class NetworkManagerGame : NetworkBehaviour, INetworkRunnerCallbacks
             yield return new WaitForSeconds(1);
             StartTimer--;
         }
-        if(StartTimer == 0) StartTimer = -1;
+        if(StartTimer == 0) 
+        {
+            StartTimer = -1;
+            PrepareGame();
+        }
     }
 
     [Rpc(RpcSources.StateAuthority, RpcTargets.All)]
     public void Rpc_CountdownHasStarted()
     {
         GameController.me.StartCoroutine(GameController.me.CountingDownToStart());
+    }
+
+    [Rpc(RpcSources.StateAuthority, RpcTargets.All)]
+    public void Rpc_GameBegins()
+    {
+        GameController.me.RefreshPlayerNicknameDisplayers();
     }
 
 
@@ -120,7 +130,9 @@ public class NetworkManagerGame : NetworkBehaviour, INetworkRunnerCallbacks
             Debug.Log("Gracz: "+keyValuePair.Key+" Państwo: "+keyValuePair.Value);
         }
     }
-    public void SendMapDataBeforeLeaving()
+
+
+    public void PrepareGame()
     {
 
     }
@@ -167,29 +179,11 @@ public class NetworkManagerGame : NetworkBehaviour, INetworkRunnerCallbacks
             }
             else // Jeśli to nie host dołącza to wysyła wcześniej ustawione dane z GameController
             {
-                runner.SendReliableDataToPlayer(player, ReliableKey.FromInts(42, 0, 21, 37),Encoding.UTF8.GetBytes(GameController.me.mapString));
+                runner.SendReliableDataToPlayer(player, ReliableKey.FromInts(42, 0, 21, 37),Encoding.UTF8.GetBytes("InitialMap " + GameController.me.mapString));
                 Debug.Log("Sent reliable data to " + player);
             }
-            /*if(!IsMapLoaded)
-            {
-                
-                runner.SendReliableDataToPlayer(player,ReliableKey.FromInts(42, 0, 21, 37),Encoding.UTF8.GetBytes(mapData));
-                IsMapLoaded = true;
-            }
-            else
-            {
-                Debug.Log(CurrentMapData.provinces[0].name);
-                string Message = JsonUtility.ToJson(CurrentMapData);
-                Debug.Log(Message);
-                runner.SendReliableDataToPlayer(player,ReliableKey.FromInts(42, 0, 21, 37),Encoding.UTF8.GetBytes(Message));
-            }*/
             StartTimer = 10;
         }
-        /*if(!IsFirstActivePlayerSet && runner.IsSharedModeMasterClient)
-        {
-            ActivePlayer = player;
-            IsFirstActivePlayerSet=true;
-        }*/
         GameController.me.UpdatePlayersCountDisplayer(Runner.ActivePlayers.ToList().Count(), runner.SessionInfo.MaxPlayers);
     }
     public void OnPlayerLeft(NetworkRunner runner, PlayerRef player)
@@ -214,29 +208,19 @@ public class NetworkManagerGame : NetworkBehaviour, INetworkRunnerCallbacks
     {
         Debug.Log("Received reliable data");
         string receivedMessage = Encoding.UTF8.GetString(data.Array, data.Offset, data.Count);
-        GameController.me.mapString = receivedMessage;
-        Map map = JsonUtility.FromJson<Map>(receivedMessage);
-        GameController.me.SetUpMap(map);
-        //Debug.Log("RECEIVED MESSAGE: "+receivedMessage);
-        /*Transform provinceParentObjectTransform = GameObject.Find("Provinces").transform;
-        Map allProvinces = JsonUtility.FromJson<Map>(receivedMessage);
-        List<ProvinceGameObject> provinceGameObjects = new List<ProvinceGameObject>();
-
-        foreach(Province provinceData in allProvinces.provinces)
+        string[] parts = receivedMessage.Split(new[] {' '}, 2);
+        string title = parts[0];
+        string content = parts[1];
+        if(title == "InitialMap")
         {
-            List<Vector2> points = new List<Vector2>();
-            foreach (Vector2 point in provinceData.points)
-            {
-                points.Add(point);
-            }
-            ProvinceGameObject province = ShapeTools.CreateProvinceGameObject(provinceData.name, provinceData.points);
-            provinceGameObjects.Add(province);
-            if(allProvinces.GetCountry(provinceData)==null) province.SetColor(Color.white);
-            else province.SetColor(allProvinces.GetCountry(provinceData).color);
-
-            province.gameObject.transform.SetParent(provinceParentObjectTransform);
-        }*/
-        //NetworkManagerGame.Instance.SetMapData(allProvinces,provinceGameObjects);
+            GameController.me.mapString = content;
+            Map map = JsonUtility.FromJson<Map>(content);
+            GameController.me.SetUpMap(map);
+        }
+        else if(title == "InitialTroops")
+        {
+            
+        }
     }
     public void OnReliableDataProgress(NetworkRunner runner, PlayerRef player, ReliableKey key, float progress) { }
     public void OnConnectRequest(NetworkRunner runner, NetworkRunnerCallbackArgs.ConnectRequest request, byte[] token) { }
