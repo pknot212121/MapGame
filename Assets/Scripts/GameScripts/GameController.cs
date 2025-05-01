@@ -36,10 +36,25 @@ public class GameController : MonoBehaviour
 
     void Update()
     {
-        if(networkPlayer != null && networkPlayer.Runner != null)
+        /*if(networkPlayer != null && networkPlayer.Runner != null)
         {
             if (anteroomCanvas != null) TrySettingCountryForPlayer();
             else TryChangingOwnerhipOfAProvince();
+        }*/
+        if(Input.GetMouseButtonDown(0))
+        {
+            if (NetworkManagerGame.Instance != null && map != null)
+            {
+                Vector3 worldPosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+                foreach(Province province in map.provinces)
+                {
+                    if(ShapeTools.IsPointInPolygon((Vector2)worldPosition, province.points.ToArray()))
+                    {
+                        ProvinceClick(province);
+                        break;
+                    }
+                }
+            }
         }
     }
 
@@ -123,7 +138,7 @@ public class GameController : MonoBehaviour
         }*/
     }
     
-    void TryChangingOwnerhipOfAProvince()
+    /*void TryChangingOwnerhipOfAProvince()
     {
         if(NetworkManagerGame.Instance != null && NetworkManagerGame.Instance.IsMapDataReady)
         {
@@ -143,9 +158,9 @@ public class GameController : MonoBehaviour
             }
             
         }
-    }
+    }*/
 
-    void TrySettingCountryForPlayer()
+    /*void TrySettingCountryForPlayer()
     {
         if (NetworkManagerGame.Instance != null && NetworkManagerGame.Instance.IsMapDataReady)
         {
@@ -171,6 +186,25 @@ public class GameController : MonoBehaviour
                 }
             }
         }
+    }*/
+
+
+    void ProvinceClick(Province province)
+    {
+        if(NetworkManagerGame.Instance.StartTimer == -1) // Gra się już rozpoczęła
+        {
+
+        }
+        else // Jesteśmy w poczekalni
+        {
+            PlayerRef owner = NetworkManagerGame.Instance.GetOwnerOfACountry(map.GetCountry(province).name);
+            if(owner==PlayerRef.None)
+            {
+                Debug.Log(province.name);
+                NetworkManagerGame.Instance.Rpc_SetPlayerCountry(NetworkManagerGame.Instance.Runner.LocalPlayer, province.name);
+                //NetworkManagerGame.Instance.PrintCountryOwners();
+            }
+        }
     }
 
     public void RefreshPlayerNicknameDisplayers()
@@ -180,9 +214,14 @@ public class GameController : MonoBehaviour
         GameObject prefab = Resources.Load("Prefabs/PlayerNicknameDisplayer") as GameObject;
         foreach(var kvp in NetworkManagerGame.Instance.PlayersToCountries)
         {
-            Debug.Log(kvp);
+            //Debug.Log(kvp);
+            if(kvp.Key == PlayerRef.None) continue; // Pomijamy pustych graczy (jeśli tacy są)
             GameObject pnd = Instantiate(prefab);
-            pnd.GetComponent<PlayerNicknameDisplayer>().Initialise(NetworkManagerGame.Instance.PlayerNicknames[kvp.Key].Value, NetworkManagerGame.Instance.CurrentMapData.GetCountry(kvp.Value.Value));
+            Country country = map.GetCountry(kvp.Value.Value);
+            Debug.Log(country);
+            string nick = NetworkManagerGame.Instance.PlayerNicknames[kvp.Key].Value;
+            Debug.Log(nick);
+            pnd.GetComponent<PlayerNicknameDisplayer>().Initialise(nick, country);
             pnd.transform.SetParent(playerNicknameDisplayersTransform);
         }
     }

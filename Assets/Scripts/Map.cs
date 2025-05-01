@@ -25,8 +25,8 @@ public class Map : Entity
     }
     public override void Unpack()
     {
-        foreach(Province province in provinces) province.Unpack();
         foreach(Country country in countries)country.Unpack();
+        foreach(Province province in provinces) province.Unpack();
         foreach(ResourceInfo resourceInfo in resourceInfos) resourceInfo.Unpack();
         foreach(TroopInfo troopInfo in troopInfos) troopInfo.Unpack();
     }

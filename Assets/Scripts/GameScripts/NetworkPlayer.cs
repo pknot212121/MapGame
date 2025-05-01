@@ -56,13 +56,12 @@ public class NetworkPlayer : NetworkBehaviour
         }
     }
 
-    [Rpc]
+    /*[Rpc]
     public void Rpc_ChangeProvinceOwnership(NetworkString<_32> winningSideName, NetworkString<_32> provinceName)
     {
-        Transform provinceParentObjectTransform = GameObject.Find("Provinces").transform;
-        Map currentMap = NetworkManagerGame.Instance.CurrentMapData;
-        Country winningSide = currentMap.GetCountry(winningSideName.ToString());
-        Province province = currentMap.GetProvince(provinceName.ToString());
+        Map currentMap = GameController.me.map;
+        Country winningSide = currentMap.GetCountry(winningSideName.Value);
+        Province province = currentMap.GetProvince(provinceName.Value);
         Country losingSide = currentMap.GetCountry(province);
         foreach(Country country in currentMap.countries)
         {
@@ -74,6 +73,5 @@ public class NetworkPlayer : NetworkBehaviour
             if(provinceGameObject.data.name == province.name) provinceGameObject.SetColor(winningSide.color);
             Debug.Log("Podbito: "+ province.name);
         }
-        
-    }
+    }*/
 }
