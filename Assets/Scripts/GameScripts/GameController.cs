@@ -50,6 +50,13 @@ public class GameController : MonoBehaviour
                 Debug.Log(province.countryName);
             }
         }
+        if(Input.GetKeyDown(KeyCode.Space))
+        {
+            foreach(KeyValuePair<PlayerRef,NetworkString<_32>> keyValuePair in NetworkManagerGame.Instance.PlayersToCountries)
+            {
+                Debug.Log("GRACZ: "+keyValuePair.Key+" PAŃSTWO: "+keyValuePair.Value);
+            }
+        }
         if(Input.GetMouseButtonDown(0))
         {
             if (NetworkManagerGame.Instance != null && map != null)
@@ -210,8 +217,8 @@ public class GameController : MonoBehaviour
             PlayerRef owner = NetworkManagerGame.Instance.GetOwnerOfACountry(map.GetCountry(province).name);
             if(owner==PlayerRef.None)
             {
-                Debug.Log(province.name);
-                NetworkManagerGame.Instance.Rpc_SetPlayerCountry(NetworkManagerGame.Instance.Runner.LocalPlayer, province.name);
+                Debug.Log("PRÓBUJĘ USTAWIĆ WŁAŚCICIELA: "+province.name);
+                NetworkManagerGame.Instance.Rpc_SetPlayerCountry(NetworkManagerGame.Instance.Runner.LocalPlayer, province.country.name);
                 //NetworkManagerGame.Instance.PrintCountryOwners();
             }
         }
