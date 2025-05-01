@@ -19,8 +19,9 @@ public class Country : Entity
         ["grey"] = Color.grey
     };
     public Country(){}
-    public Country(string name)
+    public Country(int id,string name)
     {
+        this.id = id;
         this.name = name;
         SetRandomColor();
     }

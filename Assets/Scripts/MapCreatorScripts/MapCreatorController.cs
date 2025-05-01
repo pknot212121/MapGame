@@ -132,7 +132,7 @@ public class MapCreatorController : MonoBehaviour
             }
         }
 
-        Country country = new Country(countryName);
+        Country country = new Country(++EntityCounter,countryName);
         map.countries.Add(country);
 
         GameObject prefab = Resources.Load<GameObject>("Prefabs/CountryButton");

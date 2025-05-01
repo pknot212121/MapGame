@@ -13,7 +13,7 @@ public class Map : Entity
     public List<Country> countries = new List<Country>();
     public List<ResourceInfo> resourceInfos = new List<ResourceInfo>();
     public List<TroopInfo> troopInfos = new List<TroopInfo>();
-
+    public int EntityCounter;
     public static Map me;
 
     public override void Pack()
@@ -53,6 +53,7 @@ public class Map : Entity
     public static void LoadMapIntoJson(string filename)
     {
         string path =  Application.persistentDataPath + "/" + filename + ".json";
+        MapCreatorController.me.map.EntityCounter = MapCreatorController.me.EntityCounter;
         MapCreatorController.me.map.Pack();
         string json = JsonSerialization.ToJson(MapCreatorController.me.map);
         Debug.Log("Ścieżka zapisu: " + Application.persistentDataPath);

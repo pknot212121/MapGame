@@ -199,6 +199,8 @@ public class NetworkManagerGame : NetworkBehaviour, INetworkRunnerCallbacks
                 string filename = PlayerPrefs.GetString("mapName");
                 GameController.me.mapString = Map.LoadMapFromJson(filename);
                 Map map = JsonSerialization.FromJson<Map>(GameController.me.mapString);
+                EntityCounter = map.EntityCounter;
+                Debug.Log("POCZĄTKOWA ILOŚĆ ENTITIES: "+EntityCounter);
                 map.Unpack();
                 GameController.me.SetUpMap(map);
                 Debug.Log("Set up host scene");
