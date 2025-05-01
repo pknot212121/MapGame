@@ -24,7 +24,7 @@ public class TroopGO : MonoBehaviour
         var top4 = data.numbers.Where(x => x.Value > 0).OrderByDescending(x => x.Value).Take(4).ToList();
         int sum = data.numbers.Values.Sum();
         int icons;
-        if(sum < 25) 
+        if(sum < 25)
         {
             icons = 1;
             sr[0].gameObject.SetActive(true);

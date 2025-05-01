@@ -12,6 +12,8 @@ public class Province : Entity
     [System.NonSerialized]
     public ProvinceGameObject gameObject;
 
+    public string countryName;
+
     public Province()
     {
     }
@@ -30,11 +32,16 @@ public class Province : Entity
     }
     public override void Pack()
     {
-        country=null;
+        if(country != null)
+        {
+            countryName = country.name;
+            country = null;
+        }
     }
     public override void Unpack()
     {
-        base.Unpack();
+        //Debug.Log(countryName);
+        if(countryName != null) country = GameController.me.map.GetCountry(countryName);
     }
 
 }

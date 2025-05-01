@@ -22,10 +22,10 @@ public class NetworkManagerGame : NetworkBehaviour, INetworkRunnerCallbacks
 
 
     public static NetworkManagerGame Instance{get;private set;}
-    public Map CurrentMapData { get; private set; }
-    public List<ProvinceGameObject> provinceGameObjects {get; private set;}
-    public bool IsMapDataReady { get; private set; } = false;
-    public bool IsFirstActivePlayerSet {get; private set;} = false;
+    //public Map CurrentMapData { get; private set; }
+    //public List<ProvinceGameObject> provinceGameObjects {get; private set;}
+    //public bool IsMapDataReady { get; private set; } = false;
+    //public bool IsFirstActivePlayerSet {get; private set;} = false;
     //public event Action OnMapDataReady;
 
     [SerializeField] private GameObject textEntryPrefab;
@@ -35,9 +35,10 @@ public class NetworkManagerGame : NetworkBehaviour, INetworkRunnerCallbacks
 
 
     [Rpc(RpcSources.All, RpcTargets.StateAuthority)]
-    public void Rpc_SetPlayerCountry(PlayerRef player,NetworkString<_32> countryName)
+    public void Rpc_SetPlayerCountry(PlayerRef player, NetworkString<_32> countryName)
     {
-        PlayersToCountries.Set(player,countryName);
+        if(PlayersToCountries.ContainsKey(player)) PlayersToCountries.Set(player, countryName);
+        else PlayersToCountries.Add(player, countryName);
         Rpc_RefreshPlayerNicknameDisplayers();
     }
 
@@ -62,7 +63,7 @@ public class NetworkManagerGame : NetworkBehaviour, INetworkRunnerCallbacks
             yield return new WaitForSeconds(1);
             StartTimer--;
         }
-        if(StartTimer == 0) 
+        if(StartTimer == 0)
         {
             StartTimer = -1;
             PrepareGame();
