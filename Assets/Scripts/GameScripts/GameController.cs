@@ -9,17 +9,35 @@ using UnityEngine.UI;
 public class GameController : MonoBehaviour
 {
     public static GameController me;
-    public Canvas anteroomCanvas;
-    public Canvas gameplayCanvas;
+
+    #region Transforms
+    
     public Transform playerNicknameDisplayersTransform;
     public Transform provincesTransform;
     public Transform troopsTransform;
+
+    #endregion
+    
+    #region UI variables
+
+    public Canvas anteroomCanvas;
+    public Canvas gameplayCanvas;
+
     public Button startButton;
     public Button endTurnButton;
+
     public TMP_Text startCounter;
     public TMP_Text playersCountDisplayer;
 
+    #endregion
+
+    #region Prefabs
+
     public GameObject troopPrefab;
+
+    #endregion
+
+    #region Entities
 
     public string mapString;
     public Map map;
@@ -27,6 +45,12 @@ public class GameController : MonoBehaviour
     public List<TroopGO> troopGOs = new List<TroopGO>();
 
     public List<Action> myActions = new List<Action>();
+
+    public Action actionPrepared; // Akcja którą szykujemy
+
+    #endregion
+
+    #region MonoBehaviour
 
     void Start()
     {
@@ -62,22 +86,32 @@ public class GameController : MonoBehaviour
                 Debug.Log("GRACZ: "+keyValuePair1.Key+"NICKNAME: "+keyValuePair1.Value);
             }
         }
-        if(Input.GetMouseButtonDown(0))
+
+        if(Input.GetMouseButtonDown(0)) // Ten gość robi returny, stawiać rzeczy przed nim
         {
-            if (NetworkManagerGame.Instance != null && map != null)
+            if (NetworkManagerGame.Instance == null || map == null) return;
+            Vector3 worldPosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+            foreach(TroopGO troopGO in troopGOs)
             {
-                Vector3 worldPosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-                foreach(Province province in map.provinces)
+                if(Vector2.Distance((Vector2)worldPosition, (Vector2)troopGO.transform.position) < 0.75f)
                 {
-                    if(ShapeTools.IsPointInPolygon((Vector2)worldPosition, province.points.ToArray()))
-                    {
-                        ProvinceClick(province);
-                        break;
-                    }
+                    TroopClick(troopGO.data);
+                    return;
+                }
+            }
+
+            foreach(Province province in map.provinces)
+            {
+                if(ShapeTools.IsPointInPolygon((Vector2)worldPosition, province.points.ToArray()))
+                {
+                    ProvinceClick(province);
+                    return;
                 }
             }
         }
     }
+
+    #endregion
 
     public void SetUpMap(Map map)
     {
@@ -94,6 +128,8 @@ public class GameController : MonoBehaviour
         }
         Debug.Log("Map has been set up");
     }
+
+    #region Actions handling
 
     public void HandleAction(Action action)
     {
@@ -112,6 +148,8 @@ public class GameController : MonoBehaviour
         foreach(Action action in actions) HandleAction(action);
     }
 
+    #endregion
+
     // public void EndTurnClick()
     // {
     //     Debug.Log("Próba zakończenia tury");
@@ -119,6 +157,8 @@ public class GameController : MonoBehaviour
     //         networkPlayer.RPC_EndTurn();
     //     }
     // }
+
+    #region UI methods
 
     public void UpdatePlayersCountDisplayer(int current, int max)
     {
@@ -142,6 +182,15 @@ public class GameController : MonoBehaviour
         startButton.gameObject.SetActive(true);
     }
 
+    public void ShowProvinceMenu(Province province)
+    {
+
+    }
+
+    #endregion
+
+    #region IEnumerators
+
     // Obsługuje odliczanie do startu
     public IEnumerator CountingDownToStart()
     {
@@ -160,6 +209,8 @@ public class GameController : MonoBehaviour
             Debug.Log("Game has started");
         }*/
     }
+
+    #endregion
     
     /*void TryChangingOwnerhipOfAProvince()
     {
@@ -183,40 +234,26 @@ public class GameController : MonoBehaviour
         }
     }*/
 
-    /*void TrySettingCountryForPlayer()
-    {
-        if (NetworkManagerGame.Instance != null && NetworkManagerGame.Instance.IsMapDataReady)
-        {
-            Map currentMap = NetworkManagerGame.Instance.CurrentMapData;
-            Vector3 worldPosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-            if(Input.GetMouseButtonDown(0))
-            {
-                foreach(Province province in currentMap.provinces)
-                {
-                    if(ShapeTools.IsPointInPolygon((Vector2)worldPosition, province.points.ToArray()))
-                    {
-                        string countryName = currentMap.GetCountry(province).name;
-                        PlayerRef owner = NetworkManagerGame.Instance.GetOwnerOfACountry(countryName);
-                        if(owner==PlayerRef.None)
-                        {
-                            NetworkManagerGame.Instance.Rpc_SetPlayerCountry(
-                            networkPlayer.Runner.LocalPlayer, 
-                            currentMap.GetCountry(province).name);
-                            NetworkManagerGame.Instance.PrintCountryOwners();
-                        }
-                        break;
-                    }
-                }
-            }
-        }
-    }*/
+    #region Entities clicks
 
+    void TroopClick(Troop troop)
+    {
+        Debug.Log("Troop click");
+    }
 
     void ProvinceClick(Province province)
     {
+        Debug.Log("Province click");
         if(NetworkManagerGame.Instance.StartTimer == -1) // Gra się już rozpoczęła
         {
+            if(actionPrepared == null)
+            {
+                ShowProvinceMenu(province);
+            }
+            else
+            {
 
+            }
         }
         else // Jesteśmy w poczekalni
         {
@@ -229,6 +266,8 @@ public class GameController : MonoBehaviour
             }
         }
     }
+
+    #endregion
 
     public void RefreshPlayerNicknameDisplayers()
     {
