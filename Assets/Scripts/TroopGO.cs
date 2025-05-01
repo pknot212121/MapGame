@@ -68,13 +68,12 @@ public class TroopGO : MonoBehaviour
         }
 
         int iconIndex = 0;
-        Debug.Log(iconIndex);
 
         foreach (var item in top4)
         {
             if (iconIndex >= sr.Length) break;
             float percentage = (float)item.Value / sum;
-            Sprite icon = Resources.Load(item.Key.iconName) as Sprite;
+            Sprite icon = Resources.Load<Sprite>("TroopIcons/" + item.Key.iconName);
             if(icons == 1) // Tu po prostu ustawiamy pierwszego najliczniejszego
             {
                 sr[0].sprite = icon;
@@ -95,7 +94,7 @@ public class TroopGO : MonoBehaviour
             }
             else if(icons == 3)
             {
-                if(iconIndex <= 1) // Dostaje wolne miejsce jeśli jakieś jest
+                if(iconIndex <= 2) // Dostaje wolne miejsce jeśli jakieś jest
                 {
                     sr[iconIndex++].sprite = icon;
                 }
@@ -112,7 +111,7 @@ public class TroopGO : MonoBehaviour
             }
             else if(icons == 4)
             {
-                if(iconIndex <= 1) // Dostaje wolne miejsce jeśli jakieś jest
+                if(iconIndex <= 3) // Dostaje wolne miejsce jeśli jakieś jest
                 {
                     sr[iconIndex++].sprite = icon;
                 }
