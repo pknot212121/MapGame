@@ -18,27 +18,21 @@ public class NetworkPlayer : NetworkBehaviour
     public NetworkString<_32> Nickname { get; private set; } = "";
     public override void Spawned()
     {
-        if (Object.HasStateAuthority){
-            Debug.Log("GRACZ: "+Runner.LocalPlayer+" ZESPAWNOWALNY");
-        // if(NetworkManagerGame.Instance!= null && Nickname=="")
-        }
-        
-        // {
-        //     string chosenNickname = PlayerPrefs.GetString("PlayerNickname", $"Player_{UnityEngine.Random.Range(100, 999)}");
-        //     Debug.Log("USTAWIONO NICKNAME GRACZA: "+Runner.LocalPlayer+" JAKO: "+chosenNickname+" W SPAWNED");
-        //     Rpc_SetNickname(chosenNickname);
-        // }
+
+        string chosenNickname = PlayerPrefs.GetString("PlayerNickname", $"Player_{UnityEngine.Random.Range(100, 999)}");
+        Debug.Log("USTAWIONO NICKNAME GRACZA: "+Runner.LocalPlayer+" JAKO: "+chosenNickname+" W SPAWNED");
+        Rpc_SetNickname(chosenNickname);
     }
-    public void Update()
-    {
-        if(Object.HasStateAuthority && Nickname=="")
-        {
-            string chosenNickname = PlayerPrefs.GetString("PlayerNickname", $"Player_{UnityEngine.Random.Range(100, 999)}");
-            Debug.Log("USTAWIONO NICKNAME GRACZA: "+Runner.LocalPlayer+" JAKO: "+chosenNickname+" W UPDATE");
-            Rpc_SetNickname(chosenNickname);
-        }
+    // public void Update()
+    // {
+    //     if(Object.HasStateAuthority && Nickname=="")
+    //     {
+    //         string chosenNickname = PlayerPrefs.GetString("PlayerNickname", $"Player_{UnityEngine.Random.Range(100, 999)}");
+    //         Debug.Log("USTAWIONO NICKNAME GRACZA: "+Runner.LocalPlayer+" JAKO: "+chosenNickname+" W UPDATE");
+    //         Rpc_SetNickname(chosenNickname);
+    //     }
         
-    }
+    // }
 
     [Rpc(RpcSources.All,RpcTargets.StateAuthority)]
     public void RPC_EndTurn()

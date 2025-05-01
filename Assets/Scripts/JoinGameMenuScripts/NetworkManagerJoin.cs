@@ -99,12 +99,13 @@ public class NetworkManagerJoin : MonoBehaviour, INetworkRunnerCallbacks
         if (runner.IsSharedModeMasterClient)
         {
             Debug.Log("SPAWNUJE GRACZA: "+player);
-            runner.Spawn(playerPrefab, Vector3.zero, Quaternion.identity, player);
             if (NetworkManagerGame.Instance == null)
             {
                 
                 runner.Spawn(sessionManagerPrefab,Vector3.zero, Quaternion.identity);
             }
+            runner.Spawn(playerPrefab, Vector3.zero, Quaternion.identity, player);
+            
         }
      }
     public void OnPlayerLeft(NetworkRunner runner, PlayerRef player) { }
