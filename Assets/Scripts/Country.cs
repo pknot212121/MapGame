@@ -27,18 +27,20 @@ public class Country : Entity
     }
     public override void Pack()
     {
-        foreach(Province province in provinces)
-        {
-            province.Pack();
-        }
+        // foreach(Province province in provinces)
+        // {
+        //     province.Pack();
+        // }
+        base.Pack();
     }
     public override void Unpack()
     {
-        foreach(Province province in provinces)
-        {
-            province.country = this;
-            province.Unpack();
-        }
+        // foreach(Province province in provinces)
+        // {
+        //     province.country = this;
+        //     province.Unpack();
+        // }
+        base.Pack();
     }
 
 
@@ -115,7 +117,7 @@ public class Country : Entity
 
         provinces.Add(province);
         if(province.gameObject) province.gameObject.SetColor(color);
-        
+        province.country = this;
         if(MapCreatorController.me.countryAdjusted != null)
         {
             // odswierzyc zawartosc listy

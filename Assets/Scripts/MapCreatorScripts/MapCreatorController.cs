@@ -224,9 +224,11 @@ public class MapCreatorController : MonoBehaviour
     {
         deleted.Clear();
         Vector3 worldPosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-        if(Input.GetKey(KeyCode.LeftControl)){
+        if(Input.GetKey(KeyCode.LeftControl))
+        {
             cursor.transform.position = NearestPoint((Vector2)worldPosition,-2);
-            if(Input.GetKeyDown(KeyCode.Z) && temporaryMarks.transform.childCount>0){
+            if(Input.GetKeyDown(KeyCode.Z) && temporaryMarks.transform.childCount>0)
+            {
                 Destroy(temporaryMarks.transform.GetChild(temporaryMarks.transform.childCount -1).gameObject);
                 provincePoints.RemoveAt(provincePoints.Count-1);
             }
@@ -281,8 +283,16 @@ public class MapCreatorController : MonoBehaviour
                 if(ShapeTools.IsPointInPolygon((Vector2)worldPosition, province.points.ToArray()))
                 {
                     countryAdjusted.AddProvince(province.data);
+                    foreach(Province province1 in map.provinces)
+                    {
+                    if(province1.name==province.data.name)
+                    {
+                        province1.country=countryAdjusted;
+                    }
+                    }
                     break;
                 }
+                
             }
             
         }

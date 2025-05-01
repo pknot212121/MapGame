@@ -41,6 +41,15 @@ public class GameController : MonoBehaviour
             if (anteroomCanvas != null) TrySettingCountryForPlayer();
             else TryChangingOwnerhipOfAProvince();
         }*/
+        // FOR DEBUGGING
+        if(Input.GetKeyDown(KeyCode.Tab)) Debug.Log("AKTUALNA ILOŚĆ ENTITIES: "+NetworkManagerGame.Instance.EntityCounter);
+        if(Input.GetKeyDown(KeyCode.LeftShift))
+        {
+            foreach(Province province in map.provinces)
+            {
+                Debug.Log(province.countryName);
+            }
+        }
         if(Input.GetMouseButtonDown(0))
         {
             if (NetworkManagerGame.Instance != null && map != null)
@@ -64,6 +73,7 @@ public class GameController : MonoBehaviour
         map.Unpack();
         foreach(Province province in map.provinces)
         {
+            // Debug.Log("NAZWA KRAJU: "+province.country.name);
             ProvinceGameObject provinceGO = ShapeTools.CreateProvinceGameObject(province, province.points);
             provinceGameObjects.Add(provinceGO);
             if(map.GetCountry(province) == null) provinceGO.SetColor(Color.white);
