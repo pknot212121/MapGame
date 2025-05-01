@@ -121,7 +121,7 @@ public class ShapeTools
         return true;
     }
 
-    public static bool AreTwoProvincesNeighbors(Province province1, Province province2)
+    public static bool AreTwoProvincesNeighborsOneWay(Province province1, Province province2)
     {
         foreach(Vector2 P3 in province1.points)
         {
@@ -146,6 +146,11 @@ public class ShapeTools
             }
         }
         return false;
+    }
+    public bool AreTwoProvincesNeighbors(Province province1, Province province2)
+    {
+        if(AreTwoProvincesNeighborsOneWay(province1,province2) || AreTwoProvincesNeighborsOneWay(province2,province1)) return true;
+        else return false;
     }
 
     public static bool IsClockwise(List<Vector2> points)
