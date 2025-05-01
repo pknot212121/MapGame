@@ -42,21 +42,21 @@ public class GameController : MonoBehaviour
             else TryChangingOwnerhipOfAProvince();
         }*/
         // FOR DEBUGGING
-        if(Input.GetKeyDown(KeyCode.Tab)) Debug.Log("AKTUALNA ILOŚĆ ENTITIES: "+NetworkManagerGame.Instance.EntityCounter);
-        if(Input.GetKeyDown(KeyCode.LeftShift))
-        {
-            foreach(Province province in map.provinces)
-            {
-                Debug.Log(province.countryName);
-            }
-        }
-        if(Input.GetKeyDown(KeyCode.Space))
-        {
-            foreach(KeyValuePair<PlayerRef,NetworkString<_32>> keyValuePair in NetworkManagerGame.Instance.PlayersToCountries)
-            {
-                Debug.Log("GRACZ: "+keyValuePair.Key+" PAŃSTWO: "+keyValuePair.Value);
-            }
-        }
+        // if(Input.GetKeyDown(KeyCode.Tab)) Debug.Log("AKTUALNA ILOŚĆ ENTITIES: "+NetworkManagerGame.Instance.EntityCounter);
+        // if(Input.GetKeyDown(KeyCode.LeftShift))
+        // {
+        //     foreach(Province province in map.provinces)
+        //     {
+        //         Debug.Log(province.countryName);
+        //     }
+        // }
+        // if(Input.GetKeyDown(KeyCode.Space))
+        // {
+        //     foreach(KeyValuePair<PlayerRef,NetworkString<_32>> keyValuePair in NetworkManagerGame.Instance.PlayersToCountries)
+        //     {
+        //         Debug.Log("GRACZ: "+keyValuePair.Key+" PAŃSTWO: "+keyValuePair.Value);
+        //     }
+        // }
         if(Input.GetMouseButtonDown(0))
         {
             if (NetworkManagerGame.Instance != null && map != null)
