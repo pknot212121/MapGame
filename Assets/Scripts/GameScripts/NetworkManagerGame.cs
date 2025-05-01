@@ -90,11 +90,11 @@ public class NetworkManagerGame : NetworkBehaviour, INetworkRunnerCallbacks
         GameController.me.StartCoroutine(GameController.me.CountingDownToStart());
     }
 
-    [Rpc(RpcSources.StateAuthority, RpcTargets.All)]
+    /*[Rpc(RpcSources.StateAuthority, RpcTargets.All)]
     public void Rpc_GameBegins()
     {
         GameController.me.RefreshPlayerNicknameDisplayers();
-    }
+    }*/
 
 
 
@@ -151,6 +151,7 @@ public class NetworkManagerGame : NetworkBehaviour, INetworkRunnerCallbacks
 
     public void PrepareGame()
     {
+        // Podstawowe jednostki
         List<Action> actions = new List<Action>();
         foreach (Province province in GameController.me.map.provinces)
         {
@@ -158,7 +159,6 @@ public class NetworkManagerGame : NetworkBehaviour, INetworkRunnerCallbacks
             {
                 Troop troop = new Troop(++EntityCounter, 15, province.country, province);
                 Action action = new Action(++EntityCounter,Action.ActionType.RaiseTroop, null, troop, null);
-                // action.Pack();
                 Troop troop2 = (Troop)action.entity2;
                 foreach(KeyValuePair<TroopInfo,int> keyValuePair in troop2.numbers)
                 {
@@ -168,10 +168,37 @@ public class NetworkManagerGame : NetworkBehaviour, INetworkRunnerCallbacks
             }
         }
 
-        // Tu trzeba dorobić wysyłanie listy
         string json = JsonSerialization.ToJson(actions);
         Debug.Log(json);
         DistributeMessage("InitialActions", json);
+
+        // Przypisanie państw
+        List<PlayerRef> unassignedPlayers = Runner.ActivePlayers.ToList();
+        List<Country> unassignedCountries = new List<Country>(GameController.me.map.countries);
+        foreach(var kvp in PlayersToCountries)
+        {
+            if(kvp.Key != PlayerRef.None && kvp.Value != null)
+            {
+                unassignedPlayers.RemoveAll(p => p == kvp.Key);
+                unassignedCountries.RemoveAll(c => c.name == kvp.Value.Value);
+            }
+        }
+        if(unassignedPlayers.Count > unassignedCountries.Count) 
+        {
+            Debug.Log("Too few countries to distribute, can't start");
+            return;
+        }
+        Debug.Log(unassignedPlayers.Count + " : " + unassignedCountries.Count);
+        while(unassignedPlayers.Count > 0)
+        {
+            int randomCountryIndex = UnityEngine.Random.Range(0, unassignedCountries.Count);
+            Debug.Log("Random index: " + randomCountryIndex);
+            PlayersToCountries.Add(unassignedPlayers[0], unassignedCountries[randomCountryIndex].name);
+            unassignedPlayers.RemoveAt(0);
+            unassignedCountries.RemoveAt(randomCountryIndex);
+        }
+        Rpc_RefreshPlayerNicknameDisplayers();
+
     }
 
     public void DistributeMessage(string title, string content) // Wyślij wiadomość do wszystkich

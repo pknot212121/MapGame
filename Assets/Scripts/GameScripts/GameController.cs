@@ -26,7 +26,7 @@ public class GameController : MonoBehaviour
     public List<ProvinceGameObject> provinceGameObjects = new List<ProvinceGameObject>();
     public List<TroopGO> troopGOs = new List<TroopGO>();
 
-    public List<Action> actions = new List<Action>();
+    public List<Action> myActions = new List<Action>();
 
     void Start()
     {
