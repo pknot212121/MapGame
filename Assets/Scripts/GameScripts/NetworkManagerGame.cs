@@ -145,6 +145,11 @@ public class NetworkManagerGame : NetworkBehaviour, INetworkRunnerCallbacks
                 Troop troop = new Troop(++EntityCounter, 15, province.country, province);
                 Action action = new Action(++EntityCounter,Action.ActionType.RaiseTroop, null, troop, null);
                 // action.Pack();
+                Troop troop2 = (Troop)action.entity2;
+                foreach(KeyValuePair<TroopInfo,int> keyValuePair in troop2.numbers)
+                {
+                    Debug.Log("Nazwa: "+keyValuePair.Key.name+" Ilość: "+keyValuePair.Value);
+                }
                 actions.Add(action);
             }
         }
@@ -242,6 +247,7 @@ public class NetworkManagerGame : NetworkBehaviour, INetworkRunnerCallbacks
         {
             GameController.me.mapString = content;
             Map map = JsonSerialization.FromJson<Map>(content);
+            GameController.me.map = map;
             map.Unpack();
             GameController.me.SetUpMap(map);
         }

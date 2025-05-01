@@ -15,12 +15,19 @@ using UnityEngine.UI;
 public class NetworkPlayer : NetworkBehaviour
 {
     [Networked, Capacity(32)]
-    public NetworkString<_32> Nickname { get; private set; }
+    public NetworkString<_32> Nickname { get; private set; } = "";
     public override void Spawned()
     {
-        string chosenNickname = PlayerPrefs.GetString("PlayerNickname", $"Player_{UnityEngine.Random.Range(100, 999)}");
-        Debug.Log("Spawned");
-        Rpc_SetNickname(chosenNickname);
+        
+    }
+    public void Update()
+    {
+        if(NetworkManagerGame.Instance!= null && Nickname=="")
+        {
+            string chosenNickname = PlayerPrefs.GetString("PlayerNickname", $"Player_{UnityEngine.Random.Range(100, 999)}");
+            Rpc_SetNickname(chosenNickname);
+        }
+        
     }
 
     [Rpc(RpcSources.All,RpcTargets.StateAuthority)]
