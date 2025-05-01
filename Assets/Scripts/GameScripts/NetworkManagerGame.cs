@@ -55,6 +55,20 @@ public class NetworkManagerGame : NetworkBehaviour, INetworkRunnerCallbacks
         Rpc_CountdownHasStarted();
         StartCoroutine(CountDown());
     }
+    [Rpc(RpcSources.All, RpcTargets.StateAuthority)]
+    public void Rpc_SetNickname(NetworkString<_32> nickname, RpcInfo info = default)
+    {
+        string validatedNick = nickname.Value.Trim();
+        if (this != null)
+        {
+            PlayerNicknames.Set(info.Source, validatedNick);
+            Log.Info($"RPC: Zaktualizowano GameManager.PlayerNicknames dla {info.Source}.");
+        }
+        else
+        {
+            Log.Error("RPC: GameManager.Instance jest null, nie można zaktualizować centralnego słownika nicków.");
+        }
+    }
 
     public IEnumerator CountDown()
     {
@@ -173,7 +187,7 @@ public class NetworkManagerGame : NetworkBehaviour, INetworkRunnerCallbacks
         else Destroy(gameObject);
         Runner.AddCallbacks(this);
     }
-    public override void Render() //obsługuje licznik graczy - lepsza synchronizacja
+    public override void Render() //obsługuje licznik graczy - lepsza
     {
         if (Runner == null || !Runner.IsRunning || GameController.me == null)
         {
@@ -217,6 +231,9 @@ public class NetworkManagerGame : NetworkBehaviour, INetworkRunnerCallbacks
                 Map map = JsonSerialization.FromJson<Map>(GameController.me.mapString);
                 GameController.me.map = map;
                 EntityCounter = map.EntityCounter;
+                string chosenNickname = PlayerPrefs.GetString("PlayerNickname", $"Player_{UnityEngine.Random.Range(100, 999)}");
+                Debug.Log("USTAWIONO NICKNAME GRACZA: "+Runner.LocalPlayer+" JAKO: "+chosenNickname+" W SPAWNED");
+                Rpc_SetNickname(chosenNickname);
                 map.Unpack();
                 GameController.me.SetUpMap(map);
                 Debug.Log("Set up host scene");
@@ -228,6 +245,7 @@ public class NetworkManagerGame : NetworkBehaviour, INetworkRunnerCallbacks
             }
             StartTimer = 10;
         }
+        Rpc_RefreshPlayerNicknameDisplayers();
         // Debug.Log("ILOŚĆ GRACZY: "+Runner.ActivePlayers.ToList().Count());
         // GameController.me.UpdatePlayersCountDisplayer(Runner.ActivePlayers.ToList().Count(), runner.SessionInfo.MaxPlayers);
     }
@@ -242,6 +260,7 @@ public class NetworkManagerGame : NetworkBehaviour, INetworkRunnerCallbacks
             StartTimer = 10;
             if(Master != Runner.LocalPlayer) SetNewMaster(Runner.LocalPlayer);
         }
+        Rpc_RefreshPlayerNicknameDisplayers();
         // GameController.me.UpdatePlayersCountDisplayer(Runner.ActivePlayers.ToList().Count(), runner.SessionInfo.MaxPlayers);
     }
     public void OnSceneLoadDone(NetworkRunner runner) { }
@@ -263,7 +282,9 @@ public class NetworkManagerGame : NetworkBehaviour, INetworkRunnerCallbacks
             GameController.me.map = map;
             map.Unpack();
             GameController.me.SetUpMap(map);
-            GameController.me.RefreshPlayerNicknameDisplayers();
+            string chosenNickname = PlayerPrefs.GetString("PlayerNickname", $"Player_{UnityEngine.Random.Range(100, 999)}");
+            Debug.Log("USTAWIONO NICKNAME GRACZA: "+Runner.LocalPlayer+" JAKO: "+chosenNickname+" W SPAWNED");
+            Rpc_SetNickname(chosenNickname);
         }
         else if(title == "InitialActions")
         {

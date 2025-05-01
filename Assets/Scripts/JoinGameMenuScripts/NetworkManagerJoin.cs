@@ -104,7 +104,7 @@ public class NetworkManagerJoin : MonoBehaviour, INetworkRunnerCallbacks
                 
                 runner.Spawn(sessionManagerPrefab,Vector3.zero, Quaternion.identity);
             }
-            runner.Spawn(playerPrefab, Vector3.zero, Quaternion.identity, player);
+            // runner.Spawn(playerPrefab, Vector3.zero, Quaternion.identity, player);
             
         }
      }

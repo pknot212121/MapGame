@@ -42,21 +42,25 @@ public class GameController : MonoBehaviour
             else TryChangingOwnerhipOfAProvince();
         }*/
         // FOR DEBUGGING
-        // if(Input.GetKeyDown(KeyCode.Tab)) Debug.Log("AKTUALNA ILOŚĆ ENTITIES: "+NetworkManagerGame.Instance.EntityCounter);
-        // if(Input.GetKeyDown(KeyCode.LeftShift))
-        // {
-        //     foreach(Province province in map.provinces)
-        //     {
-        //         Debug.Log(province.countryName);
-        //     }
-        // }
-        // if(Input.GetKeyDown(KeyCode.Space))
-        // {
-        //     foreach(KeyValuePair<PlayerRef,NetworkString<_32>> keyValuePair in NetworkManagerGame.Instance.PlayersToCountries)
-        //     {
-        //         Debug.Log("GRACZ: "+keyValuePair.Key+" PAŃSTWO: "+keyValuePair.Value);
-        //     }
-        // }
+        if(Input.GetKeyDown(KeyCode.Tab)) Debug.Log("AKTUALNA ILOŚĆ ENTITIES: "+NetworkManagerGame.Instance.EntityCounter);
+        if(Input.GetKeyDown(KeyCode.LeftShift))
+        {
+            foreach(Province province in map.provinces)
+            {
+                Debug.Log(province.countryName);
+            }
+        }
+        if(Input.GetKeyDown(KeyCode.Space))
+        {
+            foreach(KeyValuePair<PlayerRef,NetworkString<_32>> keyValuePair in NetworkManagerGame.Instance.PlayersToCountries)
+            {
+                Debug.Log("GRACZ: "+keyValuePair.Key+" PAŃSTWO: "+keyValuePair.Value);
+            }
+            foreach(KeyValuePair<PlayerRef,NetworkString<_32>> keyValuePair1 in NetworkManagerGame.Instance.PlayerNicknames)
+            {
+                Debug.Log("GRACZ: "+keyValuePair1.Key+"NICKNAME: "+keyValuePair1.Value);
+            }
+        }
         if(Input.GetMouseButtonDown(0))
         {
             if (NetworkManagerGame.Instance != null && map != null)
@@ -107,13 +111,13 @@ public class GameController : MonoBehaviour
         foreach(Action action in actions) HandleAction(action);
     }
 
-    public void EndTurnClick()
-    {
-        Debug.Log("Próba zakończenia tury");
-        {
-            networkPlayer.RPC_EndTurn();
-        }
-    }
+    // public void EndTurnClick()
+    // {
+    //     Debug.Log("Próba zakończenia tury");
+    //     {
+    //         networkPlayer.RPC_EndTurn();
+    //     }
+    // }
 
     public void UpdatePlayersCountDisplayer(int current, int max)
     {
