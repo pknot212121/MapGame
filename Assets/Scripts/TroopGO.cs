@@ -70,67 +70,67 @@ public class TroopGO : MonoBehaviour
         int iconIndex = 0;
         Debug.Log(iconIndex);
 
-        foreach (var item in top4)
-        {
-            if (iconIndex >= sr.Length) break;
-            float percentage = (float)item.Value / sum;
-            Sprite icon = Resources.Load(item.Key.iconName) as Sprite;
-            if(icons == 1) // Tu po prostu ustawiamy pierwszego najliczniejszego
-            {
-                sr[0].sprite = icon;
-                break;
-            }
-            else if(icons == 2)
-            {
-                if(iconIndex <= 1) // Dostaje wolne miejsce jeśli jakieś jest
-                {
-                    sr[iconIndex++].sprite = icon;
-                }
-                else break;
-                if(percentage > 0.75f) // Jeśli stanowi ponad 75% wszystkich dostaje też drugie
-                {
-                    sr[iconIndex++].sprite = icon;
-                    break;
-                }
-            }
-            else if(icons == 3)
-            {
-                if(iconIndex <= 1) // Dostaje wolne miejsce jeśli jakieś jest
-                {
-                    sr[iconIndex++].sprite = icon;
-                }
-                else break;
-                if(percentage > 0.50f) // Jeśli stanowi ponad 50% wszystkich dostaje też drugie
-                {
-                    sr[iconIndex++].sprite = icon;
-                }
-                if(percentage > 0.85f) // Jeśli stanowi ponad 85% wszystkich dostaje też trzecie
-                {
-                    sr[iconIndex++].sprite = icon;
-                    break;
-                }
-            }
-            else if(icons == 4)
-            {
-                if(iconIndex <= 1) // Dostaje wolne miejsce jeśli jakieś jest
-                {
-                    sr[iconIndex++].sprite = icon;
-                }
-                else break;
-                if(percentage > 0.45f) // Jeśli stanowi ponad 45% wszystkich dostaje też drugie
-                {
-                    sr[iconIndex++].sprite = icon;
-                }
-                if(percentage > 0.70f) // Jeśli stanowi ponad 70% wszystkich dostaje też trzecie
-                {
-                    sr[iconIndex++].sprite = icon;
-                }
-                if(percentage > 0.90f) // Jeśli stanowi ponad 90% wszystkich dostaje też czwarte
-                {
-                    sr[iconIndex++].sprite = icon;
-                    break;
-                }
-            }
-        }
+        // foreach (var item in top4)
+        // {
+        //     if (iconIndex >= sr.Length) break;
+        //     float percentage = (float)item.Value / sum;
+        //     Sprite icon = Resources.Load(item.Key.iconName) as Sprite;
+        //     if(icons == 1) // Tu po prostu ustawiamy pierwszego najliczniejszego
+        //     {
+        //         sr[0].sprite = icon;
+        //         break;
+        //     }
+        //     else if(icons == 2)
+        //     {
+        //         if(iconIndex <= 1) // Dostaje wolne miejsce jeśli jakieś jest
+        //         {
+        //             sr[iconIndex++].sprite = icon;
+        //         }
+        //         else break;
+        //         if(percentage > 0.75f) // Jeśli stanowi ponad 75% wszystkich dostaje też drugie
+        //         {
+        //             sr[iconIndex++].sprite = icon;
+        //             break;
+        //         }
+        //     }
+        //     else if(icons == 3)
+        //     {
+        //         if(iconIndex <= 1) // Dostaje wolne miejsce jeśli jakieś jest
+        //         {
+        //             sr[iconIndex++].sprite = icon;
+        //         }
+        //         else break;
+        //         if(percentage > 0.50f) // Jeśli stanowi ponad 50% wszystkich dostaje też drugie
+        //         {
+        //             sr[iconIndex++].sprite = icon;
+        //         }
+        //         if(percentage > 0.85f) // Jeśli stanowi ponad 85% wszystkich dostaje też trzecie
+        //         {
+        //             sr[iconIndex++].sprite = icon;
+        //             break;
+        //         }
+        //     }
+        //     else if(icons == 4)
+        //     {
+        //         if(iconIndex <= 1) // Dostaje wolne miejsce jeśli jakieś jest
+        //         {
+        //             sr[iconIndex++].sprite = icon;
+        //         }
+        //         else break;
+        //         if(percentage > 0.45f) // Jeśli stanowi ponad 45% wszystkich dostaje też drugie
+        //         {
+        //             sr[iconIndex++].sprite = icon;
+        //         }
+        //         if(percentage > 0.70f) // Jeśli stanowi ponad 70% wszystkich dostaje też trzecie
+        //         {
+        //             sr[iconIndex++].sprite = icon;
+        //         }
+        //         if(percentage > 0.90f) // Jeśli stanowi ponad 90% wszystkich dostaje też czwarte
+        //         {
+        //             sr[iconIndex++].sprite = icon;
+        //             break;
+        //         }
+        //     }
+        // }
     }
 }
