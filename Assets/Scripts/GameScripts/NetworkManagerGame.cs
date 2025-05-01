@@ -18,7 +18,7 @@ public class NetworkManagerGame : NetworkBehaviour, INetworkRunnerCallbacks
     [Networked] public int StartTimer { get; set; } = 10; // 10 - poczekalnia, 5-1 - odliczanie, -1 - rozpoczęta gra
     [Networked] public PlayerRef ActivePlayer {get;set;}
     [Networked] public PlayerRef Master { get; set; }
-    public int EntityCounter  = 0; //Do przydzielania kolejnych id
+    [Networked] public int EntityCounter {get;set;}  = 0; //Do przydzielania kolejnych id
 
 
     public static NetworkManagerGame Instance{get;private set;}
@@ -145,7 +145,6 @@ public class NetworkManagerGame : NetworkBehaviour, INetworkRunnerCallbacks
                 Troop troop = new Troop(++EntityCounter, 15, province.country, province);
                 Action action = new Action(++EntityCounter,Action.ActionType.RaiseTroop, null, troop, null);
                 // action.Pack();
-                Debug.Log("ILOŚĆ ENTITIES: "+EntityCounter);
                 actions.Add(action);
             }
         }
@@ -199,8 +198,8 @@ public class NetworkManagerGame : NetworkBehaviour, INetworkRunnerCallbacks
                 string filename = PlayerPrefs.GetString("mapName");
                 GameController.me.mapString = Map.LoadMapFromJson(filename);
                 Map map = JsonSerialization.FromJson<Map>(GameController.me.mapString);
+                GameController.me.map = map;
                 EntityCounter = map.EntityCounter;
-                Debug.Log("POCZĄTKOWA ILOŚĆ ENTITIES: "+EntityCounter);
                 map.Unpack();
                 GameController.me.SetUpMap(map);
                 Debug.Log("Set up host scene");
