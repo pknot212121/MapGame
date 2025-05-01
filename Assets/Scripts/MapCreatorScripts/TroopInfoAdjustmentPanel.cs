@@ -52,7 +52,7 @@ public class TroopInfoAdjustmentPanel : MonoBehaviour
 
         for(int i = 0; i < allIcons.Length; i++)
         {
-            if(allIcons[i].name == adjusted.iconName || allIcons[i].name == adjusted.iconName + "_0")
+            if(allIcons[i].name == adjusted.iconName)
             {
                 Sprite next = allIcons[(i+1) % allIcons.Length];
                 adjusted.iconName = next.name;
