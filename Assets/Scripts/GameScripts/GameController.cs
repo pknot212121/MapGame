@@ -214,7 +214,7 @@ public class GameController : MonoBehaviour
         }
         else // Jesteśmy w poczekalni
         {
-            PlayerRef owner = NetworkManagerGame.Instance.GetOwnerOfACountry(map.GetCountry(province).name);
+            PlayerRef owner = NetworkManagerGame.Instance.GetOwnerOfACountry(province.country.name);
             if(owner==PlayerRef.None)
             {
                 Debug.Log("PRÓBUJĘ USTAWIĆ WŁAŚCICIELA: "+province.name);
