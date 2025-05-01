@@ -18,7 +18,6 @@ public class GameController : MonoBehaviour
     public Button endTurnButton;
     public TMP_Text startCounter;
     public TMP_Text playersCountDisplayer;
-    public NetworkPlayer networkPlayer;
 
     public GameObject troopPrefab;
 
