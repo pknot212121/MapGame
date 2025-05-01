@@ -117,6 +117,7 @@ public class GameController : MonoBehaviour
 
     public void UpdatePlayersCountDisplayer(int current, int max)
     {
+        // Debug.Log("ILOŚĆ GRACZY W UPDACIE: "+current+"MAX GRACZY: "+max);
         playersCountDisplayer.text = $"{current}/{max}";
     }
 

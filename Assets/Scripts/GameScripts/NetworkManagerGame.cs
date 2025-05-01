@@ -173,6 +173,19 @@ public class NetworkManagerGame : NetworkBehaviour, INetworkRunnerCallbacks
         else Destroy(gameObject);
         Runner.AddCallbacks(this);
     }
+    public override void Render() //obsługuje licznik graczy - lepsza synchronizacja
+    {
+        if (Runner == null || !Runner.IsRunning || GameController.me == null)
+        {
+            return;
+        }
+        if (Runner.SessionInfo != null)
+        {
+            int currentPlayers = Runner.ActivePlayers.Count();
+            int maxPlayers = Runner.SessionInfo.MaxPlayers;
+            GameController.me.UpdatePlayersCountDisplayer(currentPlayers, maxPlayers);
+        }
+    }
     public void OnSessionListUpdated(NetworkRunner runner, List<SessionInfo> sessionList)
     {
         //Debug.Log($"Rooms list update (Count: {sessionList.Count})");
@@ -215,8 +228,8 @@ public class NetworkManagerGame : NetworkBehaviour, INetworkRunnerCallbacks
             }
             StartTimer = 10;
         }
-        Debug.Log("ILOŚĆ GRACZY: "+Runner.ActivePlayers.ToList().Count());
-        GameController.me.UpdatePlayersCountDisplayer(Runner.ActivePlayers.ToList().Count(), runner.SessionInfo.MaxPlayers);
+        // Debug.Log("ILOŚĆ GRACZY: "+Runner.ActivePlayers.ToList().Count());
+        // GameController.me.UpdatePlayersCountDisplayer(Runner.ActivePlayers.ToList().Count(), runner.SessionInfo.MaxPlayers);
     }
     public void OnPlayerLeft(NetworkRunner runner, PlayerRef player)
     {
@@ -229,7 +242,7 @@ public class NetworkManagerGame : NetworkBehaviour, INetworkRunnerCallbacks
             StartTimer = 10;
             if(Master != Runner.LocalPlayer) SetNewMaster(Runner.LocalPlayer);
         }
-        GameController.me.UpdatePlayersCountDisplayer(Runner.ActivePlayers.ToList().Count(), runner.SessionInfo.MaxPlayers);
+        // GameController.me.UpdatePlayersCountDisplayer(Runner.ActivePlayers.ToList().Count(), runner.SessionInfo.MaxPlayers);
     }
     public void OnSceneLoadDone(NetworkRunner runner) { }
     public void OnSceneLoadStart(NetworkRunner runner) { }
