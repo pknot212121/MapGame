@@ -57,6 +57,10 @@ public class MapCreatorController : MonoBehaviour
         if(isProvinceShapeFormed) ProvinceShapeFormLogic();
         else DeletingAndReturingProvincesLogic();
         if(countryAdjusted != null) AddingProvincesToCountriesLogic();
+        // if(Input.GetKeyDown(KeyCode.LeftShift) && map.provinces.Count()>1)
+        // {
+        //     Debug.Log(ShapeTools.AreTwoProvincesNeighbors(map.provinces[0],map.provinces[1]));
+        // }
     }
 
     public void CreateProvinceClick()
