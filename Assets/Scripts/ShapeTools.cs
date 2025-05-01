@@ -6,6 +6,8 @@ using System.Data.Common;
 using UnityEngine.Rendering;
 using System.Drawing;
 using System.Linq;
+// using System.Numerics;
+// using System.Numerics;
 
 public class ShapeTools
 {
@@ -117,6 +119,33 @@ public class ShapeTools
             }
         }
         return true;
+    }
+
+    public static bool AreTwoProvincesNeighbors(Province province1, Province province2)
+    {
+        foreach(Vector2 P3 in province1.points)
+        {
+            for(int i=1;i<province2.points.Count();i++)
+            {
+                float eps = 0.001f;
+                Vector2 P1 = province2.points[i-1];
+                Vector2 P2 = province2.points[i];
+                if((Math.Abs(P1.x-P3.x)<eps && Math.Abs(P1.y-P3.y)<eps) || (Math.Abs(P2.x-P3.x)<eps && Math.Abs(P2.y-P3.y)<eps)) return true;
+                float deltaX = P2.x-P1.x;
+                float deltaY = P2.y-P1.y;
+                if(Math.Abs(deltaX)<eps && Math.Abs(P3.x-P1.x)<eps)
+                {
+                    if((P3.y<P2.y && P3.y>P1.y) || (P3.y>P2.y && P3.y<P1.y)) return true;
+                }
+                else
+                {
+                    float a = deltaY/deltaX;
+                    float b = P1.y-a*P1.x;
+                    if(Math.Abs(a*P3.x+b-P3.y)<eps) return true;
+                }
+            }
+        }
+        return false;
     }
 
     public static bool IsClockwise(List<Vector2> points)
