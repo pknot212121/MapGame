@@ -21,8 +21,9 @@ public class Province : Entity
         this.name = name;
     }
 
-    public Province(string name, ProvinceGameObject gameObject)
+    public Province(int id,string name, ProvinceGameObject gameObject)
     {
+        this.id = id;
         this.name = name;
         this.gameObject = gameObject;
         points = gameObject.points;

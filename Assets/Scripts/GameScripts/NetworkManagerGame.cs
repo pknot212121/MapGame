@@ -18,7 +18,7 @@ public class NetworkManagerGame : NetworkBehaviour, INetworkRunnerCallbacks
     [Networked] public int StartTimer { get; set; } = 10; // 10 - poczekalnia, 5-1 - odliczanie, -1 - rozpoczęta gra
     [Networked] public PlayerRef ActivePlayer {get;set;}
     [Networked] public PlayerRef Master { get; set; }
-    [Networked] public bool IsMapLoaded {get;set;} = false;
+    public int EntityCounter  = 0; //Do przydzielania kolejnych id
 
 
     public static NetworkManagerGame Instance{get;private set;}
@@ -137,14 +137,14 @@ public class NetworkManagerGame : NetworkBehaviour, INetworkRunnerCallbacks
     public void PrepareGame()
     {
         List<Action> actions = new List<Action>();
-        int troopsCounter = 0;
         foreach (Province province in GameController.me.map.provinces)
         {
             if(province!=null)
             {
-                Troop troop = new Troop(++troopsCounter, 15, province.country, province);
-                Action action = new Action(Action.ActionType.RaiseTroop, null, troop, null);
+                Troop troop = new Troop(++EntityCounter, 15, province.country, province);
+                Action action = new Action(++EntityCounter,Action.ActionType.RaiseTroop, null, troop, null);
                 // action.Pack();
+                Debug.Log("ILOŚĆ ENTITIES: "+EntityCounter);
                 actions.Add(action);
             }
         }

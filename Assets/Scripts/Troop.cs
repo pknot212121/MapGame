@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 public class Troop : Entity
 {
-    int id = 0; // Identyfikator jednostki, może być używany do wysyłki
+    // int id = 0; // Identyfikator jednostki, może być używany do wysyłki
     public Dictionary<TroopInfo, int> numbers;
     public Resource transportedResources;
 

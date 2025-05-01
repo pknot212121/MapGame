@@ -44,6 +44,8 @@ public class MapCreatorController : MonoBehaviour
     List<Vector2> provincePoints = null;
     List<Vector2> allPoints = new List<Vector2>();
 
+    public int EntityCounter = 0;
+
     public static MapCreatorController me;
 
     void Start()
@@ -94,7 +96,7 @@ public class MapCreatorController : MonoBehaviour
                 return;
             }
             provinceGameObjects.Add(province);
-            map.provinces.Add(new Province(provinceName,province));
+            map.provinces.Add(new Province(++EntityCounter,provinceName,province));
             foreach(Vector2 point in provincePoints){allPoints.Add(point);}
         }
         else Debug.Log("Krawędzie się przecinają!");

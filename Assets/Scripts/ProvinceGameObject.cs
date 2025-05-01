@@ -25,7 +25,7 @@ public class ProvinceGameObject : MonoBehaviour
 
     public void Initialise(string name, List<Vector2> points = null)
     {
-        data = new Province(name, this);
+        data = new Province(++MapCreatorController.me.EntityCounter,name, this);
         this.points = points;
         data.points = points;
         if(points == null) points = new List<Vector2>();
