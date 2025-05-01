@@ -177,7 +177,7 @@ public class NetworkManagerGame : NetworkBehaviour, INetworkRunnerCallbacks
         List<Country> unassignedCountries = new List<Country>(GameController.me.map.countries);
         foreach(var kvp in PlayersToCountries)
         {
-            if(kvp.Key != PlayerRef.None && kvp.Value != null)
+            if(kvp.Key != PlayerRef.None)
             {
                 unassignedPlayers.RemoveAll(p => p == kvp.Key);
                 unassignedCountries.RemoveAll(c => c.name == kvp.Value.Value);
