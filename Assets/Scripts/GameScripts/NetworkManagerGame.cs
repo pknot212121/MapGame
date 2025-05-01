@@ -172,7 +172,6 @@ public class NetworkManagerGame : NetworkBehaviour, INetworkRunnerCallbacks
         if (Instance == null) Instance = this;
         else Destroy(gameObject);
         Runner.AddCallbacks(this);
-        GameController.me.RefreshPlayerNicknameDisplayers();
     }
     public void OnSessionListUpdated(NetworkRunner runner, List<SessionInfo> sessionList)
     {
@@ -216,6 +215,7 @@ public class NetworkManagerGame : NetworkBehaviour, INetworkRunnerCallbacks
             }
             StartTimer = 10;
         }
+        Debug.Log("ILOŚĆ GRACZY: "+Runner.ActivePlayers.ToList().Count());
         GameController.me.UpdatePlayersCountDisplayer(Runner.ActivePlayers.ToList().Count(), runner.SessionInfo.MaxPlayers);
     }
     public void OnPlayerLeft(NetworkRunner runner, PlayerRef player)
@@ -250,6 +250,7 @@ public class NetworkManagerGame : NetworkBehaviour, INetworkRunnerCallbacks
             GameController.me.map = map;
             map.Unpack();
             GameController.me.SetUpMap(map);
+            GameController.me.RefreshPlayerNicknameDisplayers();
         }
         else if(title == "InitialActions")
         {
