@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 5926345255680062293}
   - component: {fileID: 4385710961654248442}
   m_Layer: 0
-  m_Name: SessionManager
+  m_Name: sessionManager
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -47,7 +47,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   SortKey: 2689526391
   ObjectInterest: 1
-  Flags: 262145
+  Flags: 131073
   NestedObjects: []
   NetworkedBehaviours:
   - {fileID: 4385710961654248442}
@@ -64,3 +64,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 84b766931e730044486b71f72bcee130, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _PlayersToCountries:
+    _items: []
+  _PlayerNicknames:
+    _items: []
+  _StartTimer: 10
+  _EntityCounter: 0
+  textEntryPrefab: {fileID: 0}
+  textContainer: {fileID: 0}
