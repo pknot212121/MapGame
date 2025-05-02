@@ -150,7 +150,7 @@ public class ShapeTools
         if(province1 == null || province2 == null) return false;
         return AreTwoProvincesNeighborsOneWay(province1,province2) || AreTwoProvincesNeighborsOneWay(province2,province1);
     }
-    public static Vector2 PointOnLine(Vector2 p0,Vector2 p1,Vector2 q) 
+    public static float[] PointOnLine(Vector2 p0,Vector2 p1,Vector2 q) 
     {
 
         // p0 and p1 define the line segment
@@ -171,8 +171,8 @@ public class ShapeTools
         float maxy = Math.Max(p0.y, p1.y);
 
         bool isValid = (r.x >= minx && r.x <= maxx) && (r.y >= miny && r.y <= maxy);
-
-        return isValid ? r : new Vector2(-9999,-9999);
+        float[] r2 = {r.x,r.y};
+        return isValid ? r2 : null;
     }
     public static float Distance(Vector2 A, Vector2 B)
     {

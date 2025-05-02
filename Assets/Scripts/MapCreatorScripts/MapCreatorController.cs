@@ -8,6 +8,7 @@ using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
 using System.Linq;
 using System;
+using System.Data.Common;
 
 
 public class MapCreatorController : MonoBehaviour
@@ -57,10 +58,10 @@ public class MapCreatorController : MonoBehaviour
         if(isProvinceShapeFormed) ProvinceShapeFormLogic();
         else DeletingAndReturingProvincesLogic();
         if(countryAdjusted != null) AddingProvincesToCountriesLogic();
-        // if(Input.GetKeyDown(KeyCode.LeftShift) && map.provinces.Count()>1)
-        // {
-        //     Debug.Log(ShapeTools.AreTwoProvincesNeighbors(map.provinces[0],map.provinces[1]));
-        // }
+        if(Input.GetKeyDown(KeyCode.LeftAlt) && map.provinces.Count()>1)
+        {
+            Debug.Log(ShapeTools.AreTwoProvincesNeighbors(map.provinces[0],map.provinces[1]));
+        }
     }
 
     public void CreateProvinceClick()
@@ -340,28 +341,37 @@ public class MapCreatorController : MonoBehaviour
     Vector2 NearestEdgeProjection(Vector2 worldPosition,int zet)
     {
         float minDistance = float.MaxValue;
-        Vector2 nearestProjection = new Vector2();
+        Vector2 nearestProjection = new Vector2(worldPosition.x,worldPosition.y);
         foreach(Province province in map.provinces)
         {
             for(int i=1;i<province.points.Count();i++)
             {
                 Vector2 P0 = province.points[i-1];
                 Vector2 P1 = province.points[i];
-                Vector2 projection = ShapeTools.PointOnLine(P0,P1,worldPosition);
-                if(ShapeTools.Distance(worldPosition,projection)<minDistance)
+                float[] projectionArr = ShapeTools.PointOnLine(P0,P1,worldPosition);
+                if(projectionArr != null)
                 {
-                    nearestProjection = projection;
-                    minDistance = ShapeTools.Distance(worldPosition,projection);
+                    Vector2 projection = new Vector2(projectionArr[0],projectionArr[1]);
+                    if(ShapeTools.Distance(worldPosition,projection)<minDistance)
+                    {
+                        nearestProjection = projection;
+                        minDistance = ShapeTools.Distance(worldPosition,projection);
+                    }
                 }
+                
             }
             //To also check the edge between the first and the last point
             Vector2 A = province.points[0]; 
             Vector2 B = province.points[province.points.Count()-1];
-            Vector2 proj = ShapeTools.PointOnLine(A,B,worldPosition);
-            if(ShapeTools.Distance(worldPosition,proj)<minDistance)
+            float[] projArr = ShapeTools.PointOnLine(A,B,worldPosition);
+            if(projArr != null)
             {
-                nearestProjection = proj;
-                minDistance = ShapeTools.Distance(worldPosition,proj);
+                Vector2 proj = new Vector2(projArr[0],projArr[1]);
+                if(ShapeTools.Distance(worldPosition,proj)<minDistance)
+                {
+                    nearestProjection = proj;
+                    minDistance = ShapeTools.Distance(worldPosition,proj);
+                }
             }
         }
         return new Vector3(nearestProjection.x,nearestProjection.y,zet);
