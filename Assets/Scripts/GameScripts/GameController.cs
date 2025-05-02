@@ -5,6 +5,7 @@ using System.Collections;
 using System;
 using TMPro;
 using UnityEngine.UI;
+using Unity.Serialization.Json;
 using System.Linq;
 
 public class GameController : MonoBehaviour
@@ -230,6 +231,16 @@ public class GameController : MonoBehaviour
         provinceMenuCanvas.gameObject.SetActive(false);
         troopMenuCanvas.gameObject.SetActive(true);
         UpdateTroopInfoList(troop);
+    }
+
+    public void EndTurnClick()
+    {
+        NetworkManagerGame.Instance.SendReliableMessageToPlayer(NetworkManagerGame.Instance.Object.StateAuthority, "MyActions", JsonSerialization.ToJson(myActions));
+    }
+
+    public void EndTurnClick()
+    {
+        NetworkManagerGame.Instance.SendReliableMessageToPlayer(NetworkManagerGame.Instance.Object.StateAuthority, "MyActions", JsonSerialization.ToJson(myActions));
     }
 
     #endregion

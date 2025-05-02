@@ -16,12 +16,14 @@ public class NetworkManagerGame : NetworkBehaviour, INetworkRunnerCallbacks
     [Networked,Capacity(20)] public NetworkDictionary<PlayerRef, NetworkString<_32>> PlayersToCountries { get; } = new NetworkDictionary<PlayerRef, NetworkString<_32>>();
     [Networked, Capacity(20)] public NetworkDictionary<PlayerRef, NetworkString<_32>> PlayerNicknames { get; }
     [Networked] public int StartTimer { get; set; } = 10; // 10 - poczekalnia, 5-1 - odliczanie, -1 - rozpoczęta gra
-    [Networked] public PlayerRef ActivePlayer {get;set;}
+    [Networked] public int Seed { get; set; } = 10;
+    [Networked] public PlayerRef ActivePlayer { get; set; }
     [Networked] public PlayerRef Master { get; set; }
-    [Networked] public int EntityCounter {get;set;}  = 0; //Do przydzielania kolejnych id
+    [Networked] public int EntityCounter {get;set;}  = 0; // Do przydzielania kolejnych id
 
 
     public static NetworkManagerGame Instance{get;private set;}
+    public List<List<Action>> allPlayersActions = null;
     //public Map CurrentMapData { get; private set; }
     //public List<ProvinceGameObject> provinceGameObjects {get; private set;}
     //public bool IsMapDataReady { get; private set; } = false;
@@ -151,6 +153,11 @@ public class NetworkManagerGame : NetworkBehaviour, INetworkRunnerCallbacks
 
     public void PrepareGame()
     {
+        byte[] buffer = new byte[4];
+        System.Security.Cryptography.RandomNumberGenerator.Fill(buffer);
+        Seed = BitConverter.ToInt32(buffer, 0);
+        Debug.Log("Generated seed: " + Seed);
+
         // Podstawowe jednostki
         List<Action> actions = new List<Action>();
         foreach (Province province in GameController.me.map.provinces)
@@ -199,6 +206,30 @@ public class NetworkManagerGame : NetworkBehaviour, INetworkRunnerCallbacks
         }
         Rpc_RefreshPlayerNicknameDisplayers();
 
+    }
+
+    public void ProcessAllPlayersActions() // Przeplata ruchy graczy
+    {
+        List<Queue<Action>> actionsQueues = allPlayersActions.Select(list => new Queue<Action>(list)).ToList();
+        List<Action> actions = new List<Action>();
+        bool goAgain = true;
+        while(goAgain)
+        {
+            goAgain = false;
+            foreach(Queue<Action> queue in actionsQueues)
+            {
+                if (queue.Count == 0) continue;
+                actions.Add(queue.Dequeue());
+                if (queue.Count > 0) goAgain = true;
+            }
+        }
+        allPlayersActions.Clear();
+        DistributeMessage("ProcessedActions", JsonSerialization.ToJson(actions));
+    }
+
+    public void SendReliableMessageToPlayer(PlayerRef player, string title, string content)
+    {
+        Runner.SendReliableDataToPlayer(player, ReliableKey.FromInts(42, 0, 21, 37), Encoding.UTF8.GetBytes(title + " " + content));
     }
 
     public void DistributeMessage(string title, string content) // Wyślij wiadomość do wszystkich
@@ -315,8 +346,19 @@ public class NetworkManagerGame : NetworkBehaviour, INetworkRunnerCallbacks
         }
         else if(title == "InitialActions")
         {
-            // Tu wczytać akcje z jsona
-            
+            List<Action> actions = JsonSerialization.FromJson<List<Action>>(content);
+            GameController.me.HandleActions(actions);
+        }
+        else if(title == "MyActions") // Wysyłane przez graczy do authority do przetworzenia
+        {
+            if(allPlayersActions == null) allPlayersActions = new List<List<Action>>();
+            List<Action> actions = JsonSerialization.FromJson<List<Action>>(content);
+            if(actions == null) Debug.Log("Received broken actions list, can't process");
+            allPlayersActions.Add(actions);
+            if(allPlayersActions.Count == Runner.ActivePlayers.ToList().Count) ProcessAllPlayersActions();
+        }
+        else if(title == "ProcessedActions") // Przetworzone akcje wysyłane przez authority do graczy
+        {
             List<Action> actions = JsonSerialization.FromJson<List<Action>>(content);
             GameController.me.HandleActions(actions);
         }
