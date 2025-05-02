@@ -258,16 +258,28 @@ public class GameController : MonoBehaviour
 
     void TroopClick(Troop troop)
     {
-        Debug.Log("Troop click");
-        if(actionPrepared != null && actionPrepared.type == Action.ActionType.MoveTroop && actionPrepared.entity1.id == troop.id) // Drugie kliknięcie wchodzi w menu jednostki
+        Country country = null;
+        foreach(KeyValuePair<PlayerRef,NetworkString<_32>> keyValuePair in NetworkManagerGame.Instance.PlayersToCountries)
         {
-            actionPrepared = null;
-            ShowTroopMenu(troop);
+            if(keyValuePair.Key == NetworkManagerGame.Instance.Runner.LocalPlayer)
+            {
+                country = map.GetCountry((string)keyValuePair.Value);
+                break;
+            }
         }
-        else // Pierwsze kliknięcie wybiera atak
+        if(country!=null && troop.country.id == country.id)
         {
-            foreach(Province p in map.GetNeighboringProvinces(troop.province)) p.go.StartCoroutine(p.go.HighlightForSelection());
-            actionPrepared = new Action(Action.ActionType.MoveTroop, troop, null, null);
+            Debug.Log("Troop click");
+            if(actionPrepared != null && actionPrepared.type == Action.ActionType.MoveTroop && actionPrepared.entity1.id == troop.id) // Drugie kliknięcie wchodzi w menu jednostki
+            {
+                actionPrepared = null;
+                ShowTroopMenu(troop);
+            }
+            else // Pierwsze kliknięcie wybiera atak
+            {
+                foreach(Province p in map.GetNeighboringProvinces(troop.province)) p.go.StartCoroutine(p.go.HighlightForSelection());
+                actionPrepared = new Action(Action.ActionType.MoveTroop, troop, null, null);
+            }
         }
     }
 
