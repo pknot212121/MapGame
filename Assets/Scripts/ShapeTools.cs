@@ -6,6 +6,7 @@ using System.Data.Common;
 using UnityEngine.Rendering;
 using System.Drawing;
 using System.Linq;
+using UnityEngine.EventSystems;
 
 public class ShapeTools
 {
@@ -174,6 +175,25 @@ public class ShapeTools
         bool isValid = (r.x >= minx && r.x <= maxx) && (r.y >= miny && r.y <= maxy);
         float[] r2 = {r.x,r.y};
         return isValid ? r2 : null;
+    }
+    public static bool IsPointerOverSpecificCanvas(Canvas c)
+    {
+        PointerEventData eventData = new PointerEventData(EventSystem.current)
+        {
+            position = Input.mousePosition
+        };
+
+        List<RaycastResult> results = new List<RaycastResult>();
+        EventSystem.current.RaycastAll(eventData, results);
+
+        foreach (RaycastResult result in results)
+        {
+            if (result.gameObject.GetComponentInParent<Canvas>() == c)
+            {
+                return true;
+            }
+        }
+        return false;
     }
     public static float Distance(Vector2 A, Vector2 B)
     {

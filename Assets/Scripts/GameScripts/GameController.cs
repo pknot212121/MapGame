@@ -69,7 +69,7 @@ public class GameController : MonoBehaviour
             else TryChangingOwnerhipOfAProvince();
         }*/
         // FOR DEBUGGING
-        if(Input.GetMouseButtonDown(0) && !MapCreatorController.IsPointerOverSpecificCanvas(troopMenuCanvas)) troopMenuCanvas.gameObject.SetActive(false);
+        if(Input.GetMouseButtonDown(0) && !ShapeTools.IsPointerOverSpecificCanvas(troopMenuCanvas)) troopMenuCanvas.gameObject.SetActive(false);
         if(Input.GetKeyDown(KeyCode.Tab)) Debug.Log("AKTUALNA ILOŚĆ ENTITIES: "+NetworkManagerGame.Instance.EntityCounter);
         if(Input.GetKeyDown(KeyCode.LeftShift))
         {

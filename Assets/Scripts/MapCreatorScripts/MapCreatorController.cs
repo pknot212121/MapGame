@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.EventSystems;
+
 using UnityEngine.UI;
 using TMPro;
 using Unity.VisualScripting;
@@ -247,7 +247,7 @@ public class MapCreatorController : MonoBehaviour
             worldPosition.z = -2;
             cursor.transform.position = worldPosition;
         }
-        if(Input.GetMouseButtonDown(0) && !IsPointerOverSpecificCanvas(provincePointsCanvas))
+        if(Input.GetMouseButtonDown(0) && !ShapeTools.IsPointerOverSpecificCanvas(provincePointsCanvas))
         {
             GameObject prefab = Resources.Load<GameObject>("Prefabs/PointMark");
             GameObject mark = Instantiate(prefab, cursor.transform.position, Quaternion.identity);
@@ -305,26 +305,6 @@ public class MapCreatorController : MonoBehaviour
             }
             
         }
-    }
-
-    public static bool IsPointerOverSpecificCanvas(Canvas c)
-    {
-        PointerEventData eventData = new PointerEventData(EventSystem.current)
-        {
-            position = Input.mousePosition
-        };
-
-        List<RaycastResult> results = new List<RaycastResult>();
-        EventSystem.current.RaycastAll(eventData, results);
-
-        foreach (RaycastResult result in results)
-        {
-            if (result.gameObject.GetComponentInParent<Canvas>() == c)
-            {
-                return true;
-            }
-        }
-        return false;
     }
 
     Vector3 NearestPoint(Vector2 worldPosition, int zet)
