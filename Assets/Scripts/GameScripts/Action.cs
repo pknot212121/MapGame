@@ -15,9 +15,8 @@ public class Action : Entity
     public string optionalData;
 
     public Action(){}
-    public Action(int id,ActionType type, Entity entity1, Entity entity2, string optionalData)
+    public Action(ActionType type, Entity entity1, Entity entity2, string optionalData)
     {
-        this.id = id;
         this.type = type;
         this.entity1 = entity1;
         this.entity2 = entity2;
