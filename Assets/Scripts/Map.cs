@@ -48,6 +48,15 @@ public class Map : Entity
     {
         return provinces.FirstOrDefault(p => p.name == provinceName);
     }
+    public List<Province> GetNeighboringProvinces(Province province1)
+    {
+        List<Province> neighbors = new List<Province>();
+        foreach(Province province2 in provinces)
+        {
+            if(ShapeTools.AreTwoProvincesNeighbors(province1,province2)) neighbors.Add(province2);
+        }
+        return neighbors;
+    } 
 
 
     public static void LoadMapIntoJson(string filename)
