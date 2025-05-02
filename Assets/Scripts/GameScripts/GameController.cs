@@ -23,6 +23,7 @@ public class GameController : MonoBehaviour
 
     public Canvas anteroomCanvas;
     public Canvas gameplayCanvas;
+    public Canvas troopMenuCanvas;
 
     public Button startButton;
     public Button endTurnButton;
@@ -137,7 +138,7 @@ public class GameController : MonoBehaviour
         {
             GameObject panel = Instantiate(prefab, Vector3.zero, Quaternion.identity);
             panel.GetComponent<TroopInfoPrefab>().Initialise(keyValuePair.Key,keyValuePair.Value);
-            panel.transform.SetParent(troopListContentTransform);
+            panel.transform.SetParent(troopListContentTransform, false);
         }
     }
 
@@ -201,7 +202,8 @@ public class GameController : MonoBehaviour
 
     public void ShowTroopMenu(Troop troop)
     {
-
+        troopMenuCanvas.gameObject.SetActive(true);
+        UpdateTroopList(troop);
     }
 
     #endregion
@@ -259,11 +261,11 @@ public class GameController : MonoBehaviour
         if(actionPrepared != null && actionPrepared.type == Action.ActionType.MoveTroop && actionPrepared.entity1.id == troop.id) // Drugie kliknięcie wchodzi w menu jednostki
         {
             actionPrepared = null;
-            ShowTroopMenu(troop);
+            if(!troopMenuCanvas.gameObject.activeSelf) ShowTroopMenu(troop);
+            else troopMenuCanvas.gameObject.SetActive(false);
         }
         else // Pierwsze kliknięcie wybiera atak
         {
-            UpdateTroopList(troop);
             foreach(Province p in map.GetNeighboringProvinces(troop.province)) p.go.StartCoroutine(p.go.HighlightForSelection());
             actionPrepared = new Action(Action.ActionType.MoveTroop, troop, null, null);
         }
