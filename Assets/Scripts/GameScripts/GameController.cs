@@ -69,6 +69,7 @@ public class GameController : MonoBehaviour
             else TryChangingOwnerhipOfAProvince();
         }*/
         // FOR DEBUGGING
+        if(Input.GetMouseButtonDown(0) && !MapCreatorController.IsPointerOverSpecificCanvas(troopMenuCanvas)) troopMenuCanvas.gameObject.SetActive(false);
         if(Input.GetKeyDown(KeyCode.Tab)) Debug.Log("AKTUALNA ILOŚĆ ENTITIES: "+NetworkManagerGame.Instance.EntityCounter);
         if(Input.GetKeyDown(KeyCode.LeftShift))
         {
@@ -261,8 +262,7 @@ public class GameController : MonoBehaviour
         if(actionPrepared != null && actionPrepared.type == Action.ActionType.MoveTroop && actionPrepared.entity1.id == troop.id) // Drugie kliknięcie wchodzi w menu jednostki
         {
             actionPrepared = null;
-            if(!troopMenuCanvas.gameObject.activeSelf) ShowTroopMenu(troop);
-            else troopMenuCanvas.gameObject.SetActive(false);
+            ShowTroopMenu(troop);
         }
         else // Pierwsze kliknięcie wybiera atak
         {

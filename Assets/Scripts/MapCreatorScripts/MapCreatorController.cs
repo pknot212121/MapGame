@@ -307,7 +307,7 @@ public class MapCreatorController : MonoBehaviour
         }
     }
 
-    bool IsPointerOverSpecificCanvas(Canvas c)
+    public static bool IsPointerOverSpecificCanvas(Canvas c)
     {
         PointerEventData eventData = new PointerEventData(EventSystem.current)
         {
