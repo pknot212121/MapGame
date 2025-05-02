@@ -148,6 +148,7 @@ public class ShapeTools
     public static bool AreTwoProvincesNeighbors(Province province1, Province province2)
     {
         if(province1 == null || province2 == null) return false;
+        if(province1.id == province2.id) return false;
         return AreTwoProvincesNeighborsOneWay(province1,province2) || AreTwoProvincesNeighborsOneWay(province2,province1);
     }
     public static float[] PointOnLine(Vector2 p0,Vector2 p1,Vector2 q) 

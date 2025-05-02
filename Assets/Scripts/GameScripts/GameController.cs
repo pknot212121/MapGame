@@ -15,6 +15,7 @@ public class GameController : MonoBehaviour
     public Transform playerNicknameDisplayersTransform;
     public Transform provincesTransform;
     public Transform troopsTransform;
+    public Transform troopListContentTransform;
 
     #endregion
     
@@ -127,6 +128,17 @@ public class GameController : MonoBehaviour
             provinceGO.gameObject.transform.SetParent(provincesTransform);
         }
         Debug.Log("Map has been set up");
+    }
+    public void UpdateTroopList(Troop troop)
+    {
+        foreach (Transform child in troopListContentTransform) { Destroy(child.gameObject); }
+        GameObject prefab = Resources.Load<GameObject>("Prefabs/troopInfoPrefab");
+        foreach(KeyValuePair<TroopInfo,int> keyValuePair in troop.numbers)
+        {
+            GameObject panel = Instantiate(prefab, Vector3.zero, Quaternion.identity);
+            panel.GetComponent<TroopInfoPrefab>().Initialise(keyValuePair.Key,keyValuePair.Value);
+            panel.transform.SetParent(troopListContentTransform);
+        }
     }
 
     #region Actions handling
@@ -251,6 +263,7 @@ public class GameController : MonoBehaviour
         }
         else // Pierwsze kliknięcie wybiera atak
         {
+            UpdateTroopList(troop);
             foreach(Province p in map.GetNeighboringProvinces(troop.province)) p.go.StartCoroutine(p.go.HighlightForSelection());
             actionPrepared = new Action(Action.ActionType.MoveTroop, troop, null, null);
         }
