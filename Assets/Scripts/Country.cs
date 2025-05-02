@@ -57,7 +57,7 @@ public class Country : Entity
         }
         foreach(Province p in provinces)
         {
-            if(p.gameObject) p.gameObject.SetColor(color);
+            if(p.go) p.go.SetColor(color);
         }
     }
 
@@ -100,7 +100,7 @@ public class Country : Entity
         
         foreach(Province p in provinces)
         {
-            if(p.gameObject) p.gameObject.SetColor(color);
+            if(p.go) p.go.SetColor(color);
         }
     }
 
@@ -116,7 +116,7 @@ public class Country : Entity
         }
 
         provinces.Add(province);
-        if(province.gameObject) province.gameObject.SetColor(color);
+        if(province.go) province.go.SetColor(color);
         province.country = this;
         if(MapCreatorController.me.countryAdjusted != null)
         {

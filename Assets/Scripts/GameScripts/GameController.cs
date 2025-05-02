@@ -41,7 +41,7 @@ public class GameController : MonoBehaviour
 
     public string mapString;
     public Map map;
-    public List<ProvinceGameObject> provinceGameObjects = new List<ProvinceGameObject>();
+    public List<ProvinceGO> provinceGOs = new List<ProvinceGO>();
     public List<TroopGO> troopGOs = new List<TroopGO>();
 
     public List<Action> myActions = new List<Action>();
@@ -120,8 +120,8 @@ public class GameController : MonoBehaviour
         foreach(Province province in map.provinces)
         {
             // Debug.Log("NAZWA KRAJU: "+province.country.name);
-            ProvinceGameObject provinceGO = ShapeTools.CreateProvinceGameObject(province, province.points);
-            provinceGameObjects.Add(provinceGO);
+            ProvinceGO provinceGO = ShapeTools.CreateProvinceGO(province, province.points);
+            provinceGOs.Add(provinceGO);
             if(map.GetCountry(province) == null) provinceGO.SetColor(Color.white);
             else provinceGO.SetColor(map.GetCountry(province).color);
             provinceGO.gameObject.transform.SetParent(provincesTransform);
@@ -187,6 +187,11 @@ public class GameController : MonoBehaviour
 
     }
 
+    public void ShowTroopMenu(Troop troop)
+    {
+
+    }
+
     #endregion
 
     #region IEnumerators
@@ -239,6 +244,15 @@ public class GameController : MonoBehaviour
     void TroopClick(Troop troop)
     {
         Debug.Log("Troop click");
+        if(actionPrepared != null && actionPrepared.type == Action.ActionType.MoveTroop && actionPrepared.entity1.id == troop.id) // Drugie kliknięcie wchodzi w menu jednostki
+        {
+            actionPrepared = null;
+            ShowTroopMenu(troop);
+        }
+        else // Pierwsze kliknięcie wybiera atak
+        {
+            actionPrepared = new Action(++NetworkManagerGame.Instance.EntityCounter, Action.ActionType.MoveTroop, troop, null, null);
+        }
     }
 
     void ProvinceClick(Province province)
@@ -246,13 +260,17 @@ public class GameController : MonoBehaviour
         Debug.Log("Province click");
         if(NetworkManagerGame.Instance.StartTimer == -1) // Gra się już rozpoczęła
         {
-            if(actionPrepared == null)
+            if(actionPrepared != null && actionPrepared.type == Action.ActionType.MoveTroop && ShapeTools.AreTwoProvincesNeighbors(province, ((Troop)actionPrepared.entity1).province))
             {
-                ShowProvinceMenu(province);
+                actionPrepared.entity2 = province;
+                myActions.Add(actionPrepared);
+                actionPrepared = null;
+                Debug.Log("Added move action");
             }
             else
             {
-
+                actionPrepared = null;
+                ShowProvinceMenu(province);
             }
         }
         else // Jesteśmy w poczekalni

@@ -10,7 +10,7 @@ public class Province : Entity
     public Country country;
 
     [System.NonSerialized]
-    public ProvinceGameObject gameObject;
+    public ProvinceGO go;
 
     public string countryName;
 
@@ -22,18 +22,18 @@ public class Province : Entity
     {
         this.name = name;
     }
-    public Province(string name, ProvinceGameObject gameObject)
+    public Province(string name, ProvinceGO go)
     {
         this.name = name;
-        this.gameObject = gameObject;
-        points = gameObject.points;
+        this.go = go;
+        points = go.points;
     }
-    public Province(int id,string name, ProvinceGameObject gameObject)
+    public Province(int id,string name, ProvinceGO go)
     {
         this.id = id;
         this.name = name;
-        this.gameObject = gameObject;
-        points = gameObject.points;
+        this.go = go;
+        points = go.points;
     }
     public override void Pack()
     {
