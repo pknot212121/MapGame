@@ -48,7 +48,7 @@ public class GameController : MonoBehaviour
 
     public List<Action> myActions = new List<Action>();
 
-    public Action actionPrepared; // Akcja którą szykujemy
+    public Action actionPrepared = null; // Akcja którą szykujemy
 
     #endregion
 
@@ -277,8 +277,8 @@ public class GameController : MonoBehaviour
             }
             else // Pierwsze kliknięcie wybiera atak
             {
-                foreach(Province p in map.GetNeighboringProvinces(troop.province)) p.go.StartCoroutine(p.go.HighlightForSelection());
                 actionPrepared = new Action(Action.ActionType.MoveTroop, troop, null, null);
+                foreach(Province p in map.GetNeighboringProvinces(troop.province)) p.go.StartCoroutine(p.go.HighlightForSelection());
             }
         }
     }
