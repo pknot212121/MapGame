@@ -5,6 +5,7 @@ using System.Collections;
 using System;
 using TMPro;
 using UnityEngine.UI;
+using System.Linq;
 
 public class GameController : MonoBehaviour
 {
@@ -15,7 +16,8 @@ public class GameController : MonoBehaviour
     public Transform playerNicknameDisplayersTransform;
     public Transform provincesTransform;
     public Transform troopsTransform;
-    public Transform troopListContentTransform;
+    public Transform troopInfoListContentTransform;
+    public Transform troopListInProvinceContentTransform;
 
     #endregion
     
@@ -24,7 +26,7 @@ public class GameController : MonoBehaviour
     public Canvas anteroomCanvas;
     public Canvas gameplayCanvas;
     public Canvas troopMenuCanvas;
-
+    public Canvas provinceMenuCanvas;
     public Button startButton;
     public Button endTurnButton;
 
@@ -70,6 +72,8 @@ public class GameController : MonoBehaviour
         }*/
         // FOR DEBUGGING
         if(Input.GetMouseButtonDown(0) && !ShapeTools.IsPointerOverSpecificCanvas(troopMenuCanvas)) troopMenuCanvas.gameObject.SetActive(false);
+        if(Input.GetMouseButtonDown(0) && !ShapeTools.IsPointerOverSpecificCanvas(provinceMenuCanvas)) provinceMenuCanvas.gameObject.SetActive(false);
+
         if(Input.GetKeyDown(KeyCode.Tab)) Debug.Log("AKTUALNA ILOŚĆ ENTITIES: "+NetworkManagerGame.Instance.EntityCounter);
         if(Input.GetKeyDown(KeyCode.LeftShift))
         {
@@ -115,7 +119,6 @@ public class GameController : MonoBehaviour
     }
 
     #endregion
-
     public void SetUpMap(Map map)
     {
         this.map = map;
@@ -131,17 +134,36 @@ public class GameController : MonoBehaviour
         }
         Debug.Log("Map has been set up");
     }
-    public void UpdateTroopList(Troop troop)
+    #region CanvasUpdates
+    public void UpdateTroopInfoList(Troop troop)
     {
-        foreach (Transform child in troopListContentTransform) { Destroy(child.gameObject); }
+        foreach (Transform child in troopInfoListContentTransform) { Destroy(child.gameObject); }
         GameObject prefab = Resources.Load<GameObject>("Prefabs/troopInfoPrefab");
         foreach(KeyValuePair<TroopInfo,int> keyValuePair in troop.numbers)
         {
             GameObject panel = Instantiate(prefab, Vector3.zero, Quaternion.identity);
             panel.GetComponent<TroopInfoPrefab>().Initialise(keyValuePair.Key,keyValuePair.Value);
-            panel.transform.SetParent(troopListContentTransform, false);
+            panel.transform.SetParent(troopInfoListContentTransform, false);
         }
     }
+    public void UpdateTroopListInProvince(Province province)
+    {
+        foreach (Transform child in troopListInProvinceContentTransform) { Destroy(child.gameObject); }
+        GameObject prefab = Resources.Load<GameObject>("Prefabs/TroopInProvincePrefab");
+        foreach(TroopGO troopGO in troopGOs)
+        {
+            if(troopGO.data.province.id == province.id)
+            {
+                int sum=troopGO.data.numbers.Sum(x => x.Value);
+                var maxEntry = troopGO.data.numbers.Aggregate((x, y) => x.Value > y.Value ? x : y);
+                GameObject panel = Instantiate(prefab, Vector3.zero, Quaternion.identity);
+                panel.GetComponent<TroopInProvincePrefab>().Initialise(troopGO.data,maxEntry.Key,sum);
+                panel.transform.SetParent(troopListInProvinceContentTransform, false);
+            }
+        }
+        
+    }
+    #endregion
 
     #region Actions handling
 
@@ -198,13 +220,16 @@ public class GameController : MonoBehaviour
 
     public void ShowProvinceMenu(Province province)
     {
-
+        troopMenuCanvas.gameObject.SetActive(false);
+        provinceMenuCanvas.gameObject.SetActive(true);
+        UpdateTroopListInProvince(province);
     }
 
     public void ShowTroopMenu(Troop troop)
     {
+        provinceMenuCanvas.gameObject.SetActive(false);
         troopMenuCanvas.gameObject.SetActive(true);
-        UpdateTroopList(troop);
+        UpdateTroopInfoList(troop);
     }
 
     #endregion
