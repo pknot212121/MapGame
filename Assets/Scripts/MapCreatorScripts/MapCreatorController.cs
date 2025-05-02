@@ -237,6 +237,10 @@ public class MapCreatorController : MonoBehaviour
                 provincePoints.RemoveAt(provincePoints.Count-1);
             }
         }
+        else if(Input.GetKey(KeyCode.LeftShift))
+        {
+            cursor.transform.position = NearestEdgeProjection((Vector2)worldPosition,-2);
+        }
         else
         {
             worldPosition.z = -2;
@@ -332,6 +336,35 @@ public class MapCreatorController : MonoBehaviour
             if(distance<min_distance && point!=worldPosition){min_distance=distance;nearest_point=point;}
         }
         return new Vector3(nearest_point.x,nearest_point.y,zet);
+    }
+    Vector2 NearestEdgeProjection(Vector2 worldPosition,int zet)
+    {
+        float minDistance = float.MaxValue;
+        Vector2 nearestProjection = new Vector2();
+        foreach(Province province in map.provinces)
+        {
+            for(int i=1;i<province.points.Count();i++)
+            {
+                Vector2 P0 = province.points[i-1];
+                Vector2 P1 = province.points[i];
+                Vector2 projection = ShapeTools.PointOnLine(P0,P1,worldPosition);
+                if(ShapeTools.Distance(worldPosition,projection)<minDistance)
+                {
+                    nearestProjection = projection;
+                    minDistance = ShapeTools.Distance(worldPosition,projection);
+                }
+            }
+            //To also check the edge between the first and the last point
+            Vector2 A = province.points[0]; 
+            Vector2 B = province.points[province.points.Count()-1];
+            Vector2 proj = ShapeTools.PointOnLine(A,B,worldPosition);
+            if(ShapeTools.Distance(worldPosition,proj)<minDistance)
+            {
+                nearestProjection = proj;
+                minDistance = ShapeTools.Distance(worldPosition,proj);
+            }
+        }
+        return new Vector3(nearestProjection.x,nearestProjection.y,zet);
     }
 
     public void EnterCountryAdjustment(Country country)

@@ -6,8 +6,6 @@ using System.Data.Common;
 using UnityEngine.Rendering;
 using System.Drawing;
 using System.Linq;
-// using System.Numerics;
-// using System.Numerics;
 
 public class ShapeTools
 {
@@ -151,6 +149,34 @@ public class ShapeTools
     {
         if(province1 == null || province2 == null) return false;
         return AreTwoProvincesNeighborsOneWay(province1,province2) || AreTwoProvincesNeighborsOneWay(province2,province1);
+    }
+    public static Vector2 PointOnLine(Vector2 p0,Vector2 p1,Vector2 q) 
+    {
+
+        // p0 and p1 define the line segment
+        // q is the reference point (aka mouse)
+        // returns point on the line closest to px
+
+        if (p0.x == p1.x && p0.y == p1.y) p0.x -= 0.00001f;
+
+        float Unumer = ((q.x - p0.x) * (p1.x - p0.x)) + ((q.y - p0.y) * (p1.y - p0.y));
+        float Udenom = (float)(Math.Pow(p1.x - p0.x, 2) + Math.Pow(p1.y - p0.y, 2));
+        float U = Unumer / Udenom;
+
+        Vector2 r = new Vector2(p0.x + (U * (p1.x - p0.x)),p0.y + (U * (p1.y - p0.y)));
+
+        float minx = Math.Min(p0.x, p1.x);
+        float maxx = Math.Max(p0.x, p1.x);
+        float miny = Math.Min(p0.y, p1.y);
+        float maxy = Math.Max(p0.y, p1.y);
+
+        bool isValid = (r.x >= minx && r.x <= maxx) && (r.y >= miny && r.y <= maxy);
+
+        return isValid ? r : new Vector2(-9999,-9999);
+    }
+    public static float Distance(Vector2 A, Vector2 B)
+    {
+        return (A.x-B.x)*(A.x-B.x)+(A.y-B.y)*(A.y-B.y);
     }
 
     public static bool IsClockwise(List<Vector2> points)
