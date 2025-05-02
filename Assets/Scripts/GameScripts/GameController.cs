@@ -41,7 +41,7 @@ public class GameController : MonoBehaviour
 
     public string mapString;
     public Map map;
-    public List<ProvinceGameObject> provinceGameObjects = new List<ProvinceGameObject>();
+    public List<ProvinceGO> provinceGOs = new List<ProvinceGO>();
     public List<TroopGO> troopGOs = new List<TroopGO>();
 
     public List<Action> myActions = new List<Action>();
@@ -120,8 +120,8 @@ public class GameController : MonoBehaviour
         foreach(Province province in map.provinces)
         {
             // Debug.Log("NAZWA KRAJU: "+province.country.name);
-            ProvinceGameObject provinceGO = ShapeTools.CreateProvinceGameObject(province, province.points);
-            provinceGameObjects.Add(provinceGO);
+            ProvinceGO provinceGO = ShapeTools.CreateProvinceGO(province, province.points);
+            provinceGOs.Add(provinceGO);
             if(map.GetCountry(province) == null) provinceGO.SetColor(Color.white);
             else provinceGO.SetColor(map.GetCountry(province).color);
             provinceGO.gameObject.transform.SetParent(provincesTransform);

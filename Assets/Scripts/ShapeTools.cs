@@ -263,24 +263,24 @@ public class ShapeTools
         return shapeObject;
     }
 
-    public static ProvinceGameObject CreateProvinceGameObject(string name, List<Vector2> points)
+    public static ProvinceGO CreateProvinceGO(string name, List<Vector2> points)
     {
         GameObject shape = ShapeTools.CreateShape("Province", points, 0.2f);
         if(!shape) return null;
 
-        ProvinceGameObject province = shape.AddComponent<ProvinceGameObject>();
+        ProvinceGO province = shape.AddComponent<ProvinceGO>();
         province.Initialise(name, points);
         GameObject parent = GameObject.Find("Provinces");
         if(parent) shape.transform.SetParent(parent.transform);
         return province;
     }
 
-    public static ProvinceGameObject CreateProvinceGameObject(Province data, List<Vector2> points)
+    public static ProvinceGO CreateProvinceGO(Province data, List<Vector2> points)
     {
         GameObject shape = ShapeTools.CreateShape("Province", points, 0.2f);
         if(!shape) return null;
 
-        ProvinceGameObject province = shape.AddComponent<ProvinceGameObject>();
+        ProvinceGO province = shape.AddComponent<ProvinceGO>();
         province.Initialise(data, points);
         GameObject parent = GameObject.Find("Provinces");
         if(parent) shape.transform.SetParent(parent.transform);

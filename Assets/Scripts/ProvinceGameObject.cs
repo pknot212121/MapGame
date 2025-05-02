@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class ProvinceGameObject : MonoBehaviour
+public class ProvinceGO : MonoBehaviour
 {
     public Province data;
     public List<Vector2> points;
@@ -18,7 +18,7 @@ public class ProvinceGameObject : MonoBehaviour
     public void Initialise(Province data, List<Vector2> points = null)
     {
         this.data = data;
-        data.gameObject = this;
+        data.go = this;
         this.points = points;
         if(points == null) points = new List<Vector2>();
     }

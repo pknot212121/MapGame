@@ -33,8 +33,8 @@ public class MapCreatorController : MonoBehaviour
     [SerializeField] private TMP_InputField mapNameInput;
 
     public Map map = new Map();
-    public List<ProvinceGameObject> provinceGameObjects = new List<ProvinceGameObject>();
-    Stack<ProvinceGameObject> deleted = new Stack<ProvinceGameObject>();
+    public List<ProvinceGO> provinceGOs = new List<ProvinceGO>();
+    Stack<ProvinceGO> deleted = new Stack<ProvinceGO>();
 
     bool isProvinceShapeFormed = false;
     public Country countryAdjusted = null;
@@ -93,13 +93,13 @@ public class MapCreatorController : MonoBehaviour
         }
         if(ShapeTools.IsIntersecting(provincePoints))
         {
-            ProvinceGameObject province = ShapeTools.CreateProvinceGameObject(provinceName, provincePoints);
+            ProvinceGO province = ShapeTools.CreateProvinceGO(provinceName, provincePoints);
             if(!province) 
             {
                 Debug.Log("Couldn't create the shape!");
                 return;
             }
-            provinceGameObjects.Add(province);
+            provinceGOs.Add(province);
             map.provinces.Add(new Province(++EntityCounter,provinceName,province));
             foreach(Vector2 point in provincePoints){allPoints.Add(point);}
         }
@@ -254,19 +254,19 @@ public class MapCreatorController : MonoBehaviour
     {
         if(Input.GetKey(KeyCode.LeftControl) && Input.GetKeyDown(KeyCode.Z))
         {
-            ProvinceGameObject lastProvince = provinceGameObjects[provinceGameObjects.Count-1];
+            ProvinceGO lastProvince = provinceGOs[provinceGOs.Count-1];
             foreach(Vector2 point in lastProvince.points){
                 allPoints.Remove(point);
             }
-            provinceGameObjects.Remove(lastProvince);
+            provinceGOs.Remove(lastProvince);
             deleted.Push(lastProvince);
             Destroy(lastProvince.gameObject);
         }
         if(Input.GetKey(KeyCode.LeftControl) && Input.GetKeyDown(KeyCode.Y) && deleted.Count>0)
         {
-            ProvinceGameObject newProvince = deleted.Pop();
-            ProvinceGameObject province = ShapeTools.CreateProvinceGameObject(newProvince.name, newProvince.points);
-            provinceGameObjects.Add(province);
+            ProvinceGO newProvince = deleted.Pop();
+            ProvinceGO province = ShapeTools.CreateProvinceGO(newProvince.name, newProvince.points);
+            provinceGOs.Add(province);
             foreach(Vector2 point in province.points)
             {
                 allPoints.Add(point);
@@ -282,7 +282,7 @@ public class MapCreatorController : MonoBehaviour
         Vector3 worldPosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
         if(Input.GetMouseButtonDown(0))
         {
-            foreach(ProvinceGameObject province in provinceGameObjects)
+            foreach(ProvinceGO province in provinceGOs)
             {
                 if(ShapeTools.IsPointInPolygon((Vector2)worldPosition, province.points.ToArray()))
                 {
