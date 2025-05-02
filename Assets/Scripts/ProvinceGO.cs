@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Collections;
 using UnityEngine;
 
 public class ProvinceGO : MonoBehaviour
@@ -29,6 +30,22 @@ public class ProvinceGO : MonoBehaviour
         this.points = points;
         data.points = points;
         if(points == null) points = new List<Vector2>();
+    }
+
+    public IEnumerator HighlightForSelection()
+    {
+        Color originalColor = Color.grey;
+        if(data.country != null) originalColor = data.country.color;
+        var material = gameObject.GetComponent<MeshRenderer>().material;
+        while(GameController.me.actionPrepared != null)
+        {
+            material.color = Color.white;
+            yield return new WaitForSeconds(0.5f);
+            material.color = originalColor;
+            yield return new WaitForSeconds(0.5f);
+        }
+        material.color = originalColor;
+        yield return null;
     }
 
     // public void EvaluateTaxes(){
