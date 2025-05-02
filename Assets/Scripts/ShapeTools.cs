@@ -150,8 +150,7 @@ public class ShapeTools
     public static bool AreTwoProvincesNeighbors(Province province1, Province province2)
     {
         if(province1 == null || province2 == null) return false;
-        if(AreTwoProvincesNeighborsOneWay(province1,province2) || AreTwoProvincesNeighborsOneWay(province2,province1)) return true;
-        else return false;
+        return AreTwoProvincesNeighborsOneWay(province1,province2) || AreTwoProvincesNeighborsOneWay(province2,province1);
     }
 
     public static bool IsClockwise(List<Vector2> points)

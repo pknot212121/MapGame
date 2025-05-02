@@ -251,7 +251,7 @@ public class GameController : MonoBehaviour
         }
         else // Pierwsze kliknięcie wybiera atak
         {
-            actionPrepared = new Action(++NetworkManagerGame.Instance.EntityCounter, Action.ActionType.MoveTroop, troop, null, null);
+            actionPrepared = new Action(Action.ActionType.MoveTroop, troop, null, null);
         }
     }
 
