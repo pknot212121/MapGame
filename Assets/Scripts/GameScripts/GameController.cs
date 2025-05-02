@@ -238,10 +238,10 @@ public class GameController : MonoBehaviour
         NetworkManagerGame.Instance.SendReliableMessageToPlayer(NetworkManagerGame.Instance.Object.StateAuthority, "MyActions", JsonSerialization.ToJson(myActions));
     }
 
-    public void EndTurnClick()
-    {
-        NetworkManagerGame.Instance.SendReliableMessageToPlayer(NetworkManagerGame.Instance.Object.StateAuthority, "MyActions", JsonSerialization.ToJson(myActions));
-    }
+    // public void EndTurnClick()
+    // {
+    //     NetworkManagerGame.Instance.SendReliableMessageToPlayer(NetworkManagerGame.Instance.Object.StateAuthority, "MyActions", JsonSerialization.ToJson(myActions));
+    // }
 
     #endregion
 
