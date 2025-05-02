@@ -214,26 +214,6 @@ public class GameController : MonoBehaviour
             Debug.Log("Game has started");
         }*/
     }
-    public IEnumerator HighlightingProvinces(List<Province> provinces)
-    {
-        for(int timer=0;timer<10;timer++)
-        {
-            foreach(Province province in provinces)
-            {
-                if(timer%2==0) province.go.SetColor(Color.Lerp(province.country.color, Color.white, 0.2f));
-                else province.go.SetColor(Color.Lerp(province.country.color, Color.black, 0.2f));
-            }
-            yield return new WaitForSeconds(0.1f);
-        }
-        foreach(Province province in provinces)
-        {
-            province.go.SetColor(province.country.color);
-        }
-        // foreach(Province province in provinces)
-        // {
-        //     province.go.SetColor(Color.blue);
-        // }
-    }
 
     #endregion
     
@@ -271,7 +251,7 @@ public class GameController : MonoBehaviour
         }
         else // Pierwsze kliknięcie wybiera atak
         {
-            StartCoroutine(HighlightingProvinces(map.GetNeighboringProvinces(troop.province)));
+            foreach(Province p in map.GetNeighboringProvinces(troop.province)) p.go.StartCoroutine(p.go.HighlightForSelection());
             actionPrepared = new Action(Action.ActionType.MoveTroop, troop, null, null);
         }
     }
