@@ -11,9 +11,10 @@ public class Map : Entity
 {
     public List<Province> provinces = new List<Province>();
     public List<Country> countries = new List<Country>();
-    public List<ResourceInfo> resourceInfos = new List<ResourceInfo>();
     public List<TroopInfo> troopInfos = new List<TroopInfo>();
+    public List<ResourceInfo> resourceInfos = new List<ResourceInfo>();
     public List<Troop> troops = new List<Troop>();
+    public List<Resource> resources = new List<Resource>();
     public int EntityCounter;
     public static Map me;
 
@@ -33,6 +34,10 @@ public class Map : Entity
     public Province GetProvince(string provinceName)
     {
         return provinces.FirstOrDefault(p => p.name == provinceName);
+    }
+    public Troop GetTroop(int troopId)
+    {
+        return troops.FirstOrDefault(t => t.id == troopId);
     }
     public List<Province> GetNeighboringProvinces(Province province1)
     {
