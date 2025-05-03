@@ -15,7 +15,7 @@ public class Province : Entity
     public string countryName;
 
     public Resource resourceGeneration = new Resource();
-    public Resource resourceStockpiles = new Resource();
+    public List<Resource> resourceStockpiles = new List<Resource>();
     public List<Troop> troops = new List<Troop>();
 
     public Province()

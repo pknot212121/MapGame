@@ -7,7 +7,7 @@ public class Resource : Entity
 
     public Resource()
     {
-
+        
     }
     public void Fill(List<ResourceInfo> resourceInfos,int minRange,int maxRange)
     {

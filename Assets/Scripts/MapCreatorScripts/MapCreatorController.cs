@@ -315,7 +315,12 @@ public class MapCreatorController : MonoBehaviour
     {
         foreach(Province province in map.provinces)
         {
-            province.resourceStockpiles.Fill(map.resourceInfos,100,10000);
+            Resource resource1 = new Resource();
+            resource1.Fill(map.resourceInfos,10,10000);
+            Resource resource2 = new Resource();
+            resource2.Fill(map.resourceInfos,10,10000);
+            province.resourceStockpiles.Add(resource1);
+            province.resourceStockpiles.Add(resource2);
             province.resourceGeneration.Fill(map.resourceInfos,0,100);
         }
     }
