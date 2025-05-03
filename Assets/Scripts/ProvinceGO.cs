@@ -7,10 +7,6 @@ public class ProvinceGO : MonoBehaviour
     public Province data;
     public List<Vector2> points;
 
-    Dictionary<ResourceInfo, double> resourceGeneration = new Dictionary<ResourceInfo,double>();
-
-    Resource resourceStockpiles;
-
     public void SetColor(Color color)
     {
         gameObject.GetComponent<MeshRenderer>().material.color = color;

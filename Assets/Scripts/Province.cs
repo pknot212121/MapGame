@@ -14,6 +14,9 @@ public class Province : Entity
 
     public string countryName;
 
+    public Dictionary<ResourceInfo, double> resourceGeneration = new Dictionary<ResourceInfo,double>();
+    public Resource resourceStockpiles;
+
     public Province()
     {
     }

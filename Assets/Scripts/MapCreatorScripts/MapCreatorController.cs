@@ -199,6 +199,17 @@ public class MapCreatorController : MonoBehaviour
     }
 
     public void SaveMapClick(){
+        foreach(Province province in map.provinces)
+        {
+            province.resourceStockpiles = new Resource(map.resourceInfos);
+            foreach(ResourceInfo resourceInfo in map.resourceInfos)
+            {
+                int generation = UnityEngine.Random.Range(0, 100);
+                province.resourceGeneration.Add(resourceInfo,generation);
+                int stockpile = UnityEngine.Random.Range(100, 10000);
+                province.resourceStockpiles.content[resourceInfo] = stockpile;
+            }
+        }
         if(mapNameInput.text!=null) Map.LoadMapIntoJson(mapNameInput.text);
         else Map.LoadMapIntoJson("map");
     }
