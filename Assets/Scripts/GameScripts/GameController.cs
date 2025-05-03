@@ -172,7 +172,13 @@ public class GameController : MonoBehaviour
         if(action.type == Action.ActionType.RaiseTroop)
         {
             TroopGO troopGO = Instantiate(troopPrefab).GetComponent<TroopGO>();
-            //Troop troop = (Troop)action.entity2;
+            var tuple = JsonSerialization.FromJson<(int countryId, int provinceId, Dictionary<int, int> convertedNumbers)>(action.optionalData);
+            Dictionary<TroopInfo, int> convertedDict = tuple.convertedNumbers
+                .ToDictionary(
+                    kvp => map.GetTroopInfo(kvp.Key),
+                    kvp => kvp.Value
+                );
+            Troop troop = new Troop(action.id2, map.GetCountry(tuple.countryId), map.GetProvince(tuple.provinceId), convertedDict);
             //troopGO.Initialise(troop);
             troopGO.transform.SetParent(troopsTransform);
             troopGOs.Add(troopGO);

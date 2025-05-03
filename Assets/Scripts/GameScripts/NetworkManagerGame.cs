@@ -165,7 +165,13 @@ public class NetworkManagerGame : NetworkBehaviour, INetworkRunnerCallbacks
             if(province!=null)
             {
                 Troop troop = new Troop(++EntityCounter, 15, province.country, province, GameController.me.map.troopInfos);
-                Action action = new Action(Action.ActionType.RaiseTroop, 0, troop.id, null);
+                Dictionary<int, int> convertedDict = troop.numbers
+                .ToDictionary(
+                    kvp => kvp.Key.id,
+                    kvp => kvp.Value
+                );
+                var data = (countryId: province.country.id, provinceId: province.id, convertedNumbers: convertedDict);
+                Action action = new Action(Action.ActionType.RaiseTroop, 0, troop.id, JsonSerialization.ToJson(data));
                 actions.Add(action);
             }
         }

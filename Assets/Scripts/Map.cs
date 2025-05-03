@@ -31,6 +31,10 @@ public class Map : Entity
     {
         return countries.FirstOrDefault(c => c.name == countryName);
     }
+    public Country GetCountry(int countryId)
+    {
+        return countries.FirstOrDefault(c => c.id == countryId);
+    }
     public Province GetProvince(string provinceName)
     {
         return provinces.FirstOrDefault(p => p.name == provinceName);
@@ -43,6 +47,11 @@ public class Map : Entity
     {
         return troops.FirstOrDefault(t => t.id == troopId);
     }
+    public TroopInfo GetTroopInfo(int troopInfoId)
+    {
+        return troopInfos.FirstOrDefault(ti => ti.id == troopInfoId);
+    }
+
     public List<Province> GetNeighboringProvinces(Province province1)
     {
         List<Province> neighbors = new List<Province>();
