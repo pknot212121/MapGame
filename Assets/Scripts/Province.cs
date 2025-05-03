@@ -14,8 +14,9 @@ public class Province : Entity
 
     public string countryName;
 
-    public Dictionary<ResourceInfo, double> resourceGeneration = new Dictionary<ResourceInfo,double>();
-    public Resource resourceStockpiles;
+    public Resource resourceGeneration = new Resource();
+    public Resource resourceStockpiles = new Resource();
+    public List<Troop> troops = new List<Troop>();
 
     public Province()
     {
@@ -37,19 +38,6 @@ public class Province : Entity
         this.name = name;
         this.go = go;
         points = go.points;
-    }
-    public override void Pack()
-    {
-        if(country != null)
-        {
-            countryName = country.name;
-            country = null;
-        }
-    }
-    public override void Unpack()
-    {
-        //Debug.Log(countryName);
-        if(countryName != null) country = GameController.me.map.GetCountry(countryName);
     }
 
 }

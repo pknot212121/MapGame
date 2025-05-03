@@ -287,7 +287,6 @@ public class NetworkManagerGame : NetworkBehaviour, INetworkRunnerCallbacks
                 string chosenNickname = PlayerPrefs.GetString("PlayerNickname", $"Player_{UnityEngine.Random.Range(100, 999)}");
                 Debug.Log("USTAWIONO NICKNAME GRACZA: "+Runner.LocalPlayer+" JAKO: "+chosenNickname+" W SPAWNED");
                 Rpc_SetNickname(chosenNickname);
-                map.Unpack();
                 GameController.me.SetUpMap(map);
                 Debug.Log("Set up host scene");
             }
@@ -333,7 +332,6 @@ public class NetworkManagerGame : NetworkBehaviour, INetworkRunnerCallbacks
             GameController.me.mapString = content;
             Map map = JsonSerialization.FromJson<Map>(content);
             GameController.me.map = map;
-            map.Unpack();
             GameController.me.SetUpMap(map);
             string chosenNickname = PlayerPrefs.GetString("PlayerNickname", $"Player_{UnityEngine.Random.Range(100, 999)}");
             Debug.Log("USTAWIONO NICKNAME GRACZA: "+Runner.LocalPlayer+" JAKO: "+chosenNickname+" W SPAWNED");

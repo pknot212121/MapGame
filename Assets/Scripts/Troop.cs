@@ -4,7 +4,7 @@ using System.Collections.Generic;
 public class Troop : Entity
 {
     // int id = 0; // Identyfikator jednostki, może być używany do wysyłki
-    public Dictionary<TroopInfo, int> numbers;
+    public Dictionary<TroopInfo, int> numbers = new Dictionary<TroopInfo, int>();
     public Resource transportedResources;
 
     // [System.NonSerialized]
@@ -16,41 +16,29 @@ public class Troop : Entity
     public string provinceName = null; // Używane przy wysyłce
 
     public Troop(){}
-    public Troop(int id, int numberOfEachTroopInfo, Country country, Province province) // Możliwe że ten konstruktor to tymczasowe rozwiązanie
+    public Troop(int id, Country country, Province province,int minRange,int maxRange,List<TroopInfo> troopInfos) // Możliwe że ten konstruktor to tymczasowe rozwiązanie
     {
         this.id = id;
         this.numbers = new Dictionary<TroopInfo, int>();
-        foreach(TroopInfo ti in GameController.me.map.troopInfos)
+        foreach(TroopInfo ti in troopInfos)
         {
-            numbers.Add(ti, numberOfEachTroopInfo);
+            numbers[ti] = Random.Range(minRange,maxRange);
         }
         this.country = country;
         this.province = province;
     }
+    // public Troop(int id,Country country, Province province) // Możliwe że ten konstruktor to tymczasowe rozwiązanie
+    // {
+    //     this.id = id;
+    //     this.country = country;
+    //     this.province = province;
+    // }
+    // public void Fill(List<TroopInfo> troopInfos,int minRange,int maxRange)
+    // {
+    //     foreach(TroopInfo troopInfo in troopInfos)
+    //     {
+    //         numbers[troopInfo] = Random.Range(minRange,maxRange);
+    //     }
+    // }
 
-    public override void Pack() 
-    {
-        if(country != null) 
-        {
-            countryName = country.name;
-            country = null;
-        }
-        if(province != null) 
-        {
-            provinceName = province.name;
-            province = null;
-        }
-    }
-
-    public override void Unpack()
-    {
-        if(countryName != null) 
-        {
-            GameController.me.map.GetCountry(countryName);
-        }
-        if(provinceName != null) 
-        {
-            GameController.me.map.GetProvince(provinceName);
-        }
-    }
 }
