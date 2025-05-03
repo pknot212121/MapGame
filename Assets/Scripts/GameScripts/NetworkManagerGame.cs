@@ -164,13 +164,9 @@ public class NetworkManagerGame : NetworkBehaviour, INetworkRunnerCallbacks
         {
             if(province!=null)
             {
-                foreach(Troop troop in province.troops)
-                {
-                    Action action = new Action(Action.ActionType.RaiseTroop, 0, troop.id, null);
-                    actions.Add(action);
-                }
-                // Troop troop = new Troop(++EntityCounter, 15, province.country, province);
-                
+                Troop troop = new Troop(++EntityCounter, 15, province.country, province, GameController.me.map.troopInfos);
+                Action action = new Action(Action.ActionType.RaiseTroop, 0, troop.id, null);
+                actions.Add(action);
             }
         }
 
