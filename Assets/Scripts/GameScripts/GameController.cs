@@ -173,10 +173,15 @@ public class GameController : MonoBehaviour
         if(action.type == Action.ActionType.RaiseTroop)
         {
             TroopGO troopGO = Instantiate(troopPrefab).GetComponent<TroopGO>();
-            Troop troop = (Troop)action.entity2;
-            troopGO.Initialise(troop);
+            //Troop troop = (Troop)action.entity2;
+            //troopGO.Initialise(troop);
             troopGO.transform.SetParent(troopsTransform);
             troopGOs.Add(troopGO);
+        }
+        else if(action.type == Action.ActionType.MoveTroop)
+        {
+            Province province = map.GetProvince(action.id1);
+            Troop troop = map.GetTroop(action.id2);
         }
     }
 
@@ -306,14 +311,14 @@ public class GameController : MonoBehaviour
         if(country!=null && troop.country.id == country.id)
         {
             Debug.Log("Troop click");
-            if(actionPrepared != null && actionPrepared.type == Action.ActionType.MoveTroop && actionPrepared.entity1.id == troop.id) // Drugie kliknięcie wchodzi w menu jednostki
+            if(actionPrepared != null && actionPrepared.type == Action.ActionType.MoveTroop && actionPrepared.id1 == troop.id) // Drugie kliknięcie wchodzi w menu jednostki
             {
                 actionPrepared = null;
                 ShowTroopMenu(troop);
             }
             else // Pierwsze kliknięcie wybiera atak
             {
-                actionPrepared = new Action(Action.ActionType.MoveTroop, troop, null, null);
+                actionPrepared = new Action(Action.ActionType.MoveTroop, troop.id, 0, null);
                 foreach(Province p in map.GetNeighboringProvinces(troop.province)) p.go.StartCoroutine(p.go.HighlightForSelection());
             }
         }
@@ -324,9 +329,9 @@ public class GameController : MonoBehaviour
         Debug.Log("Province click");
         if(NetworkManagerGame.me.StartTimer == -1) // Gra się już rozpoczęła
         {
-            if(actionPrepared != null && actionPrepared.type == Action.ActionType.MoveTroop && ShapeTools.AreTwoProvincesNeighbors(province, ((Troop)actionPrepared.entity1).province))
+            if(actionPrepared != null && actionPrepared.type == Action.ActionType.MoveTroop && ShapeTools.AreTwoProvincesNeighbors(province, map.GetTroop(actionPrepared.id1).province))
             {
-                actionPrepared.entity2 = province;
+                actionPrepared.id1 = province.id;
                 myActions.Add(actionPrepared);
                 actionPrepared = null;
                 Debug.Log("Added move action");

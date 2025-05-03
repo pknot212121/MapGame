@@ -50,6 +50,10 @@ public class Map : Entity
     {
         return provinces.FirstOrDefault(p => p.name == provinceName);
     }
+    public Province GetProvince(int provinceId)
+    {
+        return provinces.FirstOrDefault(p => p.id == provinceId);
+    }
     public Troop GetTroop(int troopId)
     {
         return troops.FirstOrDefault(t => t.id == troopId);

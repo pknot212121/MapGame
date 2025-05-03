@@ -10,28 +10,16 @@ public class Action : Entity
         BuyProvince,
     }
     public ActionType type;
-    public Entity entity1;
-    public Entity entity2;
+    public int id1;
+    public int id2;
     public string optionalData;
 
     public Action(){}
-    public Action(ActionType type, Entity entity1, Entity entity2, string optionalData)
+    public Action(ActionType type, int id1, int id2, string optionalData)
     {
         this.type = type;
-        this.entity1 = entity1;
-        this.entity2 = entity2;
+        this.id1 = id1;
+        this.id2 = id2;
         this.optionalData = optionalData;
-    }
-
-    public override void Pack()
-    {
-        entity1.Pack();
-        entity2.Pack();
-    }
-
-    public override void Unpack()
-    {
-        entity1.Unpack();
-        entity2.Unpack();
     }
 }
