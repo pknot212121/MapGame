@@ -3,7 +3,8 @@ using System.Collections.Generic;
 
 public class Troop : Entity
 {
-    // int id = 0; // Identyfikator jednostki, może być używany do wysyłki
+    [System.NonSerialized]
+    public TroopGO go;
     public Dictionary<TroopInfo, int> numbers = new Dictionary<TroopInfo, int>();
     public Resource transportedResources;
 
@@ -11,9 +12,6 @@ public class Troop : Entity
     public Country country; // Właściciel
     // [System.NonSerialized]
     public Province province; // Prowincja na której przebywa (nie zawsze należy ona do właściciela)
-
-    public string countryName = null; // Używane przy wysyłce
-    public string provinceName = null; // Używane przy wysyłce
 
     public Troop(){}
 

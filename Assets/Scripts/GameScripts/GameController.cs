@@ -179,20 +179,48 @@ public class GameController : MonoBehaviour
                     kvp => kvp.Value
                 );
             Troop troop = new Troop(action.id2, map.GetCountry(tuple.countryId), map.GetProvince(tuple.provinceId), convertedDict);
-            //troopGO.Initialise(troop);
+            troopGO.Initialise(troop);
             troopGO.transform.SetParent(troopsTransform);
             troopGOs.Add(troopGO);
+
+            foreach(Troop t in troop.province.troops)
+            {
+                if(troop.country != t.country)
+                {
+                    Fight(troop, t);
+                }
+            }
         }
         else if(action.type == Action.ActionType.MoveTroop)
         {
             Province province = map.GetProvince(action.id1);
             Troop troop = map.GetTroop(action.id2);
+            troop.province = province;
+            troop.go.Revisualise();
+
+            foreach(Troop t in troop.province.troops)
+            {
+                if(troop.country != t.country)
+                {
+                    Fight(troop, t);
+                }
+            }
         }
     }
 
     public void HandleActions(List<Action> actions)
     {
         foreach(Action action in actions) HandleAction(action);
+    }
+
+    void Fight(Troop troop1, Troop troop2)
+    {
+        if(troop1 == null || troop2 == null) return;
+
+        // Tu trzeba zaimplementować system walki na który nie mam optymalnego pomysłu
+
+        troop1.go.Revisualise();
+        troop2.go.Revisualise();
     }
 
     #endregion

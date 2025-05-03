@@ -170,6 +170,7 @@ public class NetworkManagerGame : NetworkBehaviour, INetworkRunnerCallbacks
                     kvp => kvp.Key.id,
                     kvp => kvp.Value
                 );
+                Debug.Log(province.country); // TU JEST NULL Z JAKIEGOS POWODU
                 var data = (countryId: province.country.id, provinceId: province.id, convertedNumbers: convertedDict);
                 Action action = new Action(Action.ActionType.RaiseTroop, 0, troop.id, JsonSerialization.ToJson(data));
                 actions.Add(action);

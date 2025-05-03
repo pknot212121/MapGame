@@ -20,12 +20,13 @@ public class TroopGO : MonoBehaviour
     public void Initialise(Troop data)
     {
         this.data = data;
-        transform.position = ShapeTools.CentroidOfAPolygon(data.province.points);
+        data.go = this;
         Revisualise();
     }
 
     public void Revisualise()
     {
+        transform.position = ShapeTools.CentroidOfAPolygon(data.province.points);
         var top4 = data.numbers.Where(x => x.Value > 0).OrderByDescending(x => x.Value).Take(4).ToList();
         int sum = data.numbers.Values.Sum();
         count.text = sum.ToString();

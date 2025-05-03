@@ -186,7 +186,7 @@ public class MapCreatorController : MonoBehaviour
             return;
         }
 
-        TroopInfo troopInfo = new TroopInfo(troopInfoName);
+        TroopInfo troopInfo = new TroopInfo(++EntityCounter, troopInfoName);
         map.troopInfos.Add(troopInfo);
         GameObject prefab = Resources.Load<GameObject>("Prefabs/TroopInfoButton");
         GameObject button = Instantiate(prefab);

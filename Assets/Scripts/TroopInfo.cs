@@ -13,8 +13,9 @@ public class TroopInfo : Entity
 
     public TroopInfo(){}
 
-    public TroopInfo(string name, float overallPowerMultiplier = 1, Dictionary<string, int> unitCost = null, Dictionary<string, float> individualPowerMultiplier = null)
+    public TroopInfo(int id, string name, float overallPowerMultiplier = 1, Dictionary<string, int> unitCost = null, Dictionary<string, float> individualPowerMultiplier = null)
     {
+        this.id = id;
         this.name = name;
         this.overallPowerMultiplier = overallPowerMultiplier;
         this.individualPowerMultiplier = individualPowerMultiplier;
