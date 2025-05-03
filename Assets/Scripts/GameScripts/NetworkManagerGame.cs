@@ -22,7 +22,7 @@ public class NetworkManagerGame : NetworkBehaviour, INetworkRunnerCallbacks
     [Networked] public int EntityCounter {get;set;}  = 0; // Do przydzielania kolejnych id
 
 
-    public static NetworkManagerGame Instance{get;private set;}
+    public static NetworkManagerGame me{get;private set;}
     public List<List<Action>> allPlayersActions = null;
     //public Map CurrentMapData { get; private set; }
     //public List<ProvinceGameObject> provinceGameObjects {get; private set;}
@@ -241,7 +241,7 @@ public class NetworkManagerGame : NetworkBehaviour, INetworkRunnerCallbacks
 
     public override void Spawned()
     {
-        if (Instance == null) Instance = this;
+        if (me == null) me = this;
         else Destroy(gameObject);
         Runner.AddCallbacks(this);
     }

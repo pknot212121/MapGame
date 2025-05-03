@@ -75,7 +75,7 @@ public class GameController : MonoBehaviour
         if(Input.GetMouseButtonDown(0) && !ShapeTools.IsPointerOverSpecificCanvas(troopMenuCanvas)) troopMenuCanvas.gameObject.SetActive(false);
         if(Input.GetMouseButtonDown(0) && !ShapeTools.IsPointerOverSpecificCanvas(provinceMenuCanvas)) provinceMenuCanvas.gameObject.SetActive(false);
 
-        if(Input.GetKeyDown(KeyCode.Tab)) Debug.Log("AKTUALNA ILOŚĆ ENTITIES: "+NetworkManagerGame.Instance.EntityCounter);
+        if(Input.GetKeyDown(KeyCode.Tab)) Debug.Log("AKTUALNA ILOŚĆ ENTITIES: "+NetworkManagerGame.me.EntityCounter);
         if(Input.GetKeyDown(KeyCode.LeftShift))
         {
             foreach(Province province in map.provinces)
@@ -85,11 +85,11 @@ public class GameController : MonoBehaviour
         }
         if(Input.GetKeyDown(KeyCode.Space))
         {
-            foreach(KeyValuePair<PlayerRef,NetworkString<_32>> keyValuePair in NetworkManagerGame.Instance.PlayersToCountries)
+            foreach(KeyValuePair<PlayerRef,NetworkString<_32>> keyValuePair in NetworkManagerGame.me.PlayersToCountries)
             {
                 Debug.Log("GRACZ: "+keyValuePair.Key+" PAŃSTWO: "+keyValuePair.Value);
             }
-            foreach(KeyValuePair<PlayerRef,NetworkString<_32>> keyValuePair1 in NetworkManagerGame.Instance.PlayerNicknames)
+            foreach(KeyValuePair<PlayerRef,NetworkString<_32>> keyValuePair1 in NetworkManagerGame.me.PlayerNicknames)
             {
                 Debug.Log("GRACZ: "+keyValuePair1.Key+"NICKNAME: "+keyValuePair1.Value);
             }
@@ -97,7 +97,7 @@ public class GameController : MonoBehaviour
 
         if(Input.GetMouseButtonDown(0)) // Ten gość robi returny, stawiać rzeczy przed nim
         {
-            if (NetworkManagerGame.Instance == null || map == null) return;
+            if (NetworkManagerGame.me == null || map == null) return;
             Vector3 worldPosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
             foreach(TroopGO troopGO in troopGOs)
             {
@@ -205,7 +205,7 @@ public class GameController : MonoBehaviour
 
     public void StartClick()
     {
-        NetworkManagerGame.Instance.Rpc_StartCountdown();
+        NetworkManagerGame.me.Rpc_StartCountdown();
         startButton.gameObject.SetActive(false);
     }
 
@@ -235,7 +235,7 @@ public class GameController : MonoBehaviour
 
     public void EndTurnClick()
     {
-        NetworkManagerGame.Instance.SendReliableMessageToPlayer(NetworkManagerGame.Instance.Object.StateAuthority, "MyActions", JsonSerialization.ToJson(myActions));
+        NetworkManagerGame.me.SendReliableMessageToPlayer(NetworkManagerGame.me.Object.StateAuthority, "MyActions", JsonSerialization.ToJson(myActions));
     }
 
     // public void EndTurnClick()
@@ -251,9 +251,9 @@ public class GameController : MonoBehaviour
     public IEnumerator CountingDownToStart()
     {
         startCounter.gameObject.SetActive(true);
-        while(NetworkManagerGame.Instance.StartTimer != 10 && NetworkManagerGame.Instance.StartTimer != -1)
+        while(NetworkManagerGame.me.StartTimer != 10 && NetworkManagerGame.me.StartTimer != -1)
         {
-            startCounter.text = "Starting in: " + NetworkManagerGame.Instance.StartTimer;
+            startCounter.text = "Starting in: " + NetworkManagerGame.me.StartTimer;
             yield return null;
         }
         startCounter.gameObject.SetActive(false);
@@ -295,9 +295,9 @@ public class GameController : MonoBehaviour
     void TroopClick(Troop troop)
     {
         Country country = null;
-        foreach(KeyValuePair<PlayerRef,NetworkString<_32>> keyValuePair in NetworkManagerGame.Instance.PlayersToCountries)
+        foreach(KeyValuePair<PlayerRef,NetworkString<_32>> keyValuePair in NetworkManagerGame.me.PlayersToCountries)
         {
-            if(keyValuePair.Key == NetworkManagerGame.Instance.Runner.LocalPlayer)
+            if(keyValuePair.Key == NetworkManagerGame.me.Runner.LocalPlayer)
             {
                 country = map.GetCountry((string)keyValuePair.Value);
                 break;
@@ -322,7 +322,7 @@ public class GameController : MonoBehaviour
     void ProvinceClick(Province province)
     {
         Debug.Log("Province click");
-        if(NetworkManagerGame.Instance.StartTimer == -1) // Gra się już rozpoczęła
+        if(NetworkManagerGame.me.StartTimer == -1) // Gra się już rozpoczęła
         {
             if(actionPrepared != null && actionPrepared.type == Action.ActionType.MoveTroop && ShapeTools.AreTwoProvincesNeighbors(province, ((Troop)actionPrepared.entity1).province))
             {
@@ -339,11 +339,11 @@ public class GameController : MonoBehaviour
         }
         else // Jesteśmy w poczekalni
         {
-            PlayerRef owner = NetworkManagerGame.Instance.GetOwnerOfACountry(province.country.name);
+            PlayerRef owner = NetworkManagerGame.me.GetOwnerOfACountry(province.country.name);
             if(owner==PlayerRef.None)
             {
                 Debug.Log("PRÓBUJĘ USTAWIĆ WŁAŚCICIELA: "+province.name);
-                NetworkManagerGame.Instance.Rpc_SetPlayerCountry(NetworkManagerGame.Instance.Runner.LocalPlayer, province.country.name);
+                NetworkManagerGame.me.Rpc_SetPlayerCountry(NetworkManagerGame.me.Runner.LocalPlayer, province.country.name);
                 //NetworkManagerGame.Instance.PrintCountryOwners();
             }
         }
@@ -356,14 +356,14 @@ public class GameController : MonoBehaviour
         Debug.Log("Refreshing nickname displayers");
         foreach(Transform t in playerNicknameDisplayersTransform) Destroy(t.gameObject);
         GameObject prefab = Resources.Load("Prefabs/PlayerNicknameDisplayer") as GameObject;
-        foreach(var kvp in NetworkManagerGame.Instance.PlayersToCountries)
+        foreach(var kvp in NetworkManagerGame.me.PlayersToCountries)
         {
             //Debug.Log(kvp);
             if(kvp.Key == PlayerRef.None) continue; // Pomijamy pustych graczy (jeśli tacy są)
             GameObject pnd = Instantiate(prefab);
             Country country = map.GetCountry(kvp.Value.Value);
             Debug.Log(country);
-            string nick = NetworkManagerGame.Instance.PlayerNicknames[kvp.Key].Value;
+            string nick = NetworkManagerGame.me.PlayerNicknames[kvp.Key].Value;
             Debug.Log(nick);
             pnd.GetComponent<PlayerNicknameDisplayer>().Initialise(nick, country);
             pnd.transform.SetParent(playerNicknameDisplayersTransform);
