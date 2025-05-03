@@ -39,17 +39,6 @@ public class Troop : Entity
         this.country = country;
         this.province = province;
     }
-    public Troop(int id,int value,Country country, Province province,List<TroopInfo> troopInfos) // Możliwe że ten konstruktor to tymczasowe rozwiązanie
-    {
-        this.id = id;
-        this.numbers = new Dictionary<TroopInfo, int>();
-        foreach(TroopInfo ti in troopInfos)
-        {
-            numbers[ti] = value;
-        }
-        this.country = country;
-        this.province = province;
-    }
     // public void Fill(List<TroopInfo> troopInfos,int minRange,int maxRange)
     // {
     //     foreach(TroopInfo troopInfo in troopInfos)
