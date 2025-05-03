@@ -25,24 +25,6 @@ public class Country : Entity
         this.name = name;
         SetRandomColor();
     }
-    public override void Pack()
-    {
-        // foreach(Province province in provinces)
-        // {
-        //     province.Pack();
-        // }
-        base.Pack();
-    }
-    public override void Unpack()
-    {
-        // foreach(Province province in provinces)
-        // {
-        //     province.country = this;
-        //     province.Unpack();
-        // }
-        base.Pack();
-    }
-
 
     public void SetRandomColor()
     {

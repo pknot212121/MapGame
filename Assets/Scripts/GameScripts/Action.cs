@@ -22,16 +22,4 @@ public class Action : Entity
         this.entity2 = entity2;
         this.optionalData = optionalData;
     }
-
-    public override void Pack()
-    {
-        entity1.Pack();
-        entity2.Pack();
-    }
-
-    public override void Unpack()
-    {
-        entity1.Unpack();
-        entity2.Unpack();
-    }
 }

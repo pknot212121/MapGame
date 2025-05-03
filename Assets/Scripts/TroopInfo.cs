@@ -22,14 +22,6 @@ public class TroopInfo : Entity
         this.unitCost = unitCost;
         if(this.unitCost == null) this.unitCost = new Dictionary<string, int>();
     }
-    public override void Pack()
-    {
-        base.Pack();
-    }
-    public override void Unpack()
-    {
-        base.Unpack();
-    }
 
     public void SetIndividualPowerMultiplier(string name, float multiplier)
     {

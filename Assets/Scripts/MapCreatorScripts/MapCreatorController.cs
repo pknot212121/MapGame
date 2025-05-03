@@ -64,6 +64,8 @@ public class MapCreatorController : MonoBehaviour
         }
     }
 
+    #region UI Buttons
+
     public void CreateProvinceClick()
     {
         countryAdjusted = null;
@@ -199,17 +201,7 @@ public class MapCreatorController : MonoBehaviour
     }
 
     public void SaveMapClick(){
-        foreach(Province province in map.provinces)
-        {
-            province.resourceStockpiles = new Resource(map.resourceInfos);
-            foreach(ResourceInfo resourceInfo in map.resourceInfos)
-            {
-                int generation = UnityEngine.Random.Range(0, 100);
-                province.resourceGeneration.Add(resourceInfo,generation);
-                int stockpile = UnityEngine.Random.Range(100, 10000);
-                province.resourceStockpiles.content[resourceInfo] = stockpile;
-            }
-        }
+        GenerateRandomisedResources();
         if(mapNameInput.text!=null) Map.LoadMapIntoJson(mapNameInput.text);
         else Map.LoadMapIntoJson("map");
     }
@@ -235,7 +227,9 @@ public class MapCreatorController : MonoBehaviour
         if(countryAdjusted != null) countryAdjusted.SetRandomColor();
         countryHexColorInput.text = UnityEngine.ColorUtility.ToHtmlStringRGB(countryAdjusted.color);
     }
+    #endregion
 
+    #region polygons
     public void ProvinceShapeFormLogic()
     {
         deleted.Clear();
@@ -317,7 +311,26 @@ public class MapCreatorController : MonoBehaviour
             
         }
     }
-
+    public void GenerateRandomisedResources()
+    {
+        foreach(Province province in map.provinces)
+        {
+            province.resourceStockpiles.Fill(map.resourceInfos,100,10000);
+            province.resourceGeneration.Fill(map.resourceInfos,0,100);
+        }
+    }
+    public void GenerateRandomisedTroops()
+    {
+        foreach(Province province in map.provinces)
+        {
+            Troop troop1 = new Troop(++EntityCounter,province.country,province,10,50,map.troopInfos);
+            Troop troop2 = new Troop(++EntityCounter,province.country,province,10,50,map.troopInfos);
+            province.troops.Add(troop1);
+            map.troops.Add(troop1);
+            province.troops.Add(troop2);
+            map.troops.Add(troop2);
+        }
+    }
     Vector3 NearestPoint(Vector2 worldPosition, int zet)
     {
         double min_distance=double.MaxValue;
@@ -367,7 +380,8 @@ public class MapCreatorController : MonoBehaviour
         }
         return new Vector3(nearestProjection.x,nearestProjection.y,zet);
     }
-
+    #endregion
+    #region canvas func
     public void EnterCountryAdjustment(Country country)
     {
         countryAdjusted = country;
@@ -393,4 +407,5 @@ public class MapCreatorController : MonoBehaviour
         resourceInfoAdjustmentCanvas.gameObject.SetActive(true);
         ResourceInfoAdjustmentPanel.me.Initialise();
     }
+    #endregion
 }

@@ -13,23 +13,9 @@ public class Map : Entity
     public List<Country> countries = new List<Country>();
     public List<ResourceInfo> resourceInfos = new List<ResourceInfo>();
     public List<TroopInfo> troopInfos = new List<TroopInfo>();
+    public List<Troop> troops = new List<Troop>();
     public int EntityCounter;
     public static Map me;
-
-    public override void Pack()
-    {
-        foreach(Province province in provinces) province.Pack();
-        foreach(Country country in countries)country.Pack();
-        foreach(ResourceInfo resourceInfo in resourceInfos) resourceInfo.Pack();
-        foreach(TroopInfo troopInfo in troopInfos) troopInfo.Pack();
-    }
-    public override void Unpack()
-    {
-        foreach(Country country in countries)country.Unpack();
-        foreach(Province province in provinces) province.Unpack();
-        foreach(ResourceInfo resourceInfo in resourceInfos) resourceInfo.Unpack();
-        foreach(TroopInfo troopInfo in troopInfos) troopInfo.Unpack();
-    }
 
     public Country GetCountry(Province province){
         foreach(Country country in countries){
@@ -63,7 +49,6 @@ public class Map : Entity
     {
         string path =  Application.persistentDataPath + "/" + filename + ".json";
         MapCreatorController.me.map.EntityCounter = MapCreatorController.me.EntityCounter;
-        MapCreatorController.me.map.Pack();
         string json = JsonSerialization.ToJson(MapCreatorController.me.map);
         Debug.Log("Ścieżka zapisu: " + Application.persistentDataPath);
         System.IO.File.WriteAllText(path,json);

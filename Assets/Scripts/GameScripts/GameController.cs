@@ -123,7 +123,6 @@ public class GameController : MonoBehaviour
     public void SetUpMap(Map map)
     {
         this.map = map;
-        map.Unpack();
         foreach(Province province in map.provinces)
         {
             // Debug.Log("NAZWA KRAJU: "+province.country.name);

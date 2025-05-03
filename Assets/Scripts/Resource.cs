@@ -5,9 +5,14 @@ public class Resource : Entity
 {
     public Dictionary<ResourceInfo,int> content = new Dictionary<ResourceInfo,int>();
 
-    public Resource(List<ResourceInfo> resourceInfos){
+    public Resource()
+    {
+
+    }
+    public void Fill(List<ResourceInfo> resourceInfos,int minRange,int maxRange)
+    {
         foreach(ResourceInfo resourceInfo in resourceInfos){
-            content[resourceInfo]=0;
+            content[resourceInfo]=Random.Range(minRange,maxRange);
         }
     }
 }

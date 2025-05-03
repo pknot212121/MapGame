@@ -160,19 +160,26 @@ public class NetworkManagerGame : NetworkBehaviour, INetworkRunnerCallbacks
 
         // Podstawowe jednostki
         List<Action> actions = new List<Action>();
-        foreach (Province province in GameController.me.map.provinces)
+        // foreach (Province province in GameController.me.map.provinces)
+        // {
+        //     if(province!=null)
+        //     {
+        //         // Troop troop = new Troop(++EntityCounter, 15, province.country, province);
+        //         foreach(Troop troop in province.troops)
+                
+        //         Action action = new Action(Action.ActionType.RaiseTroop, null, troop, null);
+        //         // Troop troop2 = (Troop)action.entity2;
+        //         // foreach(KeyValuePair<TroopInfo,int> keyValuePair in troop2.numbers)
+        //         // {
+        //         //     Debug.Log("Nazwa: "+keyValuePair.Key.name+" Ilość: "+keyValuePair.Value);
+        //         // }
+        //         actions.Add(action);
+        //     }
+        // }
+        foreach(Troop troop in GameController.me.map.troops)
         {
-            if(province!=null)
-            {
-                Troop troop = new Troop(++EntityCounter, 15, province.country, province);
-                Action action = new Action(Action.ActionType.RaiseTroop, null, troop, null);
-                Troop troop2 = (Troop)action.entity2;
-                foreach(KeyValuePair<TroopInfo,int> keyValuePair in troop2.numbers)
-                {
-                    Debug.Log("Nazwa: "+keyValuePair.Key.name+" Ilość: "+keyValuePair.Value);
-                }
-                actions.Add(action);
-            }
+            Action action = new Action(Action.ActionType.RaiseTroop, null, troop, null);
+            actions.Add(action);
         }
 
         string json = JsonSerialization.ToJson(actions);
@@ -292,7 +299,6 @@ public class NetworkManagerGame : NetworkBehaviour, INetworkRunnerCallbacks
                 string chosenNickname = PlayerPrefs.GetString("PlayerNickname", $"Player_{UnityEngine.Random.Range(100, 999)}");
                 Debug.Log("USTAWIONO NICKNAME GRACZA: "+Runner.LocalPlayer+" JAKO: "+chosenNickname+" W SPAWNED");
                 Rpc_SetNickname(chosenNickname);
-                map.Unpack();
                 GameController.me.SetUpMap(map);
                 Debug.Log("Set up host scene");
             }
@@ -338,7 +344,6 @@ public class NetworkManagerGame : NetworkBehaviour, INetworkRunnerCallbacks
             GameController.me.mapString = content;
             Map map = JsonSerialization.FromJson<Map>(content);
             GameController.me.map = map;
-            map.Unpack();
             GameController.me.SetUpMap(map);
             string chosenNickname = PlayerPrefs.GetString("PlayerNickname", $"Player_{UnityEngine.Random.Range(100, 999)}");
             Debug.Log("USTAWIONO NICKNAME GRACZA: "+Runner.LocalPlayer+" JAKO: "+chosenNickname+" W SPAWNED");
