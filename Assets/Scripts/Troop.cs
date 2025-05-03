@@ -16,6 +16,18 @@ public class Troop : Entity
     public string provinceName = null; // Używane przy wysyłce
 
     public Troop(){}
+
+    public Troop(int id, int initialTroopsCount, Country country, Province province, List<TroopInfo> troopInfos) // Możliwe że ten konstruktor to tymczasowe rozwiązanie
+    {
+        this.id = id;
+        this.numbers = new Dictionary<TroopInfo, int>();
+        foreach(TroopInfo ti in troopInfos)
+        {
+            numbers[ti] = initialTroopsCount;
+        }
+        this.country = country;
+        this.province = province;
+    }
     public Troop(int id, Country country, Province province,int minRange,int maxRange,List<TroopInfo> troopInfos) // Możliwe że ten konstruktor to tymczasowe rozwiązanie
     {
         this.id = id;
